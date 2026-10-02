@@ -1,0 +1,280 @@
+[
+  {
+    "squad": "Canais Digitais",
+    "idIssue": "ISS-1042",
+    "descricao": "Ajustar validação de transferência Pix",
+    "dataInicialHomologacao": "2026-09-14",
+    "dataFinalHomologacao": "2026-09-22",
+    "dataAberturaChange": "2026-09-22",
+    "dataProducao": "2026-09-25",
+    "ambiente": "homologacao",
+    "servicos": [
+      "api-pix",
+      "api-contas"
+    ]
+  },
+  {
+    "squad": "Cartões",
+    "idIssue": "ISS-1043",
+    "descricao": "Atualizar limite disponível na fatura",
+    "dataInicialHomologacao": "2026-09-21",
+    "dataFinalHomologacao": "2026-10-05",
+    "dataAberturaChange": "2026-10-05",
+    "dataProducao": "2026-10-08",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "api-cartoes",
+      "api-limites",
+      "api-clientes"
+    ]
+  },
+  {
+    "squad": "Onboarding",
+    "idIssue": "ISS-1044",
+    "descricao": "Revisar fluxo de abertura de conta",
+    "dataInicialHomologacao": "2026-10-01",
+    "dataFinalHomologacao": "2026-10-08",
+    "dataAberturaChange": "2026-10-10",
+    "dataProducao": "2026-10-13",
+    "ambiente": "efemero",
+    "servicos": [
+      "api-clientes",
+      "api-contas",
+      "api-identidade",
+      "web-onboarding"
+    ]
+  },
+  {
+    "squad": "Crédito",
+    "idIssue": "ISS-1045",
+    "descricao": "Corrigir cálculo de parcelas na simulação",
+    "dataInicialHomologacao": "2026-08-10",
+    "dataFinalHomologacao": "2026-08-18",
+    "dataAberturaChange": "2026-08-18",
+    "dataProducao": "2026-08-21",
+    "ambiente": "homologacao",
+    "servicos": [
+      "api-credito"
+    ]
+  },
+  {
+    "squad": "Investimentos",
+    "idIssue": "ISS-1046",
+    "descricao": "Exibir rentabilidade consolidada da carteira",
+    "dataInicialHomologacao": "2026-10-05",
+    "dataFinalHomologacao": "2026-10-16",
+    "dataAberturaChange": "2026-10-18",
+    "dataProducao": "2026-10-21",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "api-investimentos",
+      "api-clientes"
+    ]
+  },
+  {
+    "squad": "Segurança",
+    "idIssue": "ISS-1047",
+    "descricao": "Melhorar confirmação de acesso por biometria",
+    "dataInicialHomologacao": "2026-09-25",
+    "dataFinalHomologacao": "2026-10-02",
+    "dataAberturaChange": "2026-10-04",
+    "dataProducao": "2026-10-07",
+    "ambiente": "efemero",
+    "servicos": [
+      "api-identidade",
+      "api-clientes",
+      "api-biometria"
+    ]
+  },
+  {
+    "squad": "Canais Digitais",
+    "idIssue": "ISS-1048",
+    "descricao": "Incluir comprovante no histórico de pagamentos",
+    "dataInicialHomologacao": "2026-10-12",
+    "dataFinalHomologacao": "2026-10-20",
+    "dataAberturaChange": "2026-10-20",
+    "dataProducao": "2026-10-23",
+    "ambiente": "homologacao",
+    "servicos": [
+      "api-pagamentos",
+      "api-contas"
+    ]
+  },
+  {
+    "squad": "Cartões",
+    "idIssue": "ISS-1049",
+    "descricao": "Corrigir notificação de compra internacional",
+    "dataInicialHomologacao": "2026-09-01",
+    "dataFinalHomologacao": "2026-09-10",
+    "dataAberturaChange": "2026-09-12",
+    "dataProducao": "2026-09-15",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "api-cartoes"
+    ]
+  },
+  {
+    "squad": "Canais Digitais",
+    "idIssue": "ISS-1050",
+    "descricao": "Ajustar layout da área Pix",
+    "dataInicialHomologacao": "2026-10-01",
+    "dataFinalHomologacao": "2026-10-08",
+    "dataAberturaChange": "2026-10-10",
+    "dataProducao": "2026-10-13",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-pix"
+    ]
+  },
+  {
+    "squad": "Canais Digitais",
+    "idIssue": "ISS-1051",
+    "descricao": "Melhorar acessibilidade da área Pix",
+    "dataInicialHomologacao": "2026-10-05",
+    "dataFinalHomologacao": "2026-10-10",
+    "dataAberturaChange": "2026-10-11",
+    "dataProducao": "2026-10-14",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-pix"
+    ]
+  },
+  {
+    "squad": "Cartões",
+    "idIssue": "ISS-1052",
+    "descricao": "Redesenhar resumo da fatura",
+    "dataInicialHomologacao": "2026-10-03",
+    "dataFinalHomologacao": "2026-10-09",
+    "dataAberturaChange": "2026-10-11",
+    "dataProducao": "2026-10-14",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-cartoes"
+    ]
+  },
+  {
+    "squad": "Cartões",
+    "idIssue": "ISS-1053",
+    "descricao": "Atualizar tela de desbloqueio",
+    "dataInicialHomologacao": "2026-10-06",
+    "dataFinalHomologacao": "2026-10-12",
+    "dataAberturaChange": "2026-10-12",
+    "dataProducao": "2026-10-15",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "web-cartoes"
+    ]
+  },
+  {
+    "squad": "Investimentos",
+    "idIssue": "ISS-1054",
+    "descricao": "Novo filtro da carteira",
+    "dataInicialHomologacao": "2026-10-10",
+    "dataFinalHomologacao": "2026-10-16",
+    "dataAberturaChange": "2026-10-18",
+    "dataProducao": "2026-10-21",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-investimentos"
+    ]
+  },
+  {
+    "squad": "Onboarding",
+    "idIssue": "ISS-1055",
+    "descricao": "Ajustar mensagens de cadastro",
+    "dataInicialHomologacao": "2026-10-02",
+    "dataFinalHomologacao": "2026-10-07",
+    "dataAberturaChange": "2026-10-09",
+    "dataProducao": "2026-10-12",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-onboarding"
+    ]
+  },
+  {
+    "squad": "Crédito",
+    "idIssue": "ISS-1056",
+    "descricao": "Atualizar simulador e taxas",
+    "dataInicialHomologacao": "2026-10-06",
+    "dataFinalHomologacao": "2026-10-15",
+    "dataAberturaChange": "2026-10-17",
+    "dataProducao": "2026-10-20",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-credito",
+      "api-credito"
+    ]
+  },
+  {
+    "squad": "Crédito",
+    "idIssue": "ISS-1057",
+    "descricao": "Revisar regras de aprovação",
+    "dataInicialHomologacao": "2026-10-09",
+    "dataFinalHomologacao": "2026-10-18",
+    "dataAberturaChange": "2026-10-18",
+    "dataProducao": "2026-10-21",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "api-credito",
+      "api-clientes",
+      "api-contas"
+    ]
+  },
+  {
+    "squad": "Segurança",
+    "idIssue": "ISS-1058",
+    "descricao": "Revisar autenticação de clientes",
+    "dataInicialHomologacao": "2026-10-01",
+    "dataFinalHomologacao": "2026-10-07",
+    "dataAberturaChange": "2026-10-09",
+    "dataProducao": "2026-10-12",
+    "ambiente": "homologacao",
+    "servicos": [
+      "api-identidade",
+      "api-clientes"
+    ]
+  },
+  {
+    "squad": "Canais Digitais",
+    "idIssue": "ISS-1059",
+    "descricao": "Atualizar confirmação de pagamentos",
+    "dataInicialHomologacao": "2026-10-14",
+    "dataFinalHomologacao": "2026-10-22",
+    "dataAberturaChange": "2026-10-24",
+    "dataProducao": "2026-10-27",
+    "ambiente": "homologacao",
+    "servicos": [
+      "web-pagamentos",
+      "api-pagamentos",
+      "api-contas",
+      "api-clientes"
+    ]
+  },
+  {
+    "squad": "Investimentos",
+    "idIssue": "ISS-1060",
+    "descricao": "Ajustar contraste dos gráficos",
+    "dataInicialHomologacao": "2026-11-02",
+    "dataFinalHomologacao": "2026-11-06",
+    "dataAberturaChange": "2026-11-08",
+    "dataProducao": "2026-11-11",
+    "ambiente": "homologacao 2",
+    "servicos": [
+      "web-investimentos"
+    ]
+  },
+  {
+    "squad": "Cartões",
+    "idIssue": "ISS-1061",
+    "descricao": "Validar fatura em ambiente isolado",
+    "dataInicialHomologacao": "2026-10-06",
+    "dataFinalHomologacao": "2026-10-12",
+    "dataAberturaChange": "2026-10-12",
+    "dataProducao": "2026-10-15",
+    "ambiente": "efemero",
+    "servicos": [
+      "web-cartoes",
+      "api-cartoes"
+    ]
+  }
+]
