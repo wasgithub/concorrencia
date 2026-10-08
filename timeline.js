@@ -2,6 +2,12 @@
 const $=s=>document.querySelector(s);
 const labels={homologacao:'Homologação','homologacao 2':'Homologação 2',efemero:'Efêmero'};
 const date=s=>s.split('-').reverse().join('/');
+// Changes vivem em store próprio; o Calendário apenas lê o status vinculado.
+const changeStatusBadge={'Planejada':'gray','Em aprovação':'orange','Aprovada':'blue','Executada':'green','Rejeitada':'red','Não realizada':'red','Rollback realizado':'red'};
+function loadChanges(){ try{ const s=JSON.parse(localStorage.getItem('issueflow.changes.v1')); return Array.isArray(s)?s:[]; }catch{ return []; } }
+let changeMap=new Map();
+function buildChangeMap(){ const map=new Map(); const final=s=>s==='Rejeitada'||s==='Não realizada'||s==='Rollback realizado'; for(const c of loadChanges()) for(const id of (c.issueIds||[])){ const cur=map.get(id); if(!cur || (final(cur.status)&&!final(c.status))) map.set(id,c); } return map; }
+function changeForIssue(id){ return changeMap.get(id)||null; }
 const now=new Date();let month=new Date(now.getFullYear(),now.getMonth(),1);
 const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
 const todayIso=iso(now);let calendarStart=iso(month);
@@ -83,6 +89,7 @@ function clearRelations() {for(const row of document.querySelectorAll('.calendar
 $('#clearRelations').onclick=clearRelations;
 function planningImpact(plan) {return plan.remainingConflicts.length?`O período sugerido ainda concorre com ${plan.remainingConflicts.map(c=>c.issue.idIssue).join(', ')}. Alinhar o início não elimina o compartilhamento de componentes.`:'O período sugerido não tem concorrências de componentes nos registros atuais.';}
 function render(){
+ changeMap=buildChangeMap();
  let {start,end,days}=bounds();const selectedMonthStart=start;calendarStart=start;const monthPairs=pairsInMonth();
  const homologating=issues.filter(i=>i.dataInicialHomologacao<=end&&i.dataFinalHomologacao>=start);
  $('#monthIssues').textContent=homologating.length;$('#monthConflicts').textContent=monthPairs.length;$('#monthProduction').textContent=issues.filter(i=>i.dataProducao>=start&&i.dataProducao<=end).length;$('#monthSuggestions').textContent=homologating.filter(i=>suggestionFor(i,issues)?.available).length;
@@ -113,7 +120,7 @@ function render(){
   const divider=element('div','concurrency-group');divider.append(element('strong','',group.key==='unrelated'?'SEM CONCORRÊNCIA':`BLOCO ${eligibleGroups.indexOf(group)+1} · ${group.pairs} RELAÇÕES DIRETAS`),element('span','',`${group.issues.length} issue(s) · ${group.issues.map(i=>i.idIssue).join(', ')}`));grid.append(divider);
  }
  previousGroup=group;
- const row=element('div','calendar-row');row.dataset.issue=issue.idIssue;const issueLabel=element('div','issue-column issue-label');issueLabel.append(element('strong','',issue.idIssue),element('span','',issue.descricao),element('small','',`${issue.squad} · ${labels[issue.ambiente]}`));const detailButton=element('button','issue-detail-button',issue.idIssue);detailButton.type='button';detailButton.onclick=()=>showDetails(issue);issueLabel.children[0].replaceWith(detailButton);row.append(issueLabel);
+ const row=element('div','calendar-row');row.dataset.issue=issue.idIssue;const issueLabel=element('div','issue-column issue-label');issueLabel.append(element('strong','',issue.idIssue),element('span','',issue.descricao),element('small','',`${issue.squad} · ${labels[issue.ambiente]}`));const detailButton=element('button','issue-detail-button',issue.idIssue);detailButton.type='button';detailButton.onclick=()=>showDetails(issue);issueLabel.children[0].replaceWith(detailButton);const linkedChange=changeForIssue(issue.idIssue);if(linkedChange){const cb=element('small','change-row-badge '+(changeStatusBadge[linkedChange.status]||'gray'),`⇄ ${linkedChange.rdm||'TBD'} · ${linkedChange.status}`);cb.title=`Change ${linkedChange.rdm||'TBD'} · ${linkedChange.status} · subida ${date(linkedChange.dataProducao)}`;issueLabel.append(cb);}row.append(issueLabel);
  const track=element('div','calendar-track');for(let d=1;d<=days;d++){const dt=new Date(shiftCalendarDays(start,d-1)+'T12:00:00');track.append(element('div','day-cell'+([0,6].includes(dt.getDay())?' weekend':'')+(iso(dt)<selectedMonthStart?' context-day':'')+(iso(dt)===todayIso?' today-cell':'')));}
  const alignment=alignmentFor(issue),partners=alignmentPartners(issue);
  if(alignment){
@@ -166,6 +173,7 @@ function renderPlanning(visible) {
 function showDetails(issue){
  $('#detailTitle').textContent=issue.idIssue;$('#detailDescription').textContent=`${issue.descricao} · ${issue.squad} · ${labels[issue.ambiente]}`;
  const dates=$('#detailDates');dates.replaceChildren();for(const [label,value] of [['Início homologação',issue.dataInicialHomologacao],['Fim homologação',issue.dataFinalHomologacao],['Abertura CHANGE/GMUD',issue.dataAberturaChange],['◆ Produção',issue.dataProducao]]){const item=element('div');item.append(element('small','',label),element('strong','',date(value)));dates.append(item);}
+ const linked=changeForIssue(issue.idIssue);if(linked){const item=element('div');item.append(element('small','','Change / RDM'));const cb=element('strong');cb.textContent=`${linked.rdm||'TBD'} · ${linked.status}${linked.reprogramacoes?' (↻×'+linked.reprogramacoes+')':''}`;item.append(cb);dates.append(item);}
  const alignment=alignmentFor(issue),alignmentBox=$('#detailAlignment');alignmentBox.replaceChildren();const partners=alignmentPartners(issue);alignmentBox.hidden=!alignment&&!partners.length;
  if(partners.length){alignmentBox.append(element('strong','','Pode ser referência de início conjunto'),element('p','',`${partners.map(i=>i.idIssue).join(', ')} poderiam começar em ${date(issue.dataInicialHomologacao)} com esta issue, pelos componentes diretamente concorrentes. Datas cadastradas preservadas.`));}
  if(alignment){alignmentBox.append(element('strong','',planningLabel(alignment)),element('p','',`Atual: ${date(issue.dataInicialHomologacao)} a ${date(issue.dataFinalHomologacao)} → Sugerido: ${date(alignment.start)} a ${date(alignment.end)}.`),element('p','',planningExplanation(alignment)),element('p','',`CHANGE/GMUD: ${date(alignment.change)} · Produção: ${date(alignment.production)}.`),element('small','',planningImpact(alignment)));}

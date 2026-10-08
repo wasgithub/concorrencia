@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>IssueFlow · Changes / RDM</title><link rel="stylesheet" href="styles.css"><link rel="stylesheet" href="changes.css"><script src="issues-store.js" defer></script><script src="tests-store.js" defer></script><script src="production-store.js" defer></script><script src="changes.js" defer></script></head>
+<body class="changes-page"><aside class="sidebar"><a class="brand" href="index.html"><span class="brand-icon">i<span>f</span></span>IssueFlow</a><div class="workspace">WORKSPACE<span>Gestão de entregas</span></div><a class="nav" href="index.html"><span>▦</span> Issues</a><a class="nav" href="timeline.html"><span>▥</span> Calendário</a><a class="nav active" href="changes.html"><span>⇄</span> Changes / RDM <span class="nav-dot"></span></a><a class="nav" href="testes.html"><span>✓</span> Testes</a><a class="nav" href="producao.html"><span>◉</span> Validação de PROD</a><div class="sidebar-note"><span class="live-dot"></span> Ambiente de demonstração<small>Dados salvos neste navegador</small></div></aside>
+<div class="shell"><header><span>Workspace <span class="slash">/</span> <strong>Changes / RDM</strong></span><div class="profile"><span class="demo">DEMO</span><span class="avatar">AD</span></div></header><main>
+<div class="page-heading"><div><div class="eyebrow">PROGRAMAÇÃO DE SUBIDAS</div><h1>Agenda de changes</h1><p>Uma change reúne issues de qualquer squad numa única subida. Acompanhe, aprove, reprograme e vincule issues. O calendário de freeze alerta subidas bloqueadas.</p></div><button id="newChange" class="primary"><span>＋</span> Nova change</button></div>
+<section class="stats" aria-label="Resumo de changes"><article><span>Changes na semana</span><span class="stat-icon">⇄</span><strong id="statWeek">0</strong><small>Subidas nos próximos 7 dias</small></article><article><span>Aguardando aprovação</span><span class="stat-icon purple-text">◷</span><strong id="statApproval">0</strong><small><i class="dot purple-bg"></i> Aguardando autorização da subida</small></article><article><span>Em freeze</span><span class="stat-icon" style="color:#c0564a">⛔</span><strong id="statFreeze">0</strong><small><i class="dot" style="background:#c0564a"></i> Subidas bloqueadas por freeze</small></article><article><span>Pendentes de cadastro</span><span class="stat-icon blue-text">＋</span><strong id="statPending">0</strong><small><i class="dot blue-bg"></i> Sugestões sem RDM</small></article></section>
+
+<section class="panel"><div class="panel-heading"><div><h2>Agenda de changes</h2><p>Changes cadastradas, priorizadas por período. Revise o checklist, autorize a subida e acompanhe a validação em produção.</p></div><div id="agendaViews" class="view-toggle"><button type="button" data-view="hoje">Hoje</button><button type="button" data-view="amanha">Amanhã</button><button type="button" data-view="semana">Esta semana</button><button type="button" data-view="todas">Todas</button></div></div><div class="filters"><label class="search"><span>⌕</span><input id="agendaSearch" type="search" placeholder="Buscar por RDM, equipe, issue..." aria-label="Buscar changes"></label><select id="agendaStatus" aria-label="Filtrar por status"><option value="">Todos os status</option></select></div><div class="table-scroll"><table><thead><tr><th>RDM / EQUIPE</th><th>SUBIDA</th><th>ISSUES</th><th>STATUS</th><th>SITUAÇÃO</th><th>AÇÕES</th></tr></thead><tbody id="agendaRows"></tbody></table></div><div id="agendaEmpty" class="empty" hidden>Nenhuma change neste período. Troque o filtro (Amanhã / Esta semana / Todas) ou cadastre uma nova pela lista de sugestões.</div><footer class="panel-footer"><span id="agendaCount"></span><span>Checklist, testes e próxima ação disponíveis em cada GMUD</span></footer></section>
+
+<section class="concurrency-panel" aria-label="Sugestões automáticas de change"><div class="concurrency-heading"><div><h2>Sugestões automáticas <span id="suggestionBadge" class="badge blue"></span></h2><p>Backlog gerado da timeline: issues da mesma equipe com a mesma data de produção. A abertura da RDM e a janela de homologação são derivadas das datas das issues.</p></div><label class="conflict-toggle"><input id="onlyConcurrency" type="checkbox"> Apenas subidas com concorrência</label></div><div id="suggestionList" class="suggestion-list"></div><p id="suggestionEmpty" class="empty" hidden>Nenhuma subida pendente de cadastro. Todas as issues já têm change.</p></section>
+
+<section class="panel"><div class="panel-heading"><div><h2>Calendário de freeze</h2><p>Janelas em que subidas são bloqueadas — por componente (ex.: ServiceNow) ou totalmente. Changes e sugestões no período recebem alerta.</p></div><button id="newFreeze" type="button" class="primary"><span>＋</span> Novo freeze</button></div><div id="freezeList" class="freeze-list"></div><p id="freezeEmpty" class="empty" hidden>Nenhum freeze cadastrado.</p></section>
+
+<div class="bottom-note">Da homologação à produção, cada subida planejada.</div></main></div>
+
+<dialog id="quickActionDialog" aria-labelledby="quickActionTitle"><div class="modal-heading"><div><div class="eyebrow">PRÓXIMA ETAPA DA GMUD</div><h2 id="quickActionTitle"></h2></div><button id="closeQuickAction" type="button" class="icon-button" aria-label="Fechar ação">×</button></div><p id="quickActionSub" class="modal-intro"></p><div id="quickActionBody"></div></dialog>
+
+<dialog id="changeDialog" aria-labelledby="changeTitle"><div class="modal-heading"><div><div class="eyebrow" id="changeEyebrow">NOVA CHANGE</div><h2 id="changeTitle">Cadastrar RDM</h2></div><button id="closeChange" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p class="modal-intro">Monte a change escolhendo as issues (de qualquer squad). Ao vincular, elas adotam a data de subida desta change.</p>
+<form id="changeForm"><div class="form-grid">
+<label>Time responsável<select name="equipe"></select></label>
+<label>Data da subida<input name="dataProducao" type="date"></label>
+</div>
+<label class="search picker-search"><span>⌕</span><input id="pickerSearch" type="search" placeholder="Filtrar issues por ID, squad, componente..." aria-label="Filtrar issues"></label>
+<div id="issuePicker" class="issue-picker"></div>
+<div id="autoSummary" class="auto-summary"></div>
+<div class="form-grid">
+<label>RDM / CHG<input name="rdm" maxlength="40" placeholder="Ex.: CHG1053297 ou TBD"></label>
+<label>Horário CHG<input name="horario" type="time"></label>
+<label>Início previsto<input name="inicioPrevisto" type="time"></label>
+<label>Final previsto<input name="finalPrevisto" type="time"></label>
+<label>Consumo de horas<output id="consumoValue" class="readonly-field">—</output></label>
+<label>SME/TL<input name="smeTl" maxlength="120" placeholder="Ex.: Eduardo Augusto"></label>
+<label>PO responsável pela validação<input name="po" maxlength="120" placeholder="Ex.: Bruna Magyar"></label><label>Time executor (opcional)<input name="timeExecutor" maxlength="120" placeholder="Ex.: Operações / Plataforma"></label>
+<label>FLEX<select name="flex"><option>Não</option><option>Sim</option></select></label>
+<label>ON<select name="on"><option>Não</option><option>Sim</option></select></label>
+<label class="full">Justificativa participação / rejeição do ON<textarea name="justificativaOn" maxlength="600" rows="2" placeholder="Obrigatória quando ON = Sim"></textarea></label>
+<label class="full">Observação<textarea name="observacao" maxlength="600" rows="2" placeholder="Observações da subida"></textarea></label>
+<label class="full">Motivo / Justificativa<textarea name="motivo" maxlength="2000" rows="4"></textarea><small class="field-hint">Gerado a partir das issues selecionadas (ID | descrição | componentes). Editável.</small></label>
+</div><p id="changeError" role="alert"></p>
+<div class="modal-actions"><button id="cancelChange" type="button" class="secondary">Cancelar</button><button type="submit" class="primary">Salvar change</button></div></form></dialog>
+
+<dialog id="detailDialog" aria-labelledby="detailTitle"><div class="modal-heading"><div><div class="eyebrow">DETALHE DA CHANGE</div><h2 id="detailTitle"></h2></div><button id="closeDetail" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p id="detailSub" class="modal-intro"></p>
+<div id="detailFreeze" class="detail-freeze" hidden></div>
+<div id="detailSummary" class="auto-summary"></div>
+<h3 class="detail-section-title">Checklist de implantação</h3>
+<div id="detailChecklist" class="detail-checklist"></div>
+<h3 class="detail-section-title">Cenários de teste</h3>
+<div id="detailScenarios" class="detail-checklist"></div>
+<h3 class="detail-section-title">Ações</h3>
+<div id="detailActions" class="detail-actions"></div>
+<h3 class="detail-section-title">Histórico</h3>
+<div id="detailHistory" class="history-list"></div>
+<div class="modal-actions"><button id="dismissDetail" type="button" class="secondary">Fechar</button></div></dialog>
+
+<dialog id="freezeDialog" aria-labelledby="freezeEyebrow"><div class="modal-heading"><div><div class="eyebrow" id="freezeEyebrow">NOVO FREEZE</div><h2>Calendário de freeze</h2></div><button id="closeFreeze" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p class="modal-intro">Defina a janela e o escopo. No escopo “Componentes”, qualquer componente que contenha um dos termos é bloqueado na subida.</p>
+<form id="freezeForm"><div class="form-grid">
+<label class="full">Nome<input name="nome" maxlength="80" placeholder="Ex.: Freeze ServiceNow"></label>
+<label>Data inicial<input name="dataInicio" type="date"></label>
+<label>Data final<input name="dataFim" type="date"><small class="field-hint">Deixe igual à inicial para um único dia.</small></label>
+<label class="full">Escopo<select name="escopo"><option value="componentes">Componentes (por termo)</option><option value="total">Total (nada sobe)</option></select></label>
+<label class="full" id="termosField">Termos de componente<input name="termos" maxlength="200" placeholder="Ex.: servicenow, pix"><small class="field-hint">Separe por vírgula. Casa por “contém” (ex.: “servicenow” bloqueia agro-srv-...-servicenow-az).</small></label>
+<label class="full">Descrição<textarea name="descricao" maxlength="400" rows="2" placeholder="Motivo do freeze"></textarea></label>
+</div><p id="freezeError" role="alert"></p>
+<div class="modal-actions"><button id="cancelFreeze" type="button" class="secondary">Cancelar</button><button type="submit" class="primary">Salvar freeze</button></div></form></dialog>
+
+<dialog id="checklistDialog" aria-labelledby="checklistTitle"><div class="modal-heading"><div><div class="eyebrow">VALIDAÇÃO PARA SUBIDA</div><h2 id="checklistTitle"></h2></div><button id="closeChecklist" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p id="checklistSub" class="modal-intro"></p>
+<div class="checklist-progress"><div class="progress"><div id="checklistBar" class="progress-fill"></div></div><span id="checklistProgressText" class="ck-progress-text"></span></div>
+<div class="checklist-toolbar"><label class="ck-filter"><input id="checklistOnlyPending" type="checkbox"> Mostrar apenas pendentes</label><div class="ck-legend"><span><i class="ck-key sim"></i>Sim</span><span><i class="ck-key nao"></i>Não</span><span><i class="ck-key na"></i>N/A</span><span><i class="ck-key pend"></i>Pendente</span></div></div>
+<div id="checklistBody" class="checklist-body"></div>
+<div class="modal-actions"><button id="manageTemplate" type="button" class="secondary">⚙ Gerenciar itens do modelo</button><span style="flex:1"></span><button id="dismissChecklist" type="button" class="secondary">Fechar</button><button id="saveChecklist" type="button" class="primary">Salvar checklist</button></div></dialog>
+
+<dialog id="templateDialog" aria-labelledby="templateTitle"><div class="modal-heading"><div><div class="eyebrow">MODELO DE CHECKLIST</div><h2 id="templateTitle">Itens do checklist</h2></div><button id="closeTemplate" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p class="modal-intro">Adicione, edite, desative ou remova itens. As mudanças valem para todas as changes.</p>
+<form id="templateForm"><div class="form-grid">
+<label>Categoria<input name="categoria" list="tplCats" maxlength="40" placeholder="Ex.: Geral, Híbrida, Plataforma"></label>
+<label>Tipo<select name="tipo"><option value="bool">Sim / Não / N/A</option><option value="numero">Número</option><option value="texto">Texto</option></select></label>
+<label class="full">Texto do item<input name="texto" maxlength="300" placeholder="Pergunta do checklist"></label>
+<label class="ck-required"><input type="checkbox" name="obrigatorio" checked> Obrigatório (conta no progresso)</label>
+</div><p id="tplError" role="alert"></p>
+<div class="modal-actions"><button id="tplSubmit" type="submit" class="primary">＋ Adicionar item</button></div></form>
+<datalist id="tplCats"></datalist>
+<div id="templateBody" class="template-body"></div>
+<div class="modal-actions"><button id="dismissTemplate" type="button" class="secondary">Fechar</button></div></dialog>
+
+<dialog id="scenarioDialog" aria-labelledby="scenarioTitle"><div class="modal-heading"><div><div class="eyebrow">PLANO DE TESTES DE PRODUÇÃO</div><h2 id="scenarioTitle"></h2></div><button id="closeScenario" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p id="scenarioSub" class="modal-intro"></p>
+<div class="scenario-top"><div id="scenarioSummary" class="scenario-summary"></div><label class="scenario-link-field">Evidências (Jira / TP)<input id="scenarioLink" type="text" maxlength="200" placeholder="Ex.: AGROFIN-12169 ou URL"></label></div>
+<div class="scenario-toolbar"><button id="toggleHO" type="button" class="secondary">✓ Escolher testes de PROD a partir de HO</button><button id="toggleImport" type="button" class="secondary">↓ Selecionar do catálogo</button><button id="toggleBuilder" type="button" class="secondary">＋ Montar avulso</button><button id="manageDims" type="button" class="secondary">⚙ Dimensões</button></div>
+<div id="scenarioBuilder" class="scenario-builder" hidden></div>
+<div id="scenarioImport" class="scenario-import" hidden></div>
+
+<div id="scenarioList" class="scenario-list"></div>
+<p id="scenarioError" class="action-error" role="alert"></p><div class="modal-actions"><button id="openRollback" class="secondary danger" type="button">Registrar rollback</button><button id="dismissScenario" type="button" class="secondary">Fechar</button><button id="saveScenario" type="button" class="primary">Salvar cenários</button></div></dialog>
+
+<dialog id="rollbackDialog" aria-labelledby="rollbackTitle"><div class="modal-heading"><div><div class="eyebrow">OCORRÊNCIA EM PRODUÇÃO</div><h2 id="rollbackTitle">Registrar rollback realizado</h2></div><button id="closeRollback" type="button" class="icon-button" aria-label="Fechar rollback">×</button></div><p class="modal-intro">Registre a reversão da subida após sua execução operacional. Este registro preserva os testes e o motivo no histórico; ele não executa a reversão dos sistemas.</p><form id="rollbackForm"><div class="form-grid"><label class="full">Cenário / etapa que motivou a reversão<select name="origem" required></select></label><label>Responsável<input name="por" required maxlength="100"></label><label class="full">Motivo e resultado da reversão<textarea name="motivo" required maxlength="2000" rows="3"></textarea></label></div><p id="rollbackError" class="action-error" role="alert"></p><div class="modal-actions"><button id="cancelRollback" type="button" class="secondary">Cancelar</button><button class="primary" type="submit">Confirmar registro de rollback</button></div></form></dialog>
+
+<dialog id="productionPicker" aria-labelledby="productionPickerTitle"><div class="modal-heading"><div><div class="eyebrow">SELEÇÃO PARA PRODUÇÃO</div><h2 id="productionPickerTitle">Quais testes serão repetidos em PROD?</h2></div><button id="closeProductionPicker" type="button" class="icon-button" aria-label="Fechar seleção de produção">×</button></div><p class="modal-intro">Marque os cenários homologados que entram nesta subida. Os resultados de produção começam pendentes e os registros de HO são preservados.</p><div class="production-picker-filters"><label class="search"><span>⌕</span><input id="productionSearch" type="search" placeholder="Buscar cenário ou issue…" aria-label="Buscar cenários homologados"></label><select id="productionIssueFilter" aria-label="Filtrar issue"></select></div><div id="scenarioHO" class="production-picker-list"></div><div class="production-picker-footer"><div><strong id="productionSelectionCount" aria-live="polite">0 cenários selecionados</strong><p>Após adicionar, clique em “Salvar cenários” no plano de produção.</p></div><div class="production-picker-actions"><button id="cancelProductionPicker" type="button" class="secondary">Cancelar</button><button id="addProductionSelection" type="button" class="primary">Adicionar ao plano de PROD</button></div></div></dialog>
+
+<dialog id="dimsDialog" aria-labelledby="dimsTitle"><div class="modal-heading"><div><div class="eyebrow">MONTADOR DE CENÁRIOS</div><h2 id="dimsTitle">Dimensões</h2></div><button id="closeDims" type="button" class="icon-button" aria-label="Fechar">×</button></div>
+<p class="modal-intro">As dimensões geram o nome do fluxo (Perfil · Linha · Garantia · Variação…). Edite as opções ou crie novas dimensões.</p>
+<div id="dimsBody" class="dims-body"></div>
+<form id="dimAddForm" class="dim-add-dimension"><input name="nome" maxlength="40" placeholder="Nova dimensão (ex.: Produto)"><button type="submit" class="secondary">＋ Adicionar dimensão</button></form>
+<div class="modal-actions"><button id="dismissDims" type="button" class="secondary">Concluir</button></div></dialog>
+
+<div id="toast" role="status" hidden></div></body></html>
