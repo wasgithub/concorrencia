@@ -17,6 +17,7 @@ let plan = structuredClone(
   hoPlans()[issueId] || { cenarios: [], historico: [] },
 );
 let baseline = JSON.stringify(plan.cenarios);
+let savedPlanRevision = JSON.stringify(hoPlans()[issueId] || null);
 let pickerTab = "catalog";
 const selectedCases = new Set();
 const expandedCases = new Set();
@@ -41,14 +42,22 @@ function changed() {
   renderSaveState();
 }
 function save() {
-  if (JSON.stringify(plan.cenarios) !== baseline) changed();
   const all = hoPlans();
+  if (JSON.stringify(all[issueId] || null) !== savedPlanRevision) {
+    const message =
+      "Esta homologação foi alterada em outra aba. Recarregue a página antes de salvar ou aprovar.";
+    $("#hoError").textContent = message;
+    notify(message);
+    return false;
+  }
+  if (JSON.stringify(plan.cenarios) !== baseline) changed();
   all[issueId] = plan;
   if (!saveTestData(hoPlansKey, all)) {
     notify("Não foi possível salvar. Tente novamente.");
     return false;
   }
   baseline = JSON.stringify(plan.cenarios);
+  savedPlanRevision = JSON.stringify(plan);
   renderSaveState();
   return true;
 }

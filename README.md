@@ -12,7 +12,7 @@ Abra `testes.html` para cadastrar casos reutilizáveis, definir o tipo de garant
 
 As trilhas são cadastradas na tela Testes: informe um nome, selecione os cenários e salve. Aplicar uma trilha cria cópias dos casos ativos no plano da issue. Mudanças posteriores no catálogo, trilhas ou etapas não alteram as etapas das novas execuções já criadas.
 
-Na change, abra os cenários e use **Escolher testes de PROD a partir de HO**: apenas cenários OK de issues vinculadas com homologação concluída e aceita ficam disponíveis. Escolha o subconjunto necessário em produção. Resultados, pedido e evidências começam vazios, preservando os registros de HO e a origem issue/cenário. Após o TL confirmar a subida realizada, o PO acessa **Validação de PROD**, conclui os testes e registra o aceite. O TL então encerra a GMUD pelo bloco da agenda. Esse aceite é separado da aprovação para subir. Após a subida, o plano fica somente para consulta; uma nova janela exige reprogramação e nova validação.
+Na change, abra os cenários e use **Escolher testes de PROD a partir de HO**: apenas cenários OK de issues vinculadas com homologação concluída e aceita ficam disponíveis. Escolha o subconjunto necessário em produção. Resultados, pedido e evidências começam vazios, preservando os registros de HO e a origem issue/cenário. Após o TL confirmar a subida realizada, o PO acessa **Validação de PROD**, conclui os testes e registra o aceite. O TL então encerra a GMUD pelo bloco da agenda. Esse aceite é separado da aprovação para subir. Após a subida, o plano fica somente para consulta; uma nova implantação exige outra GMUD e nova validação. Reprogramação da mesma GMUD é permitida antes do deploy.
 
 Os nomes dos validadores são informados manualmente; não há autenticação nem sincronização entre navegadores. A marcação manual “Validado em HO” dos cenários antigos continua disponível, mas não equivale ao aceite formal da issue.
 
@@ -85,9 +85,9 @@ Se a subida tiver sido revertida operacionalmente, use **Registrar rollback** no
 
 1. **TL → Changes / RDM:** cadastre a GMUD, indique TL e PO, vincule issues e selecione os cenários de produção.
 2. **TL → Agenda de changes:** após a aprovação e a execução da subida pelo time responsável, clique em **Subida realizada** e confirme seu nome. Isso marca a GMUD como Executada e libera os testes para o PO. A data agendada não libera a validação automaticamente. Não é necessário registrar solicitação ou início de pipeline.
-3. **PO → Validação de PROD:** acompanhe a aba inicial **Em acompanhamento** e as filas **Aguardando subida**, **Para validar** e **Finalizadas**, com busca, filtro de PO e período. Abra a GMUD, informe seu nome e valide as etapas dos cenários definidos pelo TL. Use **Marcar fluxo como OK** ou registre resultados individuais. Falhas exigem apenas um motivo em texto; não há campos de documento, upload ou evidência nessa tela.
+3. **PO → Validação de PROD:** acompanhe a aba inicial **Aguardando validação** e as filas **Em acompanhamento**, **Aguardando subida** e **Histórico**, com busca, filtro de PO e período. Abra a GMUD, informe seu nome e valide as etapas dos cenários definidos pelo TL. Use **Marcar fluxo como OK** ou registre resultados individuais. Falhas exigem apenas um motivo em texto; não há campos de documento, upload ou evidência nessa tela.
 4. **Salvar andamento** mantém resultados parciais e histórico; **Concluir validação** exige todos os cenários OK ou N/A e registra o aceite com nome e horário. Falhas de negócio ficam pendentes de decisão técnica; rollback continua na tela do TL/time executor.
-5. **TL → Agenda de changes:** após o aceite, clique em **Encerrar GMUD**. Reprogramar uma subida já iniciada preserva os resultados anteriores no histórico e reinicia a execução técnica e a validação de produção para a nova janela.
+5. **TL → Agenda de changes:** após o aceite, clique em **Encerrar GMUD**. Após a subida, uma nova tentativa usa outra GMUD, preservando os resultados anteriores. Reprogramar é permitido antes do deploy.
 
 A primeira versão usa os dados do navegador, sem autenticação ou compartilhamento entre computadores. Abas na mesma origem compartilham os registros; a validação detecta alterações concorrentes para evitar sobrescrever resultados. Testes do fluxo: `node --test tests/*.test.cjs` e, com Playwright, `node tests/po-workflow-browser.cjs`.
 
@@ -134,3 +134,7 @@ A aplicação usa somente HTML, CSS e JavaScript nativo e mantém os dados no lo
 ## Validar preservando os cenários
 
 Abra `limpar-fluxo.html` no mesmo navegador/origem. Ao abrir, a página exclui issues, planos e aceites HO, GMUDs e resultados PROD vinculados, preservando catálogo, trilhas, freezes e configurações-base. Issues e GMUDs de exemplo não serão recriadas automaticamente. Depois cadastre uma nova issue e selecione os cenários existentes para percorrer HO → GMUD → PROD.
+
+## Suíte ponta a ponta
+
+Execute `node tests/run-e2e.cjs` com Playwright disponível no ambiente de testes. O runner não instala dependências, usa servidor local temporário e contextos isolados, e gera relatório em `test-results/e2e/report.md`. Cobertura, correções e instruções: [docs/testes-ponta-a-ponta.md](docs/testes-ponta-a-ponta.md).

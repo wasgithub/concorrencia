@@ -38,8 +38,8 @@ function applyDatesToIssues(change) {
   persistIssues();
 }
 function requireOpen(change) {
-  if (change?.encerramento) {
-    notify("GMUD encerrada: disponível apenas para consulta.");
+  if (changeReadOnly(change)) {
+    notify("GMUD finalizada: disponível apenas para consulta.");
     return false;
   }
   return true;
@@ -75,6 +75,12 @@ function aprovar(change, { por, checklistIncompleto, checklistInfo }) {
 }
 function reprogramar(change, { novaData, novoHorario, motivo, por, nota }) {
   if (!requireOpen(change)) return;
+  if (change.status === "Executada") {
+    notify(
+      "Subida já realizada. Cadastre outra GMUD para uma nova implantação.",
+    );
+    return;
+  }
   invalidateProductionAcceptance(change);
   if (
     change.pipeline ||
@@ -133,6 +139,10 @@ function naoRealizar(change, { motivo, por, nota }) {
 }
 function removeChange(change) {
   if (!requireOpen(change)) return;
+  if (change.status === "Executada") {
+    notify("Subida já realizada. O histórico deve ser preservado.");
+    return;
+  }
   changes = changes.filter((c) => c.id !== change.id);
   const ok = persist();
   render();
@@ -154,6 +164,10 @@ function openCompose({
   presetOwner = null,
 } = {}) {
   if (editing && !requireOpen(editing)) return;
+  if (editing?.status === "Executada") {
+    notify("Subida já realizada. Dados preservados para consulta.");
+    return;
+  }
   composeEditingId = editing ? editing.id : null;
   composeSelected = new Set(
     editing
@@ -617,12 +631,12 @@ $("#closeQuickAction").onclick = () => $("#quickActionDialog").close();
 function renderDetailActions(change, autoAction) {
   const box = $("#detailActions");
   box.replaceChildren();
-  if (change.encerramento) {
+  if (changeReadOnly(change)) {
     box.append(
       element(
         "p",
         "muted-note",
-        "GMUD encerrada. Dados preservados para consulta.",
+        "GMUD finalizada. Dados preservados para consulta.",
       ),
     );
     return;
@@ -648,32 +662,35 @@ function renderDetailActions(change, autoAction) {
     buttons.append(
       actBtn("Encerrar GMUD", "primary", () => open("encerrarGmud")),
     );
-  if (st === "Executada" || st === "Aprovada")
+  if (st === "Executada")
     buttons.append(
       actBtn("Registrar rollback", "secondary danger", () => {
         openScenarios(change);
         openRollback();
       }),
     );
-  buttons.append(
-    actBtn("↻ Reprogramar", "secondary", () => open("reprogramar")),
-  );
+  if (st !== "Executada")
+    buttons.append(
+      actBtn("↻ Reprogramar", "secondary", () => open("reprogramar")),
+    );
   if (approvalPhase || st === "Aprovada")
     buttons.append(
       actBtn("✗ Rejeitar", "secondary danger", () => open("rejeitar")),
     );
-  buttons.append(
-    actBtn("✎ Editar / vincular issues", "secondary", () => {
-      $("#detailDialog").close();
-      openCompose({ editing: change });
-    }),
-  );
-  buttons.append(
-    actBtn("🗑 Excluir", "secondary danger", () => {
-      $("#detailDialog").close();
-      removeChange(change);
-    }),
-  );
+  if (st !== "Executada")
+    buttons.append(
+      actBtn("✎ Editar / vincular issues", "secondary", () => {
+        $("#detailDialog").close();
+        openCompose({ editing: change });
+      }),
+    );
+  if (st !== "Executada")
+    buttons.append(
+      actBtn("🗑 Excluir", "secondary danger", () => {
+        $("#detailDialog").close();
+        removeChange(change);
+      }),
+    );
   box.append(buttons, slot);
   if (autoAction && actionBuilders[autoAction]) open(autoAction);
 }
@@ -1167,14 +1184,14 @@ function render() {
               : "";
     if (next) actions.append(element("small", "change-next", next));
     const management = element("div", "change-management");
-    if (!change.encerramento) {
+    if (!changeReadOnly(change) && change.status !== "Executada") {
       const edit = actBtn("Editar GMUD", "secondary small", () =>
         openCompose({ editing: change }),
       );
       edit.title = "Alterar dados e issues vinculadas";
       management.append(edit);
     }
-    if (!change.encerramento) {
+    if (!changeReadOnly(change) && change.status !== "Executada") {
       const reschedule = actBtn("Reprogramar subida", "secondary small", () =>
         openQuickAction(change, "reprogramar"),
       );
@@ -1332,6 +1349,19 @@ $("#changeForm").onsubmit = (e) => {
     observacao: el.observacao.value.trim(),
     motivo: el.motivo.value.trim(),
   };
+  if (
+    record.rdm &&
+    changes.some(
+      (c) =>
+        c.id !== composeEditingId &&
+        c.rdm?.trim().toLocaleLowerCase("pt-BR") ===
+          record.rdm.toLocaleLowerCase("pt-BR"),
+    )
+  ) {
+    $("#changeError").textContent =
+      "Já existe uma GMUD com esta RDM. Informe outra identificação.";
+    return;
+  }
   if (record.on === "Sim" && !record.justificativaOn) {
     $("#changeError").textContent =
       "Informe a justificativa de participação do ON.";
@@ -1489,12 +1519,14 @@ function openChecklist(change) {
   checklistDraft = { ...(change.checklist || {}) };
   $("#checklistTitle").textContent =
     `Checklist · ${change.rdm || "RDM sem número"}`;
-  $("#saveChecklist").hidden = !!change.encerramento;
-  $("#manageTemplate").hidden = !!change.encerramento;
+  $("#saveChecklist").hidden =
+    changeReadOnly(change) || change.status === "Executada";
+  $("#manageTemplate").hidden =
+    changeReadOnly(change) || change.status === "Executada";
   $("#checklistSub").textContent =
     `${change.equipe} · Subida ${date(change.dataProducao)}`;
   renderChecklistForm();
-  if (change.encerramento)
+  if (changeReadOnly(change) || change.status === "Executada")
     for (const control of $("#checklistBody").querySelectorAll(
       "input,button,select,textarea",
     ))
@@ -1595,7 +1627,13 @@ function renderChecklistForm() {
 $("#checklistOnlyPending").addEventListener("change", renderChecklistForm);
 $("#saveChecklist").onclick = () => {
   const change = changes.find((c) => c.id === checklistChangeId);
-  if (!change || !requireOpen(change) || !changesAreFresh()) return;
+  if (
+    !change ||
+    !requireOpen(change) ||
+    change.status === "Executada" ||
+    !changesAreFresh()
+  )
+    return;
   if (JSON.stringify(change.checklist) !== JSON.stringify(checklistDraft))
     resetApproval(change, "Checklist alterado.");
   change.checklist = { ...checklistDraft };
@@ -1759,7 +1797,7 @@ let scenarioChangeId = null,
   productionEvents = [];
 function productionPlanLocked(change) {
   return (
-    !!change?.encerramento ||
+    changeReadOnly(change) ||
     !!change?.aceiteProducao ||
     (change?.status === "Executada" && (change.cenarios || []).length > 0)
   );
@@ -1785,7 +1823,8 @@ function openScenarios(change) {
   $("#saveScenario").hidden = locked;
   $("#scenarioDialog .scenario-toolbar").hidden = locked;
   $("#scenarioLink").closest("label").hidden = true;
-  $("#openRollback").hidden = !!change.encerramento;
+  $("#openRollback").hidden =
+    changeReadOnly(change) || change.status !== "Executada";
   $("#scenarioTitle").textContent =
     `Testes de PROD · ${change.rdm || "RDM sem número"}`;
   $("#scenarioSub").textContent =
@@ -2492,14 +2531,8 @@ function renderProductionAcceptance(box, change) {
 
 function openRollback() {
   const change = changes.find((c) => c.id === scenarioChangeId);
-  if (
-    !change ||
-    change.encerramento ||
-    !["Aprovada", "Executada"].includes(change.status)
-  ) {
-    notify(
-      "O rollback pode ser registrado para uma change aprovada ou executada.",
-    );
+  if (!change || changeReadOnly(change) || change.status !== "Executada") {
+    notify("O rollback só pode ser registrado após a subida realizada.");
     return;
   }
   const form = $("#rollbackForm");
@@ -2538,7 +2571,7 @@ $("#rollbackForm").onsubmit = (e) => {
     fields = e.target.elements,
     por = fields.por.value.trim(),
     motivo = fields.motivo.value.trim();
-  if (!change || !["Aprovada", "Executada"].includes(change.status)) {
+  if (!change || change.status !== "Executada") {
     $("#rollbackError").textContent =
       "Esta change não está em uma fase que permite registrar rollback.";
     return;

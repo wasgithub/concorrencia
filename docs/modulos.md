@@ -60,4 +60,4 @@ Ordem sugerida de implementação: features → catálogo → HO → GMUD/aprova
 
 ## Preparação MongoDB
 
-O desenho de persistência e o roteiro para portar os módulos estão em [IMPLEMENTAR_NO_SISTEMA.md](../IMPLEMENTAR_NO_SISTEMA.md) e [integration/mongodb/model.md](../integration/mongodb/model.md). Eles descrevem a arquitetura futura; não alteram os dados locais ou conectam este protótipo a um banco. No sistema real, após deploy/rollback, uma nova tentativa será outra GMUD; a reprogramação do protótipo após execução não deve ser copiada para sobrescrever a tentativa anterior.
+O desenho de persistência e o roteiro para portar os módulos estão em [IMPLEMENTAR_NO_SISTEMA.md](../IMPLEMENTAR_NO_SISTEMA.md) e [integration/mongodb/model.md](../integration/mongodb/model.md). Eles descrevem a arquitetura futura; não alteram os dados locais ou conectam este protótipo a um banco. No protótipo e no sistema real, após deploy/rollback, uma nova tentativa usa outra GMUD; reprogramação da mesma tentativa é permitida antes do deploy.

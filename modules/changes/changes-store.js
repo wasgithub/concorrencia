@@ -435,6 +435,7 @@ function activeChangeOf(issueId, exceptId) {
     (c) =>
       c.id !== exceptId &&
       !isFinal(c.status) &&
+      !c.encerramento &&
       (c.issueIds || []).includes(issueId),
   );
 }
@@ -684,7 +685,10 @@ function seedChanges() {
   return out;
 }
 if (changes === null) {
-  changes = localStorage.getItem("issueflow.demo.workflowSeeds.v1") === "false" ? [] : seedChanges();
+  changes =
+    localStorage.getItem("issueflow.demo.workflowSeeds.v1") === "false"
+      ? []
+      : seedChanges();
   persist();
 }
 
@@ -740,7 +744,10 @@ function seedFreezes() {
   ];
 }
 if (freezes === null) {
-  freezes = localStorage.getItem("issueflow.demo.workflowSeeds.v1") === "false" ? [] : seedFreezes();
+  freezes =
+    localStorage.getItem("issueflow.demo.workflowSeeds.v1") === "false"
+      ? []
+      : seedFreezes();
   persistFreezes();
 }
 function freezesFor(dataProd, componentes) {
@@ -758,4 +765,8 @@ function freezesFor(dataProd, componentes) {
 }
 function freezeNames(dataProd, componentes) {
   return freezesFor(dataProd, componentes).map((f) => f.nome);
+}
+
+function changeReadOnly(change) {
+  return !!change?.encerramento || change?.status === "Rollback realizado";
 }

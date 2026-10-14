@@ -39,15 +39,17 @@ function changeForIssue(id) {
   return changeMap.get(id) || null;
 }
 function status(issue) {
+  const linked = changeForIssue(issue.idIssue);
+  if (linked?.status === "Rollback realizado") return "Rollback realizado";
+  if (linked?.status === "Executada" || linked?.encerramento)
+    return "Em produção";
   const today = new Date();
   const now = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, "0")}-${String(today.getDate()).padStart(2, "0")}`;
-  return issue.dataProducao <= now
-    ? "Em produção"
-    : issue.dataInicialHomologacao > now
-      ? "Planejada"
-      : issue.dataFinalHomologacao < now
-        ? "Aguardando produção"
-        : "Em homologação";
+  return issue.dataInicialHomologacao > now
+    ? "Planejada"
+    : issue.dataFinalHomologacao < now
+      ? "Aguardando produção"
+      : "Em homologação";
 }
 function cell(tr, value, className) {
   const td = document.createElement("td");
@@ -188,6 +190,7 @@ function render() {
         "Em homologação": "blue",
         Planejada: "gray",
         "Aguardando produção": "orange",
+        "Rollback realizado": "red",
       }[st];
     sb.textContent = st;
     sc.append(sb);
