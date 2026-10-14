@@ -1,0 +1,93 @@
+{
+  "name": "delivery-management-reference",
+  "version": 1,
+  "backend": "use-host-system",
+  "database": "MongoDB",
+  "entryGuide": "IMPLEMENTAR_NO_SISTEMA.md",
+  "phases": [
+    {
+      "id": "01-features",
+      "name": "Features e planejamento",
+      "modules": ["features", "planning"],
+      "dependsOn": [],
+      "status": "pending",
+      "acceptance": [
+        "Cadastro e edição da feature/issue",
+        "Consulta paginada por squad, período e componente",
+        "ID externo único no workspace e referências a equipes existentes"
+      ]
+    },
+    {
+      "id": "02-catalog",
+      "name": "Catálogo e trilhas",
+      "modules": ["test-catalog"],
+      "dependsOn": ["01-features"],
+      "status": "pending",
+      "acceptance": [
+        "Cenários e etapas com IDs estáveis",
+        "Trilhas e vínculo explícito com componentes",
+        "Snapshots não são atualizados por alterações posteriores do catálogo"
+      ]
+    },
+    {
+      "id": "03-homologation",
+      "name": "Homologação e aceite",
+      "modules": ["homologation"],
+      "dependsOn": ["02-catalog"],
+      "status": "pending",
+      "acceptance": [
+        "Fila de HO por situação",
+        "Execução por etapa e motivo de falha",
+        "Aceite de PO apenas com plano não vazio concluído; alteração posterior invalida aceite"
+      ]
+    },
+    {
+      "id": "04-changes",
+      "name": "GMUD, checklist e aprovação",
+      "modules": ["changes"],
+      "dependsOn": ["03-homologation"],
+      "status": "pending",
+      "acceptance": [
+        "Criar e vincular features sem outra GMUD ativa",
+        "Checklist considera resposta Não válida; exceção incompleta explícita e auditada",
+        "Plano de PROD baseado em HO aceita; aprovação e revisão verificadas no servidor"
+      ]
+    },
+    {
+      "id": "05-production",
+      "name": "Subida e validação de produção",
+      "modules": ["production", "changes"],
+      "dependsOn": ["04-changes"],
+      "status": "pending",
+      "acceptance": [
+        "TL confirma implantação externa com releaseRef",
+        "PO valida etapas e registra motivos; sem upload de documentos",
+        "Encerrar apenas após aceite PROD; rollback preserva resultados; nova versão gera nova GMUD"
+      ]
+    },
+    {
+      "id": "06-calendars",
+      "name": "Calendários e modais",
+      "modules": ["planning", "changes"],
+      "dependsOn": ["05-production"],
+      "status": "pending",
+      "acceptance": [
+        "Consultas sobre os mesmos documentos; nenhuma coleção de timeline",
+        "Dia da implantação colorido conforme status",
+        "Modal compartilhada para consulta/aprovação e link claro para validar PROD"
+      ]
+    },
+    {
+      "id": "07-migration",
+      "name": "Migração e regressão",
+      "modules": ["demo"],
+      "dependsOn": ["06-calendars"],
+      "status": "pending",
+      "acceptance": [
+        "Importação explícita idempotente; sem seed automático",
+        "Revisar exemplos inconsistentes; não inventar aceites",
+        "Fluxo ponta a ponta com sucesso, falha, rollback e nova GMUD da mesma feature"
+      ]
+    }
+  ]
+}

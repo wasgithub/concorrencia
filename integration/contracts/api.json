@@ -1,0 +1,552 @@
+{
+  "contractVersion": 1,
+  "status": "proposal-not-implemented",
+  "basePath": "/delivery",
+  "authorization": "existing-host-session",
+  "pagination": {
+    "limitDefault": 30,
+    "limitMaximum": 100,
+    "cursor": "opaque"
+  },
+  "errorShape": {
+    "code": "string",
+    "message": "string",
+    "details": {},
+    "currentVersion": "optional-integer"
+  },
+  "operations": [
+    {
+      "id": "listFeatures",
+      "module": "features",
+      "method": "GET",
+      "path": "/delivery/features",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista paginada por squad, componente, período e busca",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "createFeature",
+      "module": "features",
+      "method": "POST",
+      "path": "/delivery/features",
+      "roles": ["TL"],
+      "purpose": "Cria registro de entrega",
+      "body": {
+        "externalId": "string",
+        "title": "string",
+        "teamId": "host-team-id",
+        "components": ["string"],
+        "environment": "ho|ho2|ephemeral",
+        "hoStartDate": "YYYY-MM-DD",
+        "hoEndDate": "YYYY-MM-DD",
+        "plannedProductionDate": "YYYY-MM-DD"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "editFeature",
+      "module": "features",
+      "method": "PATCH",
+      "path": "/delivery/features/{id}",
+      "roles": ["TL"],
+      "purpose": "Edita campos permitidos; data de GMUD vinculada só pelo comando da GMUD",
+      "body": {
+        "expectedVersion": "integer",
+        "patch": "allowed-feature-fields"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listScenarios",
+      "module": "test-catalog",
+      "method": "GET",
+      "path": "/delivery/scenarios",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Filtra PF/PJ, linha, garantia, componente, cobertura e busca",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "saveScenario",
+      "module": "test-catalog",
+      "method": "PUT",
+      "path": "/delivery/scenarios/{id}",
+      "roles": ["QA", "TL"],
+      "purpose": "Altera caso reutilizável sem mudar snapshots antigos",
+      "body": {
+        "expectedVersion": "integer",
+        "scenario": "scenario-definition"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "createScenario",
+      "module": "test-catalog",
+      "method": "POST",
+      "path": "/delivery/scenarios",
+      "roles": ["QA", "TL"],
+      "purpose": "Cria caso reutilizável",
+      "body": {
+        "scenario": "scenario-definition"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listTrails",
+      "module": "test-catalog",
+      "method": "GET",
+      "path": "/delivery/trails",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista trilhas e referências a casos",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "saveTrail",
+      "module": "test-catalog",
+      "method": "PUT",
+      "path": "/delivery/trails/{id}",
+      "roles": ["QA", "TL"],
+      "purpose": "Altera trilha; verifica casos no mesmo workspace",
+      "body": {
+        "expectedVersion": "integer",
+        "name": "string",
+        "scenarioIds": ["objectId-string"]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "createTrail",
+      "module": "test-catalog",
+      "method": "POST",
+      "path": "/delivery/trails",
+      "roles": ["QA", "TL"],
+      "purpose": "Cria trilha",
+      "body": {
+        "name": "string",
+        "scenarioIds": ["objectId-string"]
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listDefinitions",
+      "module": "test-catalog",
+      "method": "GET",
+      "path": "/delivery/definitions",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista fluxo, dimensões e checklist por kind",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "saveDefinition",
+      "module": "test-catalog",
+      "method": "PUT",
+      "path": "/delivery/definitions/{id}",
+      "roles": ["QA", "TL"],
+      "purpose": "Versiona configuração compartilhada; checklist só TL",
+      "body": {
+        "expectedVersion": "integer",
+        "items": ["definition-item"]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "createDefinition",
+      "module": "test-catalog",
+      "method": "POST",
+      "path": "/delivery/definitions",
+      "roles": ["QA", "TL"],
+      "purpose": "Cria definição conforme permissões por kind",
+      "body": {
+        "kind": "test_flow|scenario_dimensions|change_checklist",
+        "name": "string",
+        "items": ["definition-item"]
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listHOQueue",
+      "module": "homologation",
+      "method": "GET",
+      "path": "/delivery/ho-plans",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista por estado, feature e squad; inclui features sem plano",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "getHOPlan",
+      "module": "homologation",
+      "method": "GET",
+      "path": "/delivery/features/{id}/ho-plan",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Plano corrente e revisão; ausência retorna plano vazio na projeção",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "createHOPlan",
+      "module": "homologation",
+      "method": "POST",
+      "path": "/delivery/features/{id}/ho-plan",
+      "roles": ["QA", "TL"],
+      "purpose": "Cria plano corrente único, revision=0",
+      "body": {
+        "scenarioIds": ["objectId-string"],
+        "trailIds": ["objectId-string"]
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "selectHOScenarios",
+      "module": "homologation",
+      "method": "POST",
+      "path": "/delivery/ho-plans/{id}/select-scenarios",
+      "roles": ["QA", "TL"],
+      "purpose": "Servidor cria snapshots e invalida aceite",
+      "body": {
+        "expectedVersion": "integer",
+        "scenarioIds": ["objectId-string"],
+        "trailIds": ["objectId-string"],
+        "removeExecutionIds": ["string"]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "saveHOResults",
+      "module": "homologation",
+      "method": "POST",
+      "path": "/delivery/ho-plans/{id}/results",
+      "roles": ["QA", "PO", "TL"],
+      "purpose": "Resultados por IDs de execução e etapa, motivos obrigatórios para falhas",
+      "body": {
+        "expectedVersion": "integer",
+        "results": [
+          {
+            "executionId": "string",
+            "stepId": "string",
+            "result": "pending|ok|failed|not_applicable",
+            "failureReason": "string-if-failed"
+          }
+        ]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "acceptHO",
+      "module": "homologation",
+      "method": "POST",
+      "path": "/delivery/ho-plans/{id}/accept",
+      "roles": ["PO"],
+      "purpose": "Aceita plano não vazio, com todas etapas concluídas",
+      "body": {
+        "expectedVersion": "integer",
+        "note": "string"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listChanges",
+      "module": "changes",
+      "method": "GET",
+      "path": "/delivery/changes",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista calendário/gestão/fila PROD com filtros e paginação",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "getChange",
+      "module": "changes",
+      "method": "GET",
+      "path": "/delivery/changes/{id}",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Consulta completa para tela e modal",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "createChange",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes",
+      "roles": ["TL"],
+      "purpose": "Cria tentativa e adquire vínculos de features",
+      "body": {
+        "rdm": "optional-real-string",
+        "featureIds": ["objectId-string"],
+        "teamId": "host-team-id",
+        "tlId": "host-user-id",
+        "poId": "host-user-id",
+        "window": "date,startAt,endAt,timeZone",
+        "previousChangeId": "optional-objectId-string"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "editChange",
+      "module": "changes",
+      "method": "PATCH",
+      "path": "/delivery/changes/{id}",
+      "roles": ["TL"],
+      "purpose": "Campos permitidos; plano/janela/vínculos invalidam aprovação; texto simples não",
+      "body": {
+        "expectedVersion": "integer",
+        "patch": "allowed-change-fields"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "saveChecklist",
+      "module": "changes",
+      "method": "PUT",
+      "path": "/delivery/changes/{id}/checklist",
+      "roles": ["TL"],
+      "purpose": "Salva respostas no snapshot; Não conta como resposta válida",
+      "body": {
+        "expectedVersion": "integer",
+        "answers": [
+          {
+            "itemId": "string",
+            "answer": "string|number|boolean|null"
+          }
+        ]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "selectProdScenarios",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/production-plan",
+      "roles": ["TL"],
+      "purpose": "Copia cenários completos de HO aceita e ainda válida",
+      "body": {
+        "expectedVersion": "integer",
+        "sources": [
+          {
+            "hoPlanId": "objectId-string",
+            "hoRevision": "integer",
+            "executionId": "string"
+          }
+        ]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "approveChange",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/approve",
+      "roles": ["MANAGER"],
+      "purpose": "Verifica HO, plano PROD e checklist no servidor, registra referências de revisão",
+      "body": {
+        "expectedVersion": "integer",
+        "incompleteChecklistException": "optional reason + pendingItemIds"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "rescheduleChange",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/reschedule",
+      "roles": ["TL"],
+      "purpose": "Antes do deploy altera janela, invalida aprovação e atualiza projeção das features",
+      "body": {
+        "expectedVersion": "integer",
+        "window": "date,startAt,endAt,timeZone",
+        "reason": "string"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "rejectChange",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/reject",
+      "roles": ["MANAGER"],
+      "purpose": "Rejeita subida e libera vínculos, preservando histórico",
+      "body": {
+        "expectedVersion": "integer",
+        "reason": "string"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "confirmDeployment",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/confirm-deployment",
+      "roles": ["TL"],
+      "purpose": "Registra implantação externa realizada; exige aprovação válida, release e HO ainda válida",
+      "body": {
+        "expectedVersion": "integer",
+        "releaseRef": "string",
+        "occurredAt": "ISO8601"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "notPerformed",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/not-performed",
+      "roles": ["TL"],
+      "purpose": "Registra implantação não realizada e libera vínculos",
+      "body": {
+        "expectedVersion": "integer",
+        "reason": "string"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "saveProdResults",
+      "module": "production",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/production-results",
+      "roles": ["PO"],
+      "purpose": "Salva resultados sem reescrever plano; só após deploy e antes do aceite",
+      "body": {
+        "expectedVersion": "integer",
+        "results": [
+          {
+            "executionId": "string",
+            "stepId": "string",
+            "result": "pending|ok|failed|not_applicable",
+            "failureReason": "string-if-failed"
+          }
+        ]
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "acceptProduction",
+      "module": "production",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/accept-production",
+      "roles": ["PO"],
+      "purpose": "Aceita todos os cenários concluídos OK/N/A, plano não vazio",
+      "body": {
+        "expectedVersion": "integer"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "closeChange",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/close",
+      "roles": ["TL"],
+      "purpose": "Encerra apenas com deploy e aceite PROD; libera vínculos e trava alterações",
+      "body": {
+        "expectedVersion": "integer"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "registerRollback",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/changes/{id}/rollback",
+      "roles": ["TL"],
+      "purpose": "Preserva resultados e registra reversão externa, etapa e motivo",
+      "body": {
+        "expectedVersion": "integer",
+        "reason": "string",
+        "executionId": "optional-string",
+        "stepId": "optional-string",
+        "occurredAt": "ISO8601"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "listFreezes",
+      "module": "changes",
+      "method": "GET",
+      "path": "/delivery/freezes",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Lista bloqueios por janela/componente",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "createFreeze",
+      "module": "changes",
+      "method": "POST",
+      "path": "/delivery/freezes",
+      "roles": ["TL", "MANAGER"],
+      "purpose": "Cria restrição de implantação",
+      "body": {
+        "name": "string",
+        "startDate": "YYYY-MM-DD",
+        "endDate": "YYYY-MM-DD",
+        "scope": "all|components",
+        "components": ["string"]
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "editFreeze",
+      "module": "changes",
+      "method": "PUT",
+      "path": "/delivery/freezes/{id}",
+      "roles": ["TL", "MANAGER"],
+      "purpose": "Atualiza freeze versionado",
+      "body": {
+        "expectedVersion": "integer",
+        "patch": "allowed-freeze-fields"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true
+    },
+    {
+      "id": "history",
+      "module": "audit",
+      "method": "GET",
+      "path": "/delivery/history",
+      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "purpose": "Histórico append-only por entidade, com cursor e limite",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    }
+  ]
+}

@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IssueFlow · Exemplos do fluxo</title>
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <script src="modules/features/features-store.js" defer></script>
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="shared/testing/execution.js" defer></script>
+    <script src="modules/homologation/plans-store.js" defer></script>
+    <script src="modules/demo/examples-page.js" defer></script>
+  </head>
+  <body>
+    <main style="max-width: 1000px">
+      <a
+        href="timeline.html"
+        class="secondary"
+        style="display: inline-block; text-decoration: none"
+        >← Calendário</a
+      >
+      <div class="page-heading" style="margin: 28px 0">
+        <div>
+          <div class="eyebrow">VALIDAÇÃO DO FLUXO</div>
+          <h1>Exemplos de ponta a ponta</h1>
+          <p>
+            Cadastros criados e percorridos pelas telas: issue, HO, GMUD,
+            aprovação, subida e validação em PROD.
+          </p>
+        </div>
+      </div>
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Exemplos de cada etapa para consultar</h2>
+            <p>
+              Carregue os exemplos neste navegador. Seus registros existentes
+              serão preservados; exemplos já presentes não serão substituídos.
+            </p>
+          </div>
+        </div>
+        <div style="padding: 0 23px 23px">
+          <button id="loadExamples" class="primary">
+            Carregar exemplos neste navegador
+          </button>
+          <p id="exampleStatus" role="status" style="margin-top: 15px"></p>
+          <div
+            id="exampleLinks"
+            style="display: grid; gap: 16px; margin-top: 20px"
+          ></div>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>

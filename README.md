@@ -8,7 +8,7 @@ Abra `changes.html` para compor uma change com issues de uma ou mais squads, def
 
 Abra `testes.html` para cadastrar casos reutilizáveis, definir o tipo de garantia (automática ou manual), cobertura e etapa final do teste, e editar as etapas do fluxo e as dimensões do montador de nomes. Na change, use “Selecionar do catálogo” ou monte um cenário avulso para escolher os testes daquela implantação. O plano mantém uma cópia dos cenários e do fluxo. Changes é usada para selecionar os testes; os resultados por etapa são preenchidos pelo PO em Validação de PROD, sem documentos ou evidências.
 
-`tests-store.js` compartilha catálogo, etapas e dimensões entre as páginas de Changes e Testes. Os dados ficam no localStorage deste navegador. Na tela Issues, clique em **Testes de homologação** na issue. Clique em **Selecionar cenários** para abrir as abas **Sugeridos**, **Catálogo** e **Trilhas**. Busque e filtre por cobertura ou garantia, confira o contador de seleção e clique em **Adicionar ao plano** (ou **Adicionar trilha**). A seleção é mantida entre filtros e abas; cancelar não altera o plano. Use **Cenário avulso** para um teste específico. Abra os cenários do plano para informar resultados por etapa, responsável, pedido e evidências; clique em **Salvar plano e execução**. Para aprovar, o PM/PO informa nome e parecer; todos os cenários precisam estar OK ou N/A. Alterações posteriores invalidam o aceite e ficam registradas no histórico.
+`modules/test-catalog/catalog-store.js` e `shared/testing/execution.js` compartilha catálogo, etapas e dimensões entre as páginas de Changes e Testes. Os dados ficam no localStorage deste navegador. Na tela Issues, clique em **Testes de homologação** na issue. Clique em **Selecionar cenários** para abrir as abas **Sugeridos**, **Catálogo** e **Trilhas**. Busque e filtre por cobertura ou garantia, confira o contador de seleção e clique em **Adicionar ao plano** (ou **Adicionar trilha**). A seleção é mantida entre filtros e abas; cancelar não altera o plano. Use **Cenário avulso** para um teste específico. Abra os cenários do plano para informar resultados por etapa, responsável, pedido e evidências; clique em **Salvar plano e execução**. Para aprovar, o PM/PO informa nome e parecer; todos os cenários precisam estar OK ou N/A. Alterações posteriores invalidam o aceite e ficam registradas no histórico.
 
 As trilhas são cadastradas na tela Testes: informe um nome, selecione os cenários e salve. Aplicar uma trilha cria cópias dos casos ativos no plano da issue. Mudanças posteriores no catálogo, trilhas ou etapas não alteram as etapas das novas execuções já criadas.
 
@@ -16,7 +16,7 @@ Na change, abra os cenários e use **Escolher testes de PROD a partir de HO**: a
 
 Os nomes dos validadores são informados manualmente; não há autenticação nem sincronização entre navegadores. A marcação manual “Validado em HO” dos cenários antigos continua disponível, mas não equivale ao aceite formal da issue.
 
-Cadastro de issues, busca, filtros, indicadores, botão para ver componentes, alertas de concorrência e exportação JSON. Registros salvos no localStorage. `issues.json` contém 20 exemplos; `app.js` inclui a mesma carga para funcionar sem servidor. Novos exemplos são adicionados aos registros locais sem substituir cadastros existentes.
+Cadastro de issues, busca, filtros, indicadores, botão para ver componentes, alertas de concorrência e exportação JSON. Registros salvos no localStorage. `modules/demo/issues.json` contém 20 exemplos; `modules/features/features-store.js` inclui a mesma carga para funcionar sem servidor. Novos exemplos são adicionados aos registros locais sem substituir cadastros existentes.
 
 ## Ambientes e concorrência
 
@@ -34,7 +34,7 @@ A exportação baixa os dados atuais, sem alterar automaticamente o JSON origina
 
 Abra `timeline.html` ou use o menu Calendário. A visão mensal mostra períodos de homologação em barras, hachuras nos dias concorrentes e marcadores verdes de produção. Use os controles de mês e os filtros de ambiente, squad, componente ou concorrências. Clique nas issues, barras, marcadores ou cartões de concorrência para ver componentes, datas completas e a sugestão de Homologação 2. O botão para aplicar a sugestão atualiza o registro no navegador e recalcula a visão. Os indicadores resumem o mês inteiro; os filtros afetam as linhas e os cartões.
 
-`issues-store.js` contém os exemplos e as regras compartilhadas pelas duas telas.
+`modules/features/features-store.js` contém os exemplos e as regras compartilhadas pelas duas telas.
 
 ## Datas de implantação
 
@@ -94,9 +94,43 @@ A primeira versão usa os dados do navegador, sem autenticação ou compartilham
 ## Regras do fluxo simplificado
 
 - A aprovação e a confirmação da subida exigem HO aceita para todas as issues vinculadas e ao menos um cenário de PROD. Casos avulsos exigem confirmação de validação em HO. A origem dos cenários importados é conferida novamente.
-- Aprovação mostra o resumo do checklist, da HO e do plano. Checklist respondido não significa aprovado: respostas Não aparecem como itens de atenção. Aprovar com pendências ou atenção exige confirmação explícita e registra a exceção no histórico.
+- Aprovação mostra o resumo do checklist, da HO e do plano. Sim, Não e N/A contam igualmente como respostas e ficam verdes. Apenas perguntas sem resposta ficam pendentes. Aprovar com pendências exige confirmação explícita e registra a exceção no histórico.
 - Alterações na janela, nas issues, no checklist ou no plano de uma GMUD aprovada exigem nova aprovação. Ajustes de texto preservam a aprovação. Mudanças em HO após aprovar são detectadas ao confirmar a subida e exigem revisão.
 - Changes seleciona o plano; Validação de PROD executa os testes. Após a subida, o plano não pode ser editado. O PO pode corrigir e retestar falhas antes do aceite; o histórico preserva o motivo. O TL pode registrar rollback diretamente na agenda quando há falha em PROD.
 - GMUD encerrada é somente consulta: não permite editar, reprogramar, excluir, mudar checklist, alterar plano ou registrar rollback. Para outra implantação, cadastre outra GMUD.
 
 Validação adicional das regras: `node tests/flow-guards-browser.cjs` (Playwright).
+
+## Exemplos percorridos ponta a ponta
+
+Abra `exemplos.html` e clique em **Carregar exemplos neste navegador** para consultar as GMUDs DEMO-SUCESSO, DEMO-REPLANEJADA e DEMO-ROLLBACK. Os exemplos foram criados pelas telas com `tests/full-flow-browser.cjs`, que exporta `modules/demo/examples.json`. A importação preserva registros existentes e não substitui exemplos já carregados. O passo a passo e o gap de datas corrigido estão em `docs/validacao-fluxo.md`.
+
+## Timeline gerencial de GMUDs
+
+Abra `gmud-timeline.html` pelo menu **Timeline de GMUDs** ou pelo botão na agenda de Changes. A tela lê os mesmos registros de GMUD, sem duplicar cadastros. Cada tentativa ocupa uma linha na data programada, com horários, status, pendência de PROD e indicação de reprogramações. Os cartões abrem os detalhes existentes em Changes para consultar checklist, cenários e histórico. Os filtros combinam mês, equipe, situação e busca por RDM, issue, TL ou PO. A timeline de issues continua disponível para o planejamento de homologação e concorrências.
+
+Teste de navegador: `node tests/gmud-timeline-browser.cjs` com Playwright configurado.
+
+Registros antigos com deploy confirmado e nenhum cenário de PROD mostram **Plano de PROD não cadastrado**. O TL pode completar o plano uma única vez em Changes, usando cenários com HO válida; a inclusão fica no histórico, inicia os resultados como pendentes e libera o PO. Planos já definidos após deploy continuam somente para consulta. A timeline gerencial mostra equipe e TL ao lado da GMUD, com barras compactas e progresso de PROD.
+
+### Navegação operacional
+
+O menu comum a PO, TL, gerente e QA agrupa Planejamento (Issues e Calendário de homologação), Qualidade (Cenários e trilhas e Validação de homologação) e Produção (Gestão de GMUDs, Calendário de implantações e Validação de produção). A fila `validacao-ho.html` reúne as issues sem plano, em teste, aguardando aceite e aprovadas, e abre os planos existentes por issue. Os grupos orientam a navegação; não representam permissões de acesso.
+
+Todas essas entradas ficam dentro do módulo expansível **Gestão de entregas**, deixando o nível principal do menu disponível para outros módulos do sistema. O módulo abre expandido nas suas próprias telas.
+
+## Organização por responsabilidade
+
+Veja [docs/modulos.md](docs/modulos.md) para a estrutura, contratos dos dados, dependências, ordem de integração e fluxo completo de cadastro da feature até produção. Os HTMLs da raiz são entradas públicas; implementações ficam em `modules/` e infraestrutura comum em `shared/`.
+
+## Implementar no sistema real com MongoDB
+
+Comece por [IMPLEMENTAR_NO_SISTEMA.md](IMPLEMENTAR_NO_SISTEMA.md), que inclui uma solicitação pronta para usar após copiar esta pasta para o repositório real. A pasta [integration/](integration/README.md) contém o modelo de coleções, validators BSON, índices, contratos de API e fases por responsabilidade. A implementação MongoDB ainda está pendente; o protótipo continua no navegador.
+
+## Executar o protótipo
+
+A aplicação usa somente HTML, CSS e JavaScript nativo e mantém os dados no localStorage. Não exige npm install, build, framework ou backend MongoDB. A pasta integration é referência para implementação futura no sistema real. Os testes de navegador são ferramentas de desenvolvimento e não são carregados pela aplicação.
+
+## Validar preservando os cenários
+
+Abra `limpar-fluxo.html` no mesmo navegador/origem. Ao abrir, a página exclui issues, planos e aceites HO, GMUDs e resultados PROD vinculados, preservando catálogo, trilhas, freezes e configurações-base. Issues e GMUDs de exemplo não serão recriadas automaticamente. Depois cadastre uma nova issue e selecione os cenários existentes para percorrer HO → GMUD → PROD.

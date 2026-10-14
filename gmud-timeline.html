@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IssueFlow · Calendário de implantações</title>
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <link rel="stylesheet" href="modules/changes/calendar.css" />
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="shared/testing/execution.js" defer></script>
+    <script src="modules/homologation/plans-store.js" defer></script>
+    <script src="modules/production/production-domain.js" defer></script>
+    <script src="modules/changes/calendar-page.js" defer></script>
+    <script src="shared/ui/navigation.js" defer></script>
+  </head>
+  <body class="gmud-page">
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-icon">i<span>f</span></span
+        >IssueFlow</a
+      >
+      <div class="workspace">WORKSPACE<span>Gestão de operações</span></div>
+      <nav class="operation-nav" aria-label="Menu principal"></nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Ambiente de demonstração<small
+          >Dados salvos neste navegador</small
+        >
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <span>Workspace / <strong>Calendário de implantações</strong></span
+        ><span class="demo">DEMO</span>
+      </header>
+      <main>
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">VISÃO GERENCIAL</div>
+            <h1>Calendário de implantações</h1>
+            <p>
+              Agenda das implantações, resultados e validação de produção. Cada
+              GMUD representa uma tentativa de subida.
+            </p>
+          </div>
+          <a class="secondary" href="changes.html">Gerenciar GMUDs ↗</a>
+        </div>
+        <section class="stats" aria-label="Resumo do período">
+          <article>
+            <span>GMUDs no filtro</span><strong id="gmudTotal">0</strong
+            ><small>Implantações no mês selecionado</small>
+          </article>
+          <article>
+            <span>Aguardando aprovação</span><strong id="gmudApproval">0</strong
+            ><small>Autorizações pendentes</small>
+          </article>
+          <article>
+            <span>Validação de PROD</span><strong id="gmudValidation">0</strong
+            ><small>Subidas com aceite pendente</small>
+          </article>
+          <article>
+            <span>Finalizadas com sucesso</span
+            ><strong id="gmudSuccess">0</strong
+            ><small>Encerradas pelo TL</small>
+          </article>
+        </section>
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Agenda de implantação</h2>
+              <p>
+                Clique no dia colorido para abrir a GMUD. As pendentes abrem a
+                aprovação.
+              </p>
+            </div>
+            <div class="gmud-month">
+              <button
+                id="gmudPrevious"
+                class="icon-button"
+                aria-label="Mês anterior"
+              >
+                ‹</button
+              ><input
+                id="gmudMonth"
+                type="month"
+                aria-label="Mês da agenda"
+              /><button
+                id="gmudNext"
+                class="icon-button"
+                aria-label="Próximo mês"
+              >
+                ›</button
+              ><button id="gmudToday" class="secondary">Hoje</button>
+            </div>
+          </div>
+          <div class="filters">
+            <label class="search"
+              ><span>⌕</span
+              ><input
+                id="gmudSearch"
+                type="search"
+                aria-label="Buscar GMUD ou issue"
+                placeholder="Buscar RDM, issue, TL ou PO…" /></label
+            ><select id="gmudTeam" aria-label="Equipe">
+              <option value="">Todas as equipes</option></select
+            ><select id="gmudStatus" aria-label="Situação">
+              <option value="">Todas as situações</option>
+              <option value="approval">Aguardando aprovação</option>
+              <option value="approved">Aprovada</option>
+              <option value="deployed">Deploy realizado</option>
+              <option value="validated">PROD validado</option>
+              <option value="success">Finalizada com sucesso</option>
+              <option value="rollback">Rollback realizado</option>
+              <option value="rejected">Rejeitada</option>
+              <option value="cancelled">Não realizada</option>
+            </select>
+          </div>
+          <div class="gmud-legend">
+            <span class="badge orange">Aguardando aprovação</span
+            ><span class="badge blue">Aprovada</span
+            ><span class="badge green">Deploy / sucesso</span
+            ><span class="badge red">Rollback</span
+            ><small
+              >Cada marca ocupa apenas o dia da implantação. Data e janela de
+              horário aparecem junto à GMUD.</small
+            >
+          </div>
+          <div class="gmud-scroll"><div id="gmudGrid"></div></div>
+          <p id="gmudEmpty" class="empty" hidden>
+            Nenhuma GMUD neste mês com os filtros selecionados.
+          </p>
+          <footer class="panel-footer">
+            <span id="gmudCount"></span
+            ><a href="exemplos.html">Carregar exemplos ↗</a>
+          </footer>
+        </section>
+      </main>
+    </div>
+    <dialog id="gmudDetailsDialog" aria-label="Informações e ações da GMUD">
+      <iframe
+        id="gmudDetailsFrame"
+        title="Informações e ações da GMUD"
+      ></iframe>
+    </dialog>
+  </body>
+</html>

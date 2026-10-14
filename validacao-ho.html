@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IssueFlow · Validação de homologação</title>
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <script src="modules/features/features-store.js" defer></script>
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="shared/testing/execution.js" defer></script>
+    <script src="modules/homologation/plans-store.js" defer></script>
+    <script src="modules/homologation/queue-page.js" defer></script>
+    <script src="shared/ui/navigation.js" defer></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-icon">i<span>f</span></span
+        >IssueFlow</a
+      >
+      <div class="workspace">WORKSPACE<span>Gestão de operações</span></div>
+      <nav class="operation-nav" aria-label="Menu principal"></nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Ambiente de demonstração<small
+          >Dados salvos neste navegador</small
+        >
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <span>Workspace / <strong>Validação de homologação</strong></span
+        ><span class="demo">DEMO</span>
+      </header>
+      <main>
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">QUALIDADE E ACEITE DE PRODUTO</div>
+            <h1>Validação de homologação</h1>
+            <p>
+              Selecione a issue para montar o plano, executar os cenários e
+              registrar o aceite de produto.
+            </p>
+          </div>
+          <a class="secondary" href="testes.html">Cenários e trilhas ↗</a>
+        </div>
+        <section class="stats">
+          <article>
+            <span>Sem plano</span><strong id="hoNoPlan">0</strong
+            ><small>Cenários ainda não selecionados</small>
+          </article>
+          <article>
+            <span>Em validação</span><strong id="hoTesting">0</strong
+            ><small>Testes pendentes ou com falha</small>
+          </article>
+          <article>
+            <span>Aguardando aceite</span><strong id="hoAcceptance">0</strong
+            ><small>Testes concluídos, aceite do PO pendente</small>
+          </article>
+          <article>
+            <span>Aprovadas</span><strong id="hoAccepted">0</strong
+            ><small>Homologação com aceite válido</small>
+          </article>
+        </section>
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Issues para homologação</h2>
+              <p>O filtro inicial reúne os planos e aceites pendentes.</p>
+            </div>
+          </div>
+          <div class="filters">
+            <label class="search"
+              ><span>⌕</span
+              ><input
+                id="hoQueueSearch"
+                type="search"
+                placeholder="Buscar issue, descrição ou squad…"
+                aria-label="Buscar homologação" /></label
+            ><select id="hoQueueSquad" aria-label="Filtrar squad"></select
+            ><select id="hoQueueStatus" aria-label="Filtrar situação">
+              <option value="pending">Pendentes</option>
+              <option value="no-plan">Sem plano</option>
+              <option value="testing">Em validação</option>
+              <option value="acceptance">Aguardando aceite</option>
+              <option value="accepted">Aprovadas / histórico</option>
+              <option value="all">Todas as situações</option>
+            </select>
+          </div>
+          <div id="hoQueueCards" class="ho-queue"></div>
+          <p id="hoQueueEmpty" class="empty" hidden>
+            Nenhuma issue corresponde aos filtros selecionados.
+          </p>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>

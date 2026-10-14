@@ -1,0 +1,352 @@
+.gmud-page a {
+  text-decoration: none;
+}
+.gmud-page .nav {
+  color: #6c7b92;
+}
+.gmud-page .nav.active {
+  color: #4263df;
+}
+.gmud-page .sidebar .nav + .nav {
+  margin-top: 8px;
+}
+.gmud-month {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.gmud-page .panel-heading {
+  flex-wrap: wrap;
+}
+.gmud-legend {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap;
+  padding: 15px 23px;
+  border-top: 1px solid #edf0f5;
+}
+.gmud-legend small {
+  font-size: 10px;
+  color: #8792a3;
+  flex-basis: 100%;
+}
+.gmud-scroll {
+  overflow: auto;
+  max-height: 70vh;
+}
+#gmudGrid {
+  --label-width: 255px;
+  --day-width: 30px;
+  width: calc(var(--label-width) + var(--days) * var(--day-width));
+  min-width: 100%;
+}
+.gmud-grid-header,
+.gmud-row {
+  display: grid;
+  grid-template-columns: var(--label-width) minmax(0, 1fr);
+}
+.gmud-grid-header {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  background: #f9fafc;
+  border-block: 1px solid #e4e9f1;
+}
+.gmud-label {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+  background: #fff;
+  border-right: 1px solid #e4e9f1;
+  padding: 15px 16px;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.gmud-grid-header > .gmud-label,
+.gmud-status-heading {
+  font-size: 10px;
+  color: #8792a3;
+  justify-content: center;
+  background: #f9fafc;
+}
+.gmud-status-heading {
+  display: flex;
+  align-items: center;
+  padding: 15px;
+  border-right: 1px solid #e4e9f1;
+}
+.gmud-id {
+  font-size: 12px;
+  font-weight: 650;
+  color: #4263df;
+  overflow-wrap: anywhere;
+}
+.gmud-label > span {
+  font-size: 11px;
+  color: #5c6c83;
+}
+.gmud-label > small {
+  font-size: 10px;
+  color: #8792a3;
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+}
+.gmud-label .gmud-owner {
+  color: #596d8a;
+}
+.gmud-label .gmud-issues {
+  font-size: 9px;
+}
+.gmud-label .gmud-window {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 7px;
+  color: #6e7e95;
+  font-weight: 400;
+  margin: 0 0 5px;
+  padding: 0;
+  border: 0;
+}
+.gmud-date {
+  padding: 3px 7px;
+  border-radius: 5px;
+  background: #f0f3f9;
+  color: #526480;
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.gmud-hours {
+  font-size: 10px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.gmud-days,
+.gmud-track {
+  display: grid;
+  grid-template-columns: repeat(var(--days), minmax(0, 1fr));
+  min-width: 0;
+}
+.gmud-day {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 7px;
+  padding: 13px 0;
+  border-right: 1px solid #edf0f5;
+}
+.gmud-day small {
+  font-size: 9px;
+  color: #8792a3;
+}
+.gmud-day strong {
+  font-size: 11px;
+  color: #56647b;
+  font-weight: 600;
+}
+.gmud-row {
+  border-bottom: 1px solid #e4e9f1;
+  min-height: 155px;
+}
+.gmud-track {
+  position: relative;
+  grid-template-rows: 1fr;
+  min-height: 155px;
+}
+.gmud-cell {
+  grid-row: 1;
+  border-right: 1px solid #edf0f5;
+}
+.weekend {
+  background: #f7f9fc;
+}
+.gmud-pin {
+  grid-row: 1;
+  align-self: stretch;
+  justify-self: stretch;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-inline: 1px solid currentColor;
+  font-size: 14px;
+  font-weight: 700;
+  position: relative;
+  cursor: pointer;
+  transition:
+    filter 0.15s,
+    box-shadow 0.15s;
+}
+.gmud-pin.green {
+  background: #d5eee3;
+  color: #16845f;
+}
+.gmud-pin.blue {
+  background: #dce6ff;
+  color: #4263df;
+}
+.gmud-pin.red {
+  background: #f8dcd8;
+  color: #c64e40;
+}
+.gmud-pin.orange {
+  background: #fae9c9;
+  color: #a77520;
+}
+.gmud-pin.env {
+  background: #e6eaf0;
+  color: #68778d;
+}
+.gmud-pin:hover,
+.gmud-pin:focus-visible {
+  filter: brightness(0.94);
+  box-shadow: inset 0 0 0 2px currentColor;
+}
+.gmud-pin::after {
+  content: attr(data-hint);
+  position: absolute;
+  right: calc(100% + 8px);
+  top: 12px;
+  padding: 7px 10px;
+  border-radius: 6px;
+  background: #26344b;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  box-shadow: 0 3px 10px #26344b20;
+  opacity: 0;
+  pointer-events: none;
+}
+.gmud-pin:hover,
+.gmud-pin:focus-visible {
+  z-index: 4;
+}
+.gmud-pin:hover::after,
+.gmud-pin:focus-visible::after {
+  opacity: 1;
+}
+.gmud-pin:focus-visible {
+  outline: 2px solid #263d89;
+  outline-offset: -3px;
+}
+.gmud-event-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  min-width: 0;
+  margin-top: 3px;
+}
+.gmud-event {
+  display: block;
+  border: 1px solid;
+  border-radius: 5px;
+  padding: 6px 8px;
+}
+.gmud-event strong {
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+}
+.gmud-event-note {
+  font-size: 10px;
+  line-height: 1.5;
+  color: #a07b3e;
+}
+.gmud-replanned {
+  font-size: 9px;
+  color: #8a70b0;
+}
+.gmud-test-track {
+  height: 3px;
+  border-radius: 3px;
+  background: #e5ebf3;
+  overflow: hidden;
+}
+.gmud-test-track span {
+  display: block;
+  height: 100%;
+  background: #29a983;
+}
+.gmud-event.green {
+  border-color: #a6d6c2;
+}
+.gmud-event.blue {
+  border-color: #b8c9ed;
+}
+.gmud-event.red {
+  border-color: #e4b6ad;
+}
+.gmud-event.orange {
+  border-color: #ead4ab;
+}
+.gmud-event.env {
+  border-color: #d8dfe9;
+}
+.gmud-page .panel-footer a {
+  color: #4263df;
+}
+@media (max-width: 700px) {
+  #gmudGrid {
+    --label-width: 195px;
+  }
+  .gmud-page .sidebar {
+    height: auto;
+  }
+  .gmud-page .sidebar .nav {
+    display: inline-flex;
+    margin: 8px 8px 0 0;
+    padding: 7px;
+    font-size: 11px;
+  }
+  .gmud-page .sidebar .workspace,
+  .gmud-page .sidebar .sidebar-note {
+    display: none;
+  }
+  .gmud-month {
+    flex-wrap: wrap;
+  }
+  .gmud-month input {
+    width: 150px;
+  }
+  .gmud-label {
+    padding: 13px 12px;
+  }
+}
+
+.gmud-validate {
+  align-self: flex-start;
+  font-size: 11px;
+  font-weight: 600;
+  color: #4263df;
+  padding: 3px 0;
+}
+.gmud-validate:hover {
+  text-decoration: underline;
+}
+.gmud-validate:focus-visible {
+  outline: 2px solid #4263df;
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+#gmudDetailsDialog {
+  width: min(1000px, calc(100vw - 32px));
+  height: 90vh;
+  max-height: 90vh;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+  border-radius: 12px;
+}
+#gmudDetailsFrame {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  background: #fff;
+}

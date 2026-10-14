@@ -1,0 +1,1380 @@
+{
+  "report": [
+    {
+      "issue": "DEMO-E2E-SUCESSO",
+      "rdm": "DEMO-SUCESSO",
+      "id": "chg-1791588662629",
+      "result": "Finalizada com sucesso e bloqueada para alterações"
+    },
+    {
+      "issue": "DEMO-E2E-REPLANEJADA",
+      "rdm": "DEMO-REPLANEJADA",
+      "id": "chg-1791588667322",
+      "result": "Replanejada, reaprovada e aguardando subida"
+    },
+    {
+      "issue": "DEMO-E2E-ROLLBACK",
+      "rdm": "DEMO-ROLLBACK",
+      "id": "chg-1791588671605",
+      "result": "Rollback com cenário, etapa e motivo preservados"
+    },
+    {
+      "issue": "DEMO-E2E-DEPLOY",
+      "rdm": "DEMO-DEPLOY",
+      "id": "chg-1791588675972",
+      "result": "Deploy realizado; validação de PROD pendente"
+    },
+    {
+      "issue": "DEMO-E2E-PROD-VALIDADO",
+      "rdm": "DEMO-PROD-VALIDADO",
+      "id": "chg-1791588680154",
+      "result": "PROD validado; encerramento pelo TL pendente"
+    }
+  ],
+  "stores": {
+    "issueflow.records.v1": [
+      {
+        "squad": "Validação do fluxo",
+        "idIssue": "DEMO-E2E-PROD-VALIDADO",
+        "descricao": "Exemplo ponta a ponta: PROD-VALIDADO",
+        "servicos": [
+          "api-demo-e2e"
+        ],
+        "ambiente": "homologacao",
+        "dataInicialHomologacao": "2026-10-08",
+        "dataFinalHomologacao": "2026-10-09",
+        "dataAberturaChange": "2026-10-11",
+        "dataProducao": "2026-10-14"
+      },
+      {
+        "squad": "Validação do fluxo",
+        "idIssue": "DEMO-E2E-DEPLOY",
+        "descricao": "Exemplo ponta a ponta: DEPLOY",
+        "servicos": [
+          "api-demo-e2e"
+        ],
+        "ambiente": "homologacao",
+        "dataInicialHomologacao": "2026-10-08",
+        "dataFinalHomologacao": "2026-10-09",
+        "dataAberturaChange": "2026-10-11",
+        "dataProducao": "2026-10-14"
+      },
+      {
+        "squad": "Validação do fluxo",
+        "idIssue": "DEMO-E2E-ROLLBACK",
+        "descricao": "Exemplo ponta a ponta: ROLLBACK",
+        "servicos": [
+          "api-demo-e2e"
+        ],
+        "ambiente": "homologacao",
+        "dataInicialHomologacao": "2026-10-08",
+        "dataFinalHomologacao": "2026-10-09",
+        "dataAberturaChange": "2026-10-11",
+        "dataProducao": "2026-10-14"
+      },
+      {
+        "squad": "Validação do fluxo",
+        "idIssue": "DEMO-E2E-REPLANEJADA",
+        "descricao": "Exemplo ponta a ponta: REPLANEJADA",
+        "servicos": [
+          "api-demo-e2e"
+        ],
+        "ambiente": "homologacao",
+        "dataInicialHomologacao": "2026-10-08",
+        "dataFinalHomologacao": "2026-10-09",
+        "dataAberturaChange": "2026-10-13",
+        "dataProducao": "2026-10-16"
+      },
+      {
+        "squad": "Validação do fluxo",
+        "idIssue": "DEMO-E2E-SUCESSO",
+        "descricao": "Exemplo ponta a ponta: SUCESSO",
+        "servicos": [
+          "api-demo-e2e"
+        ],
+        "ambiente": "homologacao",
+        "dataInicialHomologacao": "2026-10-08",
+        "dataFinalHomologacao": "2026-10-09",
+        "dataAberturaChange": "2026-10-11",
+        "dataProducao": "2026-10-14"
+      }
+    ],
+    "issueflow.changes.v1": [
+      {
+        "id": "chg-1791588680154",
+        "equipe": "Validação do fluxo",
+        "dataProducao": "2026-10-14",
+        "dataAberturaChange": "2026-10-11",
+        "inicioHom": "2026-10-08",
+        "fimHom": "2026-10-09",
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "issueIds": [
+          "DEMO-E2E-PROD-VALIDADO"
+        ],
+        "rdm": "DEMO-PROD-VALIDADO",
+        "horario": "19:00",
+        "inicioPrevisto": "",
+        "finalPrevisto": "",
+        "consumo": "",
+        "smeTl": "TL Demo",
+        "po": "PO Demo",
+        "timeExecutor": "",
+        "flex": "Não",
+        "on": "Não",
+        "justificativaOn": "",
+        "observacao": "Texto alterado após aprovação para testar preservação.",
+        "motivo": "DEMO-E2E-PROD-VALIDADO | Exemplo ponta a ponta: PROD-VALIDADO | COMP.: api-demo-e2e",
+        "pipeline": {
+          "resultado": "Sucesso",
+          "finalizadaEm": "2026-10-09 20:31",
+          "finalizadaPor": "TL Demo"
+        },
+        "checklist": {
+          "ck-059": "Verificado no exemplo",
+          "ck-001": "Não",
+          "ck-008": "Não",
+          "ck-009": "Não",
+          "ck-010": "Não",
+          "ck-011": "Não",
+          "ck-012": "Não",
+          "ck-013": "Não",
+          "ck-014": "Não",
+          "ck-015": "Não",
+          "ck-016": "Não",
+          "ck-017": "Não",
+          "ck-018": "Não",
+          "ck-019": "Não",
+          "ck-020": "Não",
+          "ck-021": "Não",
+          "ck-022": "Não",
+          "ck-023": "Não",
+          "ck-024": "Não",
+          "ck-025": "Não",
+          "ck-026": "Não",
+          "ck-027": "Não",
+          "ck-028": "Não",
+          "ck-029": "Não",
+          "ck-030": "Não",
+          "ck-031": "Não",
+          "ck-032": "Não",
+          "ck-033": "Não",
+          "ck-034": "Não",
+          "ck-035": "Não",
+          "ck-036": "Não",
+          "ck-037": "Não",
+          "ck-038": "Não",
+          "ck-039": "Não",
+          "ck-040": "Não",
+          "ck-041": "Não",
+          "ck-042": "Não",
+          "ck-043": "Não",
+          "ck-044": "Não",
+          "ck-045": "Não",
+          "ck-046": "Não",
+          "ck-047": "Não",
+          "ck-048": "Não",
+          "ck-049": "Não",
+          "ck-050": "Não",
+          "ck-051": "Não",
+          "ck-052": "Não",
+          "ck-053": "Não",
+          "ck-054": "Não",
+          "ck-055": "Não",
+          "ck-056": "Não",
+          "ck-057": "Não",
+          "ck-058": "Não",
+          "ck-061": "Não",
+          "ck-062": "Não",
+          "ck-063": "Não",
+          "ck-002": "1",
+          "ck-004": "1",
+          "ck-006": "1",
+          "ck-064": "Verificado no exemplo",
+          "ck-066": "Verificado no exemplo"
+        },
+        "cenarios": [
+          {
+            "id": "ex-mv1ln54j-l2wd",
+            "casoId": "ex-mv1ln4jq-axnc",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": true,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ],
+            "sourceIssueId": "DEMO-E2E-PROD-VALIDADO",
+            "sourceExecutionId": "ex-mv1ln4jq-axnc",
+            "motivosEtapas": {}
+          }
+        ],
+        "cenariosLink": "",
+        "hoRevisionAprovada": "[[\"DEMO-E2E-PROD-VALIDADO\",{\"por\":\"Produto Demo\",\"nota\":\"Homologação concluída para validação do fluxo PROD-VALIDADO\",\"quando\":\"2026-10-09T23:31:19.772Z\"},[{\"id\":\"ex-mv1ln4jq-axnc\",\"casoId\":\"cat-001\",\"nome\":\"DEMO E2E · PF Hipoteca · Smoke\",\"tipo\":\"Manual\",\"etapaAlvo\":\"Criação de Pedido\",\"resp\":\"\",\"jira\":\"\",\"pedido\":\"\",\"validadoHO\":false,\"etapas\":{\"Simulação\":\"OK\",\"Criação de Pedido\":\"OK\"},\"fluxo\":[\"Simulação\",\"Criação de Pedido\"],\"cobertura\":\"Smoke E2E\",\"dimensoes\":{},\"componentes\":[\"api-demo-e2e\"]}]]]",
+        "status": "Executada",
+        "reprogramacoes": 0,
+        "aprovadaPor": "Gerente Demo",
+        "aprovadaEm": "2026-10-09 20:31",
+        "historico": [
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "criada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "teste_prod",
+            "nota": "Plano e resultados de produção atualizados.",
+            "testes": [
+              {
+                "id": "ex-mv1ln54j-l2wd",
+                "casoId": "ex-mv1ln4jq-axnc",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {},
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-PROD-VALIDADO",
+                "sourceExecutionId": "ex-mv1ln4jq-axnc"
+              }
+            ]
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "editada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "executada",
+            "por": "TL Demo",
+            "nota": "Subida realizada, confirmada pelo TL. Liberada para validação do PO."
+          },
+          {
+            "tipo": "validacao_iniciada",
+            "quando": "2026-10-09 20:31",
+            "por": "PO Demo",
+            "nota": "Validação de produção iniciada pelo PO."
+          },
+          {
+            "tipo": "teste_prod",
+            "quando": "2026-10-09 20:31",
+            "cenarioId": "ex-mv1ln54j-l2wd",
+            "cenario": "DEMO E2E · PF Hipoteca · Smoke",
+            "etapa": "Simulação",
+            "de": "Pendente",
+            "para": "OK",
+            "motivo": "",
+            "por": "PO Demo",
+            "nota": "DEMO E2E · PF Hipoteca · Smoke · Simulação: Pendente → OK"
+          },
+          {
+            "tipo": "teste_prod",
+            "quando": "2026-10-09 20:31",
+            "cenarioId": "ex-mv1ln54j-l2wd",
+            "cenario": "DEMO E2E · PF Hipoteca · Smoke",
+            "etapa": "Criação de Pedido",
+            "de": "Pendente",
+            "para": "OK",
+            "motivo": "",
+            "por": "PO Demo",
+            "nota": "DEMO E2E · PF Hipoteca · Smoke · Criação de Pedido: Pendente → OK"
+          },
+          {
+            "tipo": "validacao_concluida",
+            "quando": "2026-10-09 20:31",
+            "por": "PO Demo",
+            "nota": "Todos os cenários de produção concluídos com OK ou N/A."
+          }
+        ],
+        "validacaoIniciada": {
+          "por": "PO Demo",
+          "quando": "2026-10-09 20:31"
+        },
+        "aceiteProducao": {
+          "por": "PO Demo",
+          "quando": "2026-10-09 20:31"
+        }
+      },
+      {
+        "id": "chg-1791588675972",
+        "equipe": "Validação do fluxo",
+        "dataProducao": "2026-10-14",
+        "dataAberturaChange": "2026-10-11",
+        "inicioHom": "2026-10-08",
+        "fimHom": "2026-10-09",
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "issueIds": [
+          "DEMO-E2E-DEPLOY"
+        ],
+        "rdm": "DEMO-DEPLOY",
+        "horario": "19:00",
+        "inicioPrevisto": "",
+        "finalPrevisto": "",
+        "consumo": "",
+        "smeTl": "TL Demo",
+        "po": "PO Demo",
+        "timeExecutor": "",
+        "flex": "Não",
+        "on": "Não",
+        "justificativaOn": "",
+        "observacao": "Texto alterado após aprovação para testar preservação.",
+        "motivo": "DEMO-E2E-DEPLOY | Exemplo ponta a ponta: DEPLOY | COMP.: api-demo-e2e",
+        "pipeline": {
+          "resultado": "Sucesso",
+          "finalizadaEm": "2026-10-09 20:31",
+          "finalizadaPor": "TL Demo"
+        },
+        "checklist": {
+          "ck-059": "Verificado no exemplo",
+          "ck-001": "Não",
+          "ck-008": "Não",
+          "ck-009": "Não",
+          "ck-010": "Não",
+          "ck-011": "Não",
+          "ck-012": "Não",
+          "ck-013": "Não",
+          "ck-014": "Não",
+          "ck-015": "Não",
+          "ck-016": "Não",
+          "ck-017": "Não",
+          "ck-018": "Não",
+          "ck-019": "Não",
+          "ck-020": "Não",
+          "ck-021": "Não",
+          "ck-022": "Não",
+          "ck-023": "Não",
+          "ck-024": "Não",
+          "ck-025": "Não",
+          "ck-026": "Não",
+          "ck-027": "Não",
+          "ck-028": "Não",
+          "ck-029": "Não",
+          "ck-030": "Não",
+          "ck-031": "Não",
+          "ck-032": "Não",
+          "ck-033": "Não",
+          "ck-034": "Não",
+          "ck-035": "Não",
+          "ck-036": "Não",
+          "ck-037": "Não",
+          "ck-038": "Não",
+          "ck-039": "Não",
+          "ck-040": "Não",
+          "ck-041": "Não",
+          "ck-042": "Não",
+          "ck-043": "Não",
+          "ck-044": "Não",
+          "ck-045": "Não",
+          "ck-046": "Não",
+          "ck-047": "Não",
+          "ck-048": "Não",
+          "ck-049": "Não",
+          "ck-050": "Não",
+          "ck-051": "Não",
+          "ck-052": "Não",
+          "ck-053": "Não",
+          "ck-054": "Não",
+          "ck-055": "Não",
+          "ck-056": "Não",
+          "ck-057": "Não",
+          "ck-058": "Não",
+          "ck-061": "Não",
+          "ck-062": "Não",
+          "ck-063": "Não",
+          "ck-002": "1",
+          "ck-004": "1",
+          "ck-006": "1",
+          "ck-064": "Verificado no exemplo",
+          "ck-066": "Verificado no exemplo"
+        },
+        "cenarios": [
+          {
+            "id": "ex-mv1ln1wt-8ufc",
+            "casoId": "ex-mv1ln1c3-ebwj",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": true,
+            "etapas": {},
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ],
+            "sourceIssueId": "DEMO-E2E-DEPLOY",
+            "sourceExecutionId": "ex-mv1ln1c3-ebwj"
+          }
+        ],
+        "cenariosLink": "",
+        "hoRevisionAprovada": "[[\"DEMO-E2E-DEPLOY\",{\"por\":\"Produto Demo\",\"nota\":\"Homologação concluída para validação do fluxo DEPLOY\",\"quando\":\"2026-10-09T23:31:15.689Z\"},[{\"id\":\"ex-mv1ln1c3-ebwj\",\"casoId\":\"cat-001\",\"nome\":\"DEMO E2E · PF Hipoteca · Smoke\",\"tipo\":\"Manual\",\"etapaAlvo\":\"Criação de Pedido\",\"resp\":\"\",\"jira\":\"\",\"pedido\":\"\",\"validadoHO\":false,\"etapas\":{\"Simulação\":\"OK\",\"Criação de Pedido\":\"OK\"},\"fluxo\":[\"Simulação\",\"Criação de Pedido\"],\"cobertura\":\"Smoke E2E\",\"dimensoes\":{},\"componentes\":[\"api-demo-e2e\"]}]]]",
+        "status": "Executada",
+        "reprogramacoes": 0,
+        "aprovadaPor": "Gerente Demo",
+        "aprovadaEm": "2026-10-09 20:31",
+        "historico": [
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "criada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "teste_prod",
+            "nota": "Plano e resultados de produção atualizados.",
+            "testes": [
+              {
+                "id": "ex-mv1ln1wt-8ufc",
+                "casoId": "ex-mv1ln1c3-ebwj",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {},
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-DEPLOY",
+                "sourceExecutionId": "ex-mv1ln1c3-ebwj"
+              }
+            ]
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "editada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "executada",
+            "por": "TL Demo",
+            "nota": "Subida realizada, confirmada pelo TL. Liberada para validação do PO."
+          }
+        ]
+      },
+      {
+        "id": "chg-1791588671605",
+        "equipe": "Validação do fluxo",
+        "dataProducao": "2026-10-14",
+        "dataAberturaChange": "2026-10-11",
+        "inicioHom": "2026-10-08",
+        "fimHom": "2026-10-09",
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "issueIds": [
+          "DEMO-E2E-ROLLBACK"
+        ],
+        "rdm": "DEMO-ROLLBACK",
+        "horario": "19:00",
+        "inicioPrevisto": "",
+        "finalPrevisto": "",
+        "consumo": "",
+        "smeTl": "TL Demo",
+        "po": "PO Demo",
+        "timeExecutor": "",
+        "flex": "Não",
+        "on": "Não",
+        "justificativaOn": "",
+        "observacao": "Texto alterado após aprovação para testar preservação.",
+        "motivo": "DEMO-E2E-ROLLBACK | Exemplo ponta a ponta: ROLLBACK | COMP.: api-demo-e2e",
+        "pipeline": {
+          "resultado": "Sucesso",
+          "finalizadaEm": "2026-10-09 20:31",
+          "finalizadaPor": "TL Demo"
+        },
+        "checklist": {
+          "ck-059": "Verificado no exemplo",
+          "ck-001": "Não",
+          "ck-008": "Não",
+          "ck-009": "Não",
+          "ck-010": "Não",
+          "ck-011": "Não",
+          "ck-012": "Não",
+          "ck-013": "Não",
+          "ck-014": "Não",
+          "ck-015": "Não",
+          "ck-016": "Não",
+          "ck-017": "Não",
+          "ck-018": "Não",
+          "ck-019": "Não",
+          "ck-020": "Não",
+          "ck-021": "Não",
+          "ck-022": "Não",
+          "ck-023": "Não",
+          "ck-024": "Não",
+          "ck-025": "Não",
+          "ck-026": "Não",
+          "ck-027": "Não",
+          "ck-028": "Não",
+          "ck-029": "Não",
+          "ck-030": "Não",
+          "ck-031": "Não",
+          "ck-032": "Não",
+          "ck-033": "Não",
+          "ck-034": "Não",
+          "ck-035": "Não",
+          "ck-036": "Não",
+          "ck-037": "Não",
+          "ck-038": "Não",
+          "ck-039": "Não",
+          "ck-040": "Não",
+          "ck-041": "Não",
+          "ck-042": "Não",
+          "ck-043": "Não",
+          "ck-044": "Não",
+          "ck-045": "Não",
+          "ck-046": "Não",
+          "ck-047": "Não",
+          "ck-048": "Não",
+          "ck-049": "Não",
+          "ck-050": "Não",
+          "ck-051": "Não",
+          "ck-052": "Não",
+          "ck-053": "Não",
+          "ck-054": "Não",
+          "ck-055": "Não",
+          "ck-056": "Não",
+          "ck-057": "Não",
+          "ck-058": "Não",
+          "ck-061": "Não",
+          "ck-062": "Não",
+          "ck-063": "Não",
+          "ck-002": "1",
+          "ck-004": "1",
+          "ck-006": "1",
+          "ck-064": "Verificado no exemplo",
+          "ck-066": "Verificado no exemplo"
+        },
+        "cenarios": [
+          {
+            "id": "ex-mv1lmyj2-ofsz",
+            "casoId": "ex-mv1lmy1w-zg5i",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": true,
+            "etapas": {
+              "Criação de Pedido": "Falhou"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ],
+            "sourceIssueId": "DEMO-E2E-ROLLBACK",
+            "sourceExecutionId": "ex-mv1lmy1w-zg5i",
+            "motivosEtapas": {
+              "Criação de Pedido": "Erro ao criar pedido em PROD. Reversão necessária."
+            }
+          }
+        ],
+        "cenariosLink": "",
+        "hoRevisionAprovada": "[[\"DEMO-E2E-ROLLBACK\",{\"por\":\"Produto Demo\",\"nota\":\"Homologação concluída para validação do fluxo ROLLBACK\",\"quando\":\"2026-10-09T23:31:11.355Z\"},[{\"id\":\"ex-mv1lmy1w-zg5i\",\"casoId\":\"cat-001\",\"nome\":\"DEMO E2E · PF Hipoteca · Smoke\",\"tipo\":\"Manual\",\"etapaAlvo\":\"Criação de Pedido\",\"resp\":\"\",\"jira\":\"\",\"pedido\":\"\",\"validadoHO\":false,\"etapas\":{\"Simulação\":\"OK\",\"Criação de Pedido\":\"OK\"},\"fluxo\":[\"Simulação\",\"Criação de Pedido\"],\"cobertura\":\"Smoke E2E\",\"dimensoes\":{},\"componentes\":[\"api-demo-e2e\"]}]]]",
+        "status": "Rollback realizado",
+        "reprogramacoes": 0,
+        "aprovadaPor": "Gerente Demo",
+        "aprovadaEm": "2026-10-09 20:31",
+        "historico": [
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "criada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "teste_prod",
+            "nota": "Plano e resultados de produção atualizados.",
+            "testes": [
+              {
+                "id": "ex-mv1lmyj2-ofsz",
+                "casoId": "ex-mv1lmy1w-zg5i",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {},
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-ROLLBACK",
+                "sourceExecutionId": "ex-mv1lmy1w-zg5i"
+              }
+            ]
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "editada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "executada",
+            "por": "TL Demo",
+            "nota": "Subida realizada, confirmada pelo TL. Liberada para validação do PO."
+          },
+          {
+            "tipo": "validacao_iniciada",
+            "quando": "2026-10-09 20:31",
+            "por": "PO Demo",
+            "nota": "Validação de produção iniciada pelo PO."
+          },
+          {
+            "tipo": "teste_prod",
+            "quando": "2026-10-09 20:31",
+            "cenarioId": "ex-mv1lmyj2-ofsz",
+            "cenario": "DEMO E2E · PF Hipoteca · Smoke",
+            "etapa": "Criação de Pedido",
+            "de": "Pendente",
+            "para": "Falhou",
+            "motivo": "Erro ao criar pedido em PROD. Reversão necessária.",
+            "por": "PO Demo",
+            "nota": "DEMO E2E · PF Hipoteca · Smoke · Criação de Pedido: Pendente → Falhou"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "rollback",
+            "por": "TL Demo",
+            "motivo": "Versão anterior restaurada após erro na criação do pedido.",
+            "nota": "Origem: DEMO E2E · PF Hipoteca · Smoke · Criação de Pedido",
+            "testes": [
+              {
+                "id": "ex-mv1lmyj2-ofsz",
+                "casoId": "ex-mv1lmy1w-zg5i",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {
+                  "Criação de Pedido": "Falhou"
+                },
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-ROLLBACK",
+                "sourceExecutionId": "ex-mv1lmy1w-zg5i",
+                "motivosEtapas": {
+                  "Criação de Pedido": "Erro ao criar pedido em PROD. Reversão necessária."
+                }
+              }
+            ]
+          }
+        ],
+        "validacaoIniciada": {
+          "por": "PO Demo",
+          "quando": "2026-10-09 20:31"
+        }
+      },
+      {
+        "id": "chg-1791588667322",
+        "equipe": "Validação do fluxo",
+        "dataProducao": "2026-10-16",
+        "dataAberturaChange": "2026-10-13",
+        "inicioHom": "2026-10-08",
+        "fimHom": "2026-10-09",
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "issueIds": [
+          "DEMO-E2E-REPLANEJADA"
+        ],
+        "rdm": "DEMO-REPLANEJADA",
+        "horario": "19:00",
+        "inicioPrevisto": "",
+        "finalPrevisto": "",
+        "consumo": "",
+        "smeTl": "TL Demo",
+        "po": "PO Demo",
+        "timeExecutor": "",
+        "flex": "Não",
+        "on": "Não",
+        "justificativaOn": "",
+        "observacao": "Texto alterado após aprovação para testar preservação.",
+        "motivo": "DEMO-E2E-REPLANEJADA | Exemplo ponta a ponta: REPLANEJADA | COMP.: api-demo-e2e",
+        "checklist": {
+          "ck-059": "Verificado no exemplo",
+          "ck-001": "Não",
+          "ck-008": "Não",
+          "ck-009": "Não",
+          "ck-010": "Não",
+          "ck-011": "Não",
+          "ck-012": "Não",
+          "ck-013": "Não",
+          "ck-014": "Não",
+          "ck-015": "Não",
+          "ck-016": "Não",
+          "ck-017": "Não",
+          "ck-018": "Não",
+          "ck-019": "Não",
+          "ck-020": "Não",
+          "ck-021": "Não",
+          "ck-022": "Não",
+          "ck-023": "Não",
+          "ck-024": "Não",
+          "ck-025": "Não",
+          "ck-026": "Não",
+          "ck-027": "Não",
+          "ck-028": "Não",
+          "ck-029": "Não",
+          "ck-030": "Não",
+          "ck-031": "Não",
+          "ck-032": "Não",
+          "ck-033": "Não",
+          "ck-034": "Não",
+          "ck-035": "Não",
+          "ck-036": "Não",
+          "ck-037": "Não",
+          "ck-038": "Não",
+          "ck-039": "Não",
+          "ck-040": "Não",
+          "ck-041": "Não",
+          "ck-042": "Não",
+          "ck-043": "Não",
+          "ck-044": "Não",
+          "ck-045": "Não",
+          "ck-046": "Não",
+          "ck-047": "Não",
+          "ck-048": "Não",
+          "ck-049": "Não",
+          "ck-050": "Não",
+          "ck-051": "Não",
+          "ck-052": "Não",
+          "ck-053": "Não",
+          "ck-054": "Não",
+          "ck-055": "Não",
+          "ck-056": "Não",
+          "ck-057": "Não",
+          "ck-058": "Não",
+          "ck-061": "Não",
+          "ck-062": "Não",
+          "ck-063": "Não",
+          "ck-002": "1",
+          "ck-004": "1",
+          "ck-006": "1",
+          "ck-064": "Verificado no exemplo",
+          "ck-066": "Verificado no exemplo"
+        },
+        "cenarios": [
+          {
+            "id": "ex-mv1lmv8k-7het",
+            "casoId": "ex-mv1lmuqz-w6h4",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": true,
+            "etapas": {},
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ],
+            "sourceIssueId": "DEMO-E2E-REPLANEJADA",
+            "sourceExecutionId": "ex-mv1lmuqz-w6h4"
+          }
+        ],
+        "cenariosLink": "",
+        "hoRevisionAprovada": "[[\"DEMO-E2E-REPLANEJADA\",{\"por\":\"Produto Demo\",\"nota\":\"Homologação concluída para validação do fluxo REPLANEJADA\",\"quando\":\"2026-10-09T23:31:07.073Z\"},[{\"id\":\"ex-mv1lmuqz-w6h4\",\"casoId\":\"cat-001\",\"nome\":\"DEMO E2E · PF Hipoteca · Smoke\",\"tipo\":\"Manual\",\"etapaAlvo\":\"Criação de Pedido\",\"resp\":\"\",\"jira\":\"\",\"pedido\":\"\",\"validadoHO\":false,\"etapas\":{\"Simulação\":\"OK\",\"Criação de Pedido\":\"OK\"},\"fluxo\":[\"Simulação\",\"Criação de Pedido\"],\"cobertura\":\"Smoke E2E\",\"dimensoes\":{},\"componentes\":[\"api-demo-e2e\"]}]]]",
+        "status": "Aprovada",
+        "reprogramacoes": 1,
+        "aprovadaPor": "Gerente Demo",
+        "aprovadaEm": "2026-10-09 20:31",
+        "historico": [
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "criada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "teste_prod",
+            "nota": "Plano e resultados de produção atualizados.",
+            "testes": [
+              {
+                "id": "ex-mv1lmv8k-7het",
+                "casoId": "ex-mv1lmuqz-w6h4",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {},
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-REPLANEJADA",
+                "sourceExecutionId": "ex-mv1lmuqz-w6h4"
+              }
+            ]
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "editada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "reprogramada",
+            "de": "2026-10-14",
+            "para": "2026-10-16",
+            "motivo": "Bug encontrado",
+            "por": "TL Demo",
+            "nota": "Ajuste da janela para corrigir implantação."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          }
+        ]
+      },
+      {
+        "id": "chg-1791588662629",
+        "equipe": "Validação do fluxo",
+        "dataProducao": "2026-10-14",
+        "dataAberturaChange": "2026-10-11",
+        "inicioHom": "2026-10-08",
+        "fimHom": "2026-10-09",
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "issueIds": [
+          "DEMO-E2E-SUCESSO"
+        ],
+        "rdm": "DEMO-SUCESSO",
+        "horario": "19:00",
+        "inicioPrevisto": "",
+        "finalPrevisto": "",
+        "consumo": "",
+        "smeTl": "TL Demo",
+        "po": "PO Demo",
+        "timeExecutor": "",
+        "flex": "Não",
+        "on": "Não",
+        "justificativaOn": "",
+        "observacao": "Texto alterado após aprovação para testar preservação.",
+        "motivo": "DEMO-E2E-SUCESSO | Exemplo ponta a ponta: SUCESSO | COMP.: api-demo-e2e",
+        "pipeline": {
+          "resultado": "Sucesso",
+          "finalizadaEm": "2026-10-09 20:31",
+          "finalizadaPor": "TL Demo"
+        },
+        "checklist": {
+          "ck-059": "Verificado no exemplo",
+          "ck-001": "Não",
+          "ck-008": "Não",
+          "ck-009": "Não",
+          "ck-010": "Não",
+          "ck-011": "Não",
+          "ck-012": "Não",
+          "ck-013": "Não",
+          "ck-014": "Não",
+          "ck-015": "Não",
+          "ck-016": "Não",
+          "ck-017": "Não",
+          "ck-018": "Não",
+          "ck-019": "Não",
+          "ck-020": "Não",
+          "ck-021": "Não",
+          "ck-022": "Não",
+          "ck-023": "Não",
+          "ck-024": "Não",
+          "ck-025": "Não",
+          "ck-026": "Não",
+          "ck-027": "Não",
+          "ck-028": "Não",
+          "ck-029": "Não",
+          "ck-030": "Não",
+          "ck-031": "Não",
+          "ck-032": "Não",
+          "ck-033": "Não",
+          "ck-034": "Não",
+          "ck-035": "Não",
+          "ck-036": "Não",
+          "ck-037": "Não",
+          "ck-038": "Não",
+          "ck-039": "Não",
+          "ck-040": "Não",
+          "ck-041": "Não",
+          "ck-042": "Não",
+          "ck-043": "Não",
+          "ck-044": "Não",
+          "ck-045": "Não",
+          "ck-046": "Não",
+          "ck-047": "Não",
+          "ck-048": "Não",
+          "ck-049": "Não",
+          "ck-050": "Não",
+          "ck-051": "Não",
+          "ck-052": "Não",
+          "ck-053": "Não",
+          "ck-054": "Não",
+          "ck-055": "Não",
+          "ck-056": "Não",
+          "ck-057": "Não",
+          "ck-058": "Não",
+          "ck-061": "Não",
+          "ck-062": "Não",
+          "ck-063": "Não",
+          "ck-002": "1",
+          "ck-004": "1",
+          "ck-006": "1",
+          "ck-064": "Verificado no exemplo",
+          "ck-066": "Verificado no exemplo"
+        },
+        "cenarios": [
+          {
+            "id": "ex-mv1lmrmh-i0rd",
+            "casoId": "ex-mv1lmqx2-83nf",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": true,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ],
+            "sourceIssueId": "DEMO-E2E-SUCESSO",
+            "sourceExecutionId": "ex-mv1lmqx2-83nf",
+            "motivosEtapas": {}
+          }
+        ],
+        "cenariosLink": "",
+        "hoRevisionAprovada": "[[\"DEMO-E2E-SUCESSO\",{\"por\":\"Produto Demo\",\"nota\":\"Homologação concluída para validação do fluxo SUCESSO\",\"quando\":\"2026-10-09T23:31:02.323Z\"},[{\"id\":\"ex-mv1lmqx2-83nf\",\"casoId\":\"cat-001\",\"nome\":\"DEMO E2E · PF Hipoteca · Smoke\",\"tipo\":\"Manual\",\"etapaAlvo\":\"Criação de Pedido\",\"resp\":\"\",\"jira\":\"\",\"pedido\":\"\",\"validadoHO\":false,\"etapas\":{\"Simulação\":\"OK\",\"Criação de Pedido\":\"OK\"},\"fluxo\":[\"Simulação\",\"Criação de Pedido\"],\"cobertura\":\"Smoke E2E\",\"dimensoes\":{},\"componentes\":[\"api-demo-e2e\"]}]]]",
+        "status": "Executada",
+        "reprogramacoes": 0,
+        "aprovadaPor": "Gerente Demo",
+        "aprovadaEm": "2026-10-09 20:31",
+        "historico": [
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "criada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "teste_prod",
+            "nota": "Plano e resultados de produção atualizados.",
+            "testes": [
+              {
+                "id": "ex-mv1lmrmh-i0rd",
+                "casoId": "ex-mv1lmqx2-83nf",
+                "nome": "DEMO E2E · PF Hipoteca · Smoke",
+                "tipo": "Manual",
+                "etapaAlvo": "Criação de Pedido",
+                "resp": "",
+                "jira": "",
+                "pedido": "",
+                "validadoHO": true,
+                "etapas": {},
+                "fluxo": [
+                  "Simulação",
+                  "Criação de Pedido"
+                ],
+                "cobertura": "Smoke E2E",
+                "dimensoes": {},
+                "componentes": [
+                  "api-demo-e2e"
+                ],
+                "sourceIssueId": "DEMO-E2E-SUCESSO",
+                "sourceExecutionId": "ex-mv1lmqx2-83nf"
+              }
+            ]
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "aprovada",
+            "por": "Gerente Demo",
+            "nota": "Aprovada com checklist incompleto (61/66)."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "editada"
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "executada",
+            "por": "TL Demo",
+            "nota": "Subida realizada, confirmada pelo TL. Liberada para validação do PO."
+          },
+          {
+            "tipo": "validacao_iniciada",
+            "quando": "2026-10-09 20:31",
+            "por": "PO Demo",
+            "nota": "Validação de produção iniciada pelo PO."
+          },
+          {
+            "tipo": "teste_prod",
+            "quando": "2026-10-09 20:31",
+            "cenarioId": "ex-mv1lmrmh-i0rd",
+            "cenario": "DEMO E2E · PF Hipoteca · Smoke",
+            "etapa": "Simulação",
+            "de": "Pendente",
+            "para": "OK",
+            "motivo": "",
+            "por": "PO Demo",
+            "nota": "DEMO E2E · PF Hipoteca · Smoke · Simulação: Pendente → OK"
+          },
+          {
+            "tipo": "teste_prod",
+            "quando": "2026-10-09 20:31",
+            "cenarioId": "ex-mv1lmrmh-i0rd",
+            "cenario": "DEMO E2E · PF Hipoteca · Smoke",
+            "etapa": "Criação de Pedido",
+            "de": "Pendente",
+            "para": "OK",
+            "motivo": "",
+            "por": "PO Demo",
+            "nota": "DEMO E2E · PF Hipoteca · Smoke · Criação de Pedido: Pendente → OK"
+          },
+          {
+            "tipo": "validacao_concluida",
+            "quando": "2026-10-09 20:31",
+            "por": "PO Demo",
+            "nota": "Todos os cenários de produção concluídos com OK ou N/A."
+          },
+          {
+            "quando": "2026-10-09 20:31",
+            "tipo": "encerrada",
+            "por": "TL Demo",
+            "nota": "GMUD encerrada após subida e validação de produção."
+          }
+        ],
+        "validacaoIniciada": {
+          "por": "PO Demo",
+          "quando": "2026-10-09 20:31"
+        },
+        "aceiteProducao": {
+          "por": "PO Demo",
+          "quando": "2026-10-09 20:31"
+        },
+        "encerramento": {
+          "por": "TL Demo",
+          "quando": "2026-10-09 20:31"
+        }
+      }
+    ],
+    "issueflow.scenariocatalog.v1": [
+      {
+        "id": "cat-001",
+        "nome": "DEMO E2E · PF Hipoteca · Smoke",
+        "dimensoes": {},
+        "componentes": [
+          "api-demo-e2e"
+        ],
+        "tipo": "Manual",
+        "etapaAlvo": "Criação de Pedido",
+        "cobertura": "Smoke E2E",
+        "ativo": true
+      }
+    ],
+    "issueflow.hoplans.v1": {
+      "DEMO-E2E-SUCESSO": {
+        "cenarios": [
+          {
+            "id": "ex-mv1lmqx2-83nf",
+            "casoId": "cat-001",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": false,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ]
+          }
+        ],
+        "historico": [
+          {
+            "quando": "2026-10-09T23:31:02.323Z",
+            "texto": "Homologação aprovada por Produto Demo: Homologação concluída para validação do fluxo SUCESSO"
+          }
+        ],
+        "aceite": {
+          "por": "Produto Demo",
+          "nota": "Homologação concluída para validação do fluxo SUCESSO",
+          "quando": "2026-10-09T23:31:02.323Z"
+        }
+      },
+      "DEMO-E2E-REPLANEJADA": {
+        "cenarios": [
+          {
+            "id": "ex-mv1lmuqz-w6h4",
+            "casoId": "cat-001",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": false,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ]
+          }
+        ],
+        "historico": [
+          {
+            "quando": "2026-10-09T23:31:07.073Z",
+            "texto": "Homologação aprovada por Produto Demo: Homologação concluída para validação do fluxo REPLANEJADA"
+          }
+        ],
+        "aceite": {
+          "por": "Produto Demo",
+          "nota": "Homologação concluída para validação do fluxo REPLANEJADA",
+          "quando": "2026-10-09T23:31:07.073Z"
+        }
+      },
+      "DEMO-E2E-ROLLBACK": {
+        "cenarios": [
+          {
+            "id": "ex-mv1lmy1w-zg5i",
+            "casoId": "cat-001",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": false,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ]
+          }
+        ],
+        "historico": [
+          {
+            "quando": "2026-10-09T23:31:11.355Z",
+            "texto": "Homologação aprovada por Produto Demo: Homologação concluída para validação do fluxo ROLLBACK"
+          }
+        ],
+        "aceite": {
+          "por": "Produto Demo",
+          "nota": "Homologação concluída para validação do fluxo ROLLBACK",
+          "quando": "2026-10-09T23:31:11.355Z"
+        }
+      },
+      "DEMO-E2E-DEPLOY": {
+        "cenarios": [
+          {
+            "id": "ex-mv1ln1c3-ebwj",
+            "casoId": "cat-001",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": false,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ]
+          }
+        ],
+        "historico": [
+          {
+            "quando": "2026-10-09T23:31:15.689Z",
+            "texto": "Homologação aprovada por Produto Demo: Homologação concluída para validação do fluxo DEPLOY"
+          }
+        ],
+        "aceite": {
+          "por": "Produto Demo",
+          "nota": "Homologação concluída para validação do fluxo DEPLOY",
+          "quando": "2026-10-09T23:31:15.689Z"
+        }
+      },
+      "DEMO-E2E-PROD-VALIDADO": {
+        "cenarios": [
+          {
+            "id": "ex-mv1ln4jq-axnc",
+            "casoId": "cat-001",
+            "nome": "DEMO E2E · PF Hipoteca · Smoke",
+            "tipo": "Manual",
+            "etapaAlvo": "Criação de Pedido",
+            "resp": "",
+            "jira": "",
+            "pedido": "",
+            "validadoHO": false,
+            "etapas": {
+              "Simulação": "OK",
+              "Criação de Pedido": "OK"
+            },
+            "fluxo": [
+              "Simulação",
+              "Criação de Pedido"
+            ],
+            "cobertura": "Smoke E2E",
+            "dimensoes": {},
+            "componentes": [
+              "api-demo-e2e"
+            ]
+          }
+        ],
+        "historico": [
+          {
+            "quando": "2026-10-09T23:31:19.772Z",
+            "texto": "Homologação aprovada por Produto Demo: Homologação concluída para validação do fluxo PROD-VALIDADO"
+          }
+        ],
+        "aceite": {
+          "por": "Produto Demo",
+          "nota": "Homologação concluída para validação do fluxo PROD-VALIDADO",
+          "quando": "2026-10-09T23:31:19.772Z"
+        }
+      }
+    }
+  }
+}
