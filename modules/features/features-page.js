@@ -24,6 +24,8 @@ function loadChanges() {
   }
 }
 let changeMap = new Map();
+let featurePage = 1;
+let featurePageSize = 25;
 function buildChangeMap() {
   const map = new Map();
   const final = (s) =>
@@ -93,97 +95,42 @@ function render() {
         i.ambiente === $("#environmentFilter").value),
   );
   $("#rows").replaceChildren();
-  for (const issue of filtered) {
+  const pages = Math.max(1, Math.ceil(filtered.length / featurePageSize));
+  featurePage = Math.min(featurePage, pages);
+  const start = (featurePage - 1) * featurePageSize;
+  for (const issue of filtered.slice(start, start + featurePageSize)) {
     const tr = document.createElement("tr");
-    const idcell = cell(tr, issue.idIssue, "issue-id");
-    const sub = document.createElement("small");
-    sub.textContent = issue.squad;
-    idcell.append(sub);
-    const testsLink = document.createElement("a");
-    testsLink.href =
-      "homologacao.html?issue=" + encodeURIComponent(issue.idIssue);
-    testsLink.className = "secondary component-button";
-    testsLink.textContent = "Testes de homologação";
-    idcell.append(testsLink);
-    cell(tr, issue.descricao, "description");
-    const servicesCell = cell(tr, "", "services-cell");
-    const viewButton = document.createElement("button");
-    viewButton.type = "button";
-    viewButton.className = "secondary component-button";
-    viewButton.textContent = `Ver componentes (${issue.servicos.length})`;
-    viewButton.setAttribute(
-      "aria-label",
-      `Ver componentes de ${issue.idIssue}`,
+    const idcell = cell(tr, "", "issue-id");
+    const title = document.createElement("button");
+    title.type = "button";
+    title.className = "feature-id-link";
+    title.textContent = issue.idIssue;
+    title.setAttribute("aria-label", `Detalhes de ${issue.idIssue}`);
+    title.onclick = () => showComponents(issue, true);
+    const description = document.createElement("span");
+    description.className = "feature-description";
+    description.textContent = issue.descricao;
+    description.title = issue.descricao;
+    idcell.append(title, description);
+    const teamCell = cell(tr, issue.squad, "feature-team");
+    const environment = document.createElement("small");
+    environment.textContent = labels[issue.ambiente];
+    teamCell.append(environment);
+    const period = cell(
+      tr,
+      `${date(issue.dataInicialHomologacao).slice(0, 5)} – ${date(issue.dataFinalHomologacao).slice(0, 5)}`,
+      "feature-ho-period",
     );
-    viewButton.onclick = () => showComponents(issue);
-    servicesCell.append(viewButton);
-    const concurrencyCell = cell(tr, "");
-    const conflicts = conflictsFor(issue, issues);
-    if (conflicts.length) tr.classList.add("has-conflict");
-    const concurrencyBadge = document.createElement(
-      conflicts.length ? "button" : "span",
-    );
-    if (conflicts.length) {
-      concurrencyBadge.type = "button";
-      concurrencyBadge.onclick = () => showComponents(issue);
-      concurrencyBadge.setAttribute(
-        "aria-label",
-        `Ver concorrências de ${issue.idIssue}`,
-      );
-    }
-    concurrencyBadge.className =
-      "badge " + (conflicts.length ? "red" : "green");
-    concurrencyBadge.textContent = conflicts.length
-      ? `⚠ ${conflicts.length} concorrência(s)`
-      : "Sem concorrência";
-    concurrencyCell.append(concurrencyBadge);
-    if (conflicts.length) {
-      const details = document.createElement("small");
-      details.className = "conflict-ids";
-      details.textContent = [
-        ...new Set(conflicts.flatMap((c) => c.servicos)),
-      ].join(", ");
-      concurrencyCell.append(details);
-    }
-    const env = cell(tr, "");
-    const badge = document.createElement("span");
-    badge.className = "badge env";
-    badge.textContent = labels[issue.ambiente];
-    env.append(badge);
-    const recommendation = suggestionFor(issue, issues);
-    if (recommendation) {
-      const hint = document.createElement("button");
-      hint.type = "button";
-      hint.className =
-        "environment-hint " +
-        (recommendation.available ? "available" : "unavailable");
-      hint.textContent = recommendation.available
-        ? "↗ Sugerido: Homologação 2"
-        : "Homologação 2 ocupado";
-      hint.title = recommendation.message;
-      hint.onclick = () => showComponents(issue);
-      env.append(hint);
-    }
-    cell(tr, date(issue.dataInicialHomologacao));
-    cell(tr, date(issue.dataFinalHomologacao));
-    cell(tr, date(issue.dataAberturaChange));
-    cell(tr, date(issue.dataProducao));
-    const changeCell = cell(tr, "", "change-cell");
-    const linkedChange = changeForIssue(issue.idIssue);
-    if (linkedChange) {
-      const cb = document.createElement("span");
-      cb.className =
-        "badge " + (changeStatusBadge[linkedChange.status] || "gray");
-      cb.textContent = `${linkedChange.rdm || "TBD"} · ${linkedChange.status}`;
-      cb.title = `Subida ${date(linkedChange.dataProducao)}${linkedChange.reprogramacoes ? " · reprogramada ×" + linkedChange.reprogramacoes : ""}`;
-      changeCell.append(cb);
-    } else {
-      changeCell.append(document.createTextNode("—"));
-    }
-    const sc = cell(tr, "");
-    const sb = document.createElement("span");
-    const st = status(issue);
-    sb.className =
+    period.title = `Homologação: ${date(issue.dataInicialHomologacao)} a ${date(issue.dataFinalHomologacao)}`;
+    const production = cell(tr, date(issue.dataProducao), "feature-production");
+    const linked = changeForIssue(issue.idIssue);
+    const gmud = document.createElement("small");
+    gmud.textContent = linked ? linked.rdm || "GMUD sem RDM" : "Sem GMUD";
+    production.append(gmud);
+    const statusCell = cell(tr, "", "feature-status");
+    const state = status(issue),
+      stateBadge = document.createElement("span");
+    stateBadge.className =
       "badge " +
       {
         "Em produção": "green",
@@ -191,17 +138,91 @@ function render() {
         Planejada: "gray",
         "Aguardando produção": "orange",
         "Rollback realizado": "red",
-      }[st];
-    sb.textContent = st;
-    sc.append(sb);
+      }[state];
+    stateBadge.textContent = state;
+    statusCell.append(stateBadge);
+    const conflicts = conflictsFor(issue, issues);
+    if (conflicts.length) {
+      tr.classList.add("has-conflict");
+      const alert = document.createElement("button");
+      alert.type = "button";
+      alert.className = "feature-conflict";
+      alert.textContent = `${conflicts.length} concorrência(s)`;
+      alert.setAttribute("aria-label", `Ver concorrências de ${issue.idIssue}`);
+      alert.onclick = () => showComponents(issue);
+      statusCell.append(alert);
+    }
+    const mobileStatus = stateBadge.cloneNode(true);
+    mobileStatus.classList.add("feature-mobile-status");
+    idcell.append(mobileStatus);
+    const actionCell = cell(tr, "", "feature-action-cell"),
+      actions = document.createElement("div");
+    actions.className = "feature-actions";
+    const ho = document.createElement("a");
+    ho.href = "homologacao.html?issue=" + encodeURIComponent(issue.idIssue);
+    ho.className = "feature-action feature-action-ho";
+    ho.setAttribute("aria-label", `Testes de homologação de ${issue.idIssue}`);
+    ho.title = "Testes de homologação";
+    ho.append(featureActionIcon("tests"), document.createTextNode("HO"));
+    const components = document.createElement("button");
+    components.type = "button";
+    components.className = "feature-action feature-action-components";
+    components.setAttribute(
+      "aria-label",
+      `Ver componentes de ${issue.idIssue}`,
+    );
+    components.title = `Ver ${issue.servicos.length} componentes e concorrências`;
+    const count = document.createElement("span");
+    count.className = "feature-action-count";
+    count.textContent = issue.servicos.length;
+    components.append(featureActionIcon("components"), count);
+    components.onclick = () => showComponents(issue);
+    actions.append(ho, components);
+    actionCell.append(actions);
     $("#rows").append(tr);
   }
-  $("#empty").hidden = filtered.length !== 0;
-  $("#count").textContent = `${filtered.length} de ${issues.length} issues`;
+  $("#empty").hidden = filtered.length > 0;
+  $("#count").textContent = filtered.length
+    ? `${start + 1}–${Math.min(start + featurePageSize, filtered.length)} de ${filtered.length} issues`
+    : "0 issues";
+  $("#featurePageLabel").textContent = `${featurePage} / ${pages}`;
+  $("#featurePrevious").disabled = featurePage === 1;
+  $("#featureNext").disabled = featurePage === pages;
 }
-function showComponents(issue) {
+
+function showComponents(issue, details = false) {
   const conflicts = conflictsFor(issue, issues);
-  $("#componentsTitle").textContent = `Componentes · ${issue.idIssue}`;
+  $("#componentsTitle").textContent =
+    `${details ? "Detalhes" : "Componentes"} · ${issue.idIssue}`;
+  const summary = $("#featureDetails");
+  summary.replaceChildren();
+  const linked = changeForIssue(issue.idIssue);
+  for (const [label, value] of [
+    ["Descrição", issue.descricao],
+    ["Squad", issue.squad],
+    ["Ambiente", labels[issue.ambiente]],
+    [
+      "Homologação",
+      `${date(issue.dataInicialHomologacao)} a ${date(issue.dataFinalHomologacao)}`,
+    ],
+    ["Abertura da GMUD", date(issue.dataAberturaChange)],
+    ["Produção prevista", date(issue.dataProducao)],
+    [
+      "GMUD",
+      linked
+        ? `${linked.rdm || "Sem RDM"} · ${linked.status}`
+        : "Não vinculada",
+    ],
+    ["Situação", status(issue)],
+  ]) {
+    const field = document.createElement("div"),
+      heading = document.createElement("small"),
+      content = document.createElement("span");
+    heading.textContent = label;
+    content.textContent = value;
+    field.append(heading, content);
+    summary.append(field);
+  }
   $("#componentsSummary").textContent =
     `${issue.squad} · ${labels[issue.ambiente]} · Homologação: ${date(issue.dataInicialHomologacao)} a ${date(issue.dataFinalHomologacao)}`;
   const alert = $("#componentsAlert");
@@ -414,7 +435,11 @@ $("#form").onsubmit = (e) => {
   );
 };
 ["#search", "#squadFilter", "#environmentFilter", "#conflictFilter"].forEach(
-  (s) => $(s).addEventListener("input", render),
+  (s) =>
+    $(s).addEventListener("input", () => {
+      featurePage = 1;
+      render();
+    }),
 );
 $("#export").onclick = () => {
   const blob = new Blob([JSON.stringify(issues, null, 2)], {
@@ -427,6 +452,19 @@ $("#export").onclick = () => {
   a.click();
   setTimeout(() => URL.revokeObjectURL(url), 1000);
   notify("JSON exportado com os registros atuais.");
+};
+$("#featurePrevious").onclick = () => {
+  featurePage--;
+  render();
+};
+$("#featureNext").onclick = () => {
+  featurePage++;
+  render();
+};
+$("#featurePageSize").onchange = (e) => {
+  featurePageSize = Number(e.target.value);
+  featurePage = 1;
+  render();
 };
 render();
 
@@ -451,3 +489,24 @@ $("#form").elements.dataProducao.addEventListener("input", () => {
       3,
     );
 });
+
+function featureActionIcon(kind) {
+  const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+  svg.setAttribute("viewBox", "0 0 24 24");
+  svg.setAttribute("aria-hidden", "true");
+  svg.setAttribute("focusable", "false");
+  svg.setAttribute("fill", "none");
+  svg.setAttribute("stroke", "currentColor");
+  svg.setAttribute("stroke-width", "1.7");
+  svg.setAttribute("stroke-linecap", "round");
+  svg.setAttribute("stroke-linejoin", "round");
+  const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+  path.setAttribute(
+    "d",
+    kind === "tests"
+      ? "M9 4H6a2 2 0 0 0-2 2v14h16V6a2 2 0 0 0-2-2h-3M9 2h6v4H9zM8 13l3 3 5-6"
+      : "M3 3h7v7H3zM14 3h7v7h-7zM3 14h7v7H3zM14 14h7v7h-7z",
+  );
+  svg.append(path);
+  return svg;
+}

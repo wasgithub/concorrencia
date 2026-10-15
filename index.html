@@ -4,12 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>IssueFlow · Gestão de issues</title>
+    <link rel="stylesheet" href="shared/ui/theme.css" />
     <link rel="stylesheet" href="shared/ui/styles.css" />
+    <link rel="stylesheet" href="modules/features/features.css" />
     <script src="modules/features/features-store.js" defer></script>
     <script src="modules/features/features-page.js" defer></script>
     <script src="shared/ui/navigation.js" defer></script>
   </head>
-  <body>
+  <body class="features-page">
     <aside class="sidebar">
       <a class="brand" href="index.html"
         ><span class="brand-icon">i<span>f</span></span
@@ -46,7 +48,9 @@
             <span>＋</span> Nova feature / issue
           </button>
         </div>
-        <p style="margin:0 0 18px;font-size:12px"><a href="limpar-fluxo.html">Excluir issues e preservar cenários →</a></p>
+        <p style="margin: 0 0 18px; font-size: 12px">
+          <a href="limpar-fluxo.html">Excluir issues e preservar cenários →</a>
+        </p>
         <section class="stats" aria-label="Resumo de issues">
           <article>
             <span>Total de issues</span><span class="stat-icon">▦</span
@@ -95,7 +99,7 @@
           <div class="panel-heading">
             <div>
               <h2>Issues cadastradas</h2>
-              <p>Consulte os registros e o cronograma de cada entrega.</p>
+              <p>Clique no ID para ver as datas e os detalhes completos.</p>
             </div>
             <button id="export" class="secondary">↓ Exportar JSON</button>
           </div>
@@ -120,17 +124,12 @@
             <table>
               <thead>
                 <tr>
-                  <th>ISSUE / SQUAD</th>
-                  <th>DESCRIÇÃO</th>
-                  <th>SERVIÇOS / COMPONENTES</th>
-                  <th>CONCORRÊNCIA</th>
-                  <th>AMBIENTE</th>
-                  <th>INÍCIO HOMOL.</th>
-                  <th>FIM HOMOL.</th>
-                  <th>ABERTURA CHANGE/GMUD</th>
-                  <th>PRODUÇÃO</th>
-                  <th>CHANGE / RDM</th>
+                  <th>FEATURE / ISSUE</th>
+                  <th>SQUAD / AMBIENTE</th>
+                  <th>HOMOLOGAÇÃO</th>
+                  <th>PRODUÇÃO / GMUD</th>
                   <th>STATUS</th>
+                  <th>AÇÕES</th>
                 </tr>
               </thead>
               <tbody id="rows"></tbody>
@@ -140,9 +139,23 @@
             Nenhuma issue encontrada. Ajuste os filtros ou cadastre uma nova
             issue.
           </div>
-          <footer class="panel-footer">
-            <span id="count"></span
-            ><span>Status calculado a partir das datas cadastradas</span>
+          <footer class="panel-footer feature-pagination">
+            <span id="count" aria-live="polite"></span>
+            <div class="feature-page-controls">
+              <label
+                >Por página
+                <select id="featurePageSize" aria-label="Issues por página">
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                  <option value="100">100</option>
+                </select></label
+              ><button id="featurePrevious" class="secondary" type="button">
+                Anterior</button
+              ><span id="featurePageLabel" aria-live="polite"></span
+              ><button id="featureNext" class="secondary" type="button">
+                Próxima
+              </button>
+            </div>
           </footer>
         </section>
         <div class="bottom-note">
@@ -165,6 +178,7 @@
           ×
         </button>
       </div>
+      <div id="featureDetails" class="feature-details"></div>
       <p id="componentsSummary" class="modal-intro"></p>
       <div id="componentsAlert" role="status"></div>
       <div id="componentSuggestion" hidden></div>

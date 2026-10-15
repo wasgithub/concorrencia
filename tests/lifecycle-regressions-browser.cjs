@@ -122,7 +122,7 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
           .locator("#rows tr")
           .filter({ hasText: "DEMO-E2E-REPLANEJADA" });
         assert.equal(
-          await row.locator("td").last().textContent(),
+          await row.locator(".feature-status .badge").textContent(),
           "Aguardando produção",
         );
       },

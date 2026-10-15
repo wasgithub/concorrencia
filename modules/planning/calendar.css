@@ -3,7 +3,7 @@ a.nav {
   color: #6c7b92;
 }
 a.nav.active {
-  color: #4263df;
+  color: var(--color-primary);
 }
 .sidebar .nav + .nav {
   margin-top: 8px;
@@ -177,10 +177,10 @@ a.nav.active {
   background: #f6f8fc;
 }
 .day-label.current-day {
-  background: #edf2ff;
+  background: var(--color-primary-soft);
 }
 .current-day strong {
-  background: #4263eb;
+  background: var(--color-primary);
   color: white;
   border-radius: 50%;
   width: 24px;
@@ -960,7 +960,7 @@ a.nav.active {
   opacity: 0.25;
 }
 .calendar-row.relation-selected .issue-column {
-  background: #edf3ff;
+  background: var(--color-primary-soft);
   box-shadow: inset 3px 0 #6385d0;
 }
 .calendar-row.relation-neighbor .issue-column {
@@ -1004,7 +1004,7 @@ a.nav.active {
 .timeline-test-fill {
   display: block;
   height: 100%;
-  background: #29a983;
+  background: var(--color-primary);
   border-radius: 4px;
 }
 .timeline-test-progress.has-failure {
@@ -1022,7 +1022,7 @@ a.nav.active {
   display: inline-block;
   width: 23px;
   height: 4px;
-  background: #29a983;
+  background: var(--color-primary);
   border-radius: 3px;
 }
 .timeline-test-summary {
@@ -1071,13 +1071,13 @@ a.nav.active {
   cursor: pointer;
 }
 .timeline-ho-acceptance.pending {
-  background: #fff5e7;
+  background: var(--color-warning-soft);
   border-color: #f2dfba;
   color: #9c732f;
 }
 .timeline-ho-acceptance.accepted {
-  background: #eaf8f2;
-  color: #278968;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
 }
 .calendar-row {
   min-height: 150px;
@@ -1122,7 +1122,7 @@ a.nav.active {
   line-height: 1.6;
 }
 .timeline-change-history.success {
-  border-left: 3px solid #29a983;
+  border-left: 3px solid var(--color-primary);
 }
 .timeline-change-history.replanned {
   border-left: 3px solid #9875ca;
@@ -1159,7 +1159,7 @@ a.nav.active {
 }
 .timeline-outcome.success {
   color: #237d5b;
-  background: #eaf8f2;
+  background: var(--color-primary-soft);
   border-color: #a9dcc6;
 }
 .timeline-outcome.rollback {
@@ -1174,7 +1174,7 @@ a.nav.active {
 }
 .timeline-outcome.deployed {
   color: #4268ad;
-  background: #edf3ff;
+  background: var(--color-primary-soft);
   border-color: #bacdf1;
 }
 
@@ -1199,7 +1199,7 @@ a.nav.active {
 }
 .timeline-outcome.deployed {
   color: #237d5b;
-  background: #eaf8f2;
+  background: var(--color-primary-soft);
   border-color: #a9dcc6;
 }
 .delivery-deployed .homologation-bar {
@@ -1210,7 +1210,7 @@ a.nav.active {
 .timeline-prod-pending {
   border: 1px solid #f2dfba;
   border-radius: 5px;
-  background: #fff5e7;
+  background: var(--color-warning-soft);
   color: #9c732f;
   padding: 3px 8px;
   font-size: 10px;

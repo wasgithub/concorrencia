@@ -21,8 +21,8 @@
   font-weight: 600;
 }
 .po-tabs button[aria-selected="true"] {
-  color: #4263eb;
-  border-bottom-color: #4263eb;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 .po-cards {
   display: grid;
@@ -89,7 +89,7 @@
 }
 .po-progress-track div {
   height: 100%;
-  background: #29a983;
+  background: var(--color-primary);
 }
 .po-card-actions {
   display: flex;
@@ -214,7 +214,7 @@
   font-size: 11px;
 }
 .po-stage-grid select[data-result="OK"] {
-  color: #278968;
+  color: var(--color-primary);
   background: #f2fbf6;
   border-color: #bcdfcf;
 }
@@ -242,7 +242,7 @@
 .po-scenario-controls button {
   font-size: 10px;
   padding: 8px 11px;
-  color: #278968;
+  color: var(--color-primary);
   border-color: #cae6d8;
   background: #f4fbf7;
 }

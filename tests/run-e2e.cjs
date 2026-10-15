@@ -9,6 +9,7 @@ fs.mkdirSync(out, { recursive: true });
 const suites = [
   "unit",
   "navigation-browser",
+  "feature-actions-browser",
   "reset-flow-browser",
   "homologacao-browser",
   "production-picker-browser",

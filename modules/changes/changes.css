@@ -163,7 +163,7 @@
 }
 
 .approval-ready {
-  color: #278968;
+  color: var(--color-primary);
 }
 
 .changes-embedded > .sidebar,
