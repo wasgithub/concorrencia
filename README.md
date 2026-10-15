@@ -138,3 +138,11 @@ Abra `limpar-fluxo.html` no mesmo navegador/origem. Ao abrir, a página exclui i
 ## Suíte ponta a ponta
 
 Execute `node tests/run-e2e.cjs` com Playwright disponível no ambiente de testes. O runner não instala dependências, usa servidor local temporário e contextos isolados, e gera relatório em `test-results/e2e/report.md`. Cobertura, correções e instruções: [docs/testes-ponta-a-ponta.md](docs/testes-ponta-a-ponta.md).
+
+## Lista compacta de features/issues
+
+A lista mostra seis colunas principais: feature/descrição, squad/ambiente, período de HO, produção/GMUD, status e ações. Clique no ID para detalhes completos, incluindo abertura da GMUD e componentes. HO e componentes ficam lado a lado; paginação oferece 25, 50 ou 100 itens e reinicia ao filtrar. No celular, a lista prioriza identificação, descrição, situação e ações; demais informações ficam nos detalhes.
+
+## Identidade visual
+
+A cor principal segue o verde e-agro, com azul secundário, amarelo de atenção e superfícies brancas. Tokens compartilhados em `shared/ui/theme.css`; decisões de contraste e reutilização em [docs/tema.md](docs/tema.md).

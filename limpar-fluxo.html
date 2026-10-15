@@ -1,1 +1,54 @@
-<!doctype html><html lang="pt-BR"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>IssueFlow · Excluir issues e manter cenários</title><link rel="stylesheet" href="shared/ui/styles.css"><script src="modules/demo/reset-flow-page.js" defer></script></head><body><main style="max-width:850px;margin:auto"><div class="page-heading"><div><div class="eyebrow">VALIDAÇÃO DO FLUXO</div><h1>Excluir issues e manter cenários</h1><p>Esta página exclui as issues e seus planos de HO e GMUDs, preservando o catálogo de cenários e as trilhas.</p></div></div><section class="panel"><div class="panel-heading"><div><h2>Resultado da limpeza</h2><p id="resetFlowStatus" role="status">Limpando o fluxo…</p></div></div><div style="padding:0 23px 23px"><p style="font-size:12px;line-height:1.7;margin-bottom:18px">Cenários, trilhas, etapas, dimensões e modelo de checklist continuam disponíveis. As issues de exemplo não serão recriadas automaticamente. Atualize outras abas do protótipo antes de continuar.</p><a id="startFlow" class="secondary" href="index.html" style="text-decoration:none;display:inline-block" hidden>Cadastrar uma nova issue e iniciar validação →</a></div></section><p style="font-size:12px;line-height:1.7">Para validar: cadastre uma issue → selecione um cenário existente → execute e aprove HO → crie a GMUD e o plano de PROD → aprove a subida → registre a implantação → valide PROD → encerre a GMUD.</p></main></body></html>
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IssueFlow · Excluir issues e manter cenários</title>
+    <link rel="stylesheet" href="shared/ui/theme.css" />
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <script src="modules/demo/reset-flow-page.js" defer></script>
+  </head>
+  <body>
+    <main style="max-width: 850px; margin: auto">
+      <div class="page-heading">
+        <div>
+          <div class="eyebrow">VALIDAÇÃO DO FLUXO</div>
+          <h1>Excluir issues e manter cenários</h1>
+          <p>
+            Esta página exclui as issues e seus planos de HO e GMUDs,
+            preservando o catálogo de cenários e as trilhas.
+          </p>
+        </div>
+      </div>
+      <section class="panel">
+        <div class="panel-heading">
+          <div>
+            <h2>Resultado da limpeza</h2>
+            <p id="resetFlowStatus" role="status">Limpando o fluxo…</p>
+          </div>
+        </div>
+        <div style="padding: 0 23px 23px">
+          <p style="font-size: 12px; line-height: 1.7; margin-bottom: 18px">
+            Cenários, trilhas, etapas, dimensões e modelo de checklist continuam
+            disponíveis. As issues de exemplo não serão recriadas
+            automaticamente. Atualize outras abas do protótipo antes de
+            continuar.
+          </p>
+          <a
+            id="startFlow"
+            class="secondary"
+            href="index.html"
+            style="text-decoration: none; display: inline-block"
+            hidden
+            >Cadastrar uma nova issue e iniciar validação →</a
+          >
+        </div>
+      </section>
+      <p style="font-size: 12px; line-height: 1.7">
+        Para validar: cadastre uma issue → selecione um cenário existente →
+        execute e aprove HO → crie a GMUD e o plano de PROD → aprove a subida →
+        registre a implantação → valide PROD → encerre a GMUD.
+      </p>
+    </main>
+  </body>
+</html>

@@ -31,6 +31,7 @@ A pasta é ignorada pelo Git para não versionar resultados de cada execução. 
 | Suíte | Validação |
 | --- | --- |
 | Unitários | Regras de snapshot, resultados, HO, PROD e preparação MongoDB |
+| Ações de Features / Issues | Seis colunas compactas, detalhes completos, paginação/filtros, abertura da modal, acesso HO por teclado e mobile |
 | Navegação | Menu, módulo expansível, página ativa, fila HO, histórico e mobile |
 | Limpeza | Excluir issues/execuções e preservar cenários personalizados, trilhas e configurações |
 | Homologação | Sugestões, filtros, seleção, cancelamento, trilhas, resultados, persistência e aceite |

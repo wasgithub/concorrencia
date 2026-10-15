@@ -71,7 +71,7 @@
 }
 .ho-progress > div {
   height: 100%;
-  background: #29a983;
+  background: var(--color-primary);
   transition: width 0.2s;
 }
 .ho-executions {
@@ -90,8 +90,8 @@
   height: 52px;
   margin: 0 auto 16px;
   border-radius: 14px;
-  background: #edf2ff;
-  color: #4263eb;
+  background: var(--color-primary-soft);
+  color: var(--color-primary);
   font-size: 25px;
 }
 .ho-empty h3 {
@@ -198,7 +198,7 @@
 .ho-stage-grid select[data-result="OK"] {
   border-color: #bcdfcf;
   background: #f2fbf6;
-  color: #278968;
+  color: var(--color-primary);
 }
 .ho-stage-grid select[data-result="Falhou"] {
   border-color: #edc6c0;
@@ -290,8 +290,8 @@
   border-bottom: 2px solid transparent;
 }
 .ho-tabs button[aria-selected="true"] {
-  color: #4263eb;
-  border-bottom-color: #4263eb;
+  color: var(--color-primary);
+  border-bottom-color: var(--color-primary);
 }
 .ho-tabs button span {
   border-radius: 5px;
@@ -348,7 +348,7 @@
   margin-top: 4px;
 }
 .ho-picker-body input[type="checkbox"] {
-  accent-color: #4263eb;
+  accent-color: var(--color-primary);
   width: 15px;
   height: 15px;
   cursor: pointer;
@@ -387,12 +387,12 @@
   gap: 12px;
   padding: 16px;
   margin: 20px 24px;
-  background: #f3f6ff;
-  border: 1px solid #e0e7fd;
+  background: var(--color-primary-soft);
+  border: 1px solid var(--color-primary-border);
   border-radius: 8px;
 }
 .ho-note-icon {
-  color: #4263eb;
+  color: var(--color-primary);
   font-size: 22px;
 }
 .ho-suggestion-note strong {
@@ -468,7 +468,7 @@
   color: #5a77c5;
 }
 .ho-save-dirty {
-  color: #b1873a !important;
+  color: var(--color-warning-text) !important;
 }
 @media (max-width: 1000px) {
   .ho-heading-actions {
@@ -629,7 +629,7 @@
 .ho-filter-summary button {
   border: 0;
   background: transparent;
-  color: #526fce;
+  color: var(--color-primary);
   font-size: 10px;
   padding: 3px;
 }
@@ -682,7 +682,7 @@
 .ho-fill-ok {
   padding: 8px 11px;
   font-size: 10px;
-  color: #278968;
+  color: var(--color-primary);
   border-color: #cae6d8;
   background: #f4fbf7;
 }

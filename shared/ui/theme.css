@@ -1,0 +1,25 @@
+/* Paleta e-agro. Tons de interação escuros preservam contraste em textos pequenos. */
+:root {
+  --brand-green-symbol: #35c537;
+  --brand-green-start: #24b732;
+  --brand-green-end: #09a12a;
+  --brand-blue: #008aeb;
+  --brand-yellow: #edba12;
+  --color-primary: #0b7d28;
+  --color-primary-hover: #086522;
+  --color-primary-fill-start: #16892e;
+  --color-primary-soft: #eff9ef;
+  --color-primary-soft-hover: #e1f3e1;
+  --color-primary-border: #c5e6c8;
+  --color-primary-focus: #2d9944;
+  --color-primary-shadow: rgba(11, 125, 40, 0.14);
+  --color-secondary: #008aeb;
+  --color-secondary-text: #006cb8;
+  --color-secondary-soft: #eef7ff;
+  --color-secondary-border: #cbe4f8;
+  --color-warning: #edba12;
+  --color-warning-soft: #fff8db;
+  --color-warning-text: #806300;
+  --color-surface: #ffffff;
+  --color-background: #ffffff;
+}
