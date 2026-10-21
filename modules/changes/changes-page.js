@@ -50,21 +50,51 @@ function resetApproval(change, nota) {
     delete change.aprovadaPor;
     delete change.aprovadaEm;
     delete change.hoRevisionAprovada;
+    delete change.excecaoChecklist;
     logHistory(change, {
       tipo: "editada",
       nota: nota + " Nova aprovação necessária.",
     });
   }
 }
-function aprovar(change, { por, checklistIncompleto, checklistInfo }) {
+function aprovar(
+  change,
+  { por, checklistIncompleto, checklistInfo, exceptionReason },
+) {
+  if (!DeliveryModules.isEnabled("approval")) {
+    notify("A aprovação da subida será habilitada na fase de aprovação.");
+    return false;
+  }
+  if (
+    !["Planejada", "Em aprovação", "Aprovada"].includes(change.status) ||
+    !por?.trim()
+  )
+    return false;
   if (!requireOpen(change) || productionPrerequisites(change).length) return;
+  if (
+    !checklistStatus(change).complete &&
+    (!checklistIncompleto || !exceptionReason?.trim())
+  ) {
+    notify("Registre o motivo para aprovar com checklist incompleto.");
+    return false;
+  }
   change.hoRevisionAprovada = productionHORevision(change);
   change.status = "Aprovada";
   change.aprovadaPor = por;
   change.aprovadaEm = nowStamp();
   const nota = checklistIncompleto
-    ? `Aprovada com checklist incompleto (${checklistInfo}).`
+    ? `Aprovada com checklist incompleto (${checklistInfo}). Motivo: ${exceptionReason}`
     : undefined;
+  if (checklistIncompleto)
+    change.excecaoChecklist = {
+      motivo: exceptionReason.trim(),
+      pendentes: checklistItems()
+        .filter((i) => i.obrigatorio && !isAnswered(change.checklist?.[i.id]))
+        .map((i) => i.id),
+      por,
+      quando: change.aprovadaEm,
+    };
+  else delete change.excecaoChecklist;
   logHistory(change, { tipo: "aprovada", por, nota });
   commit(
     change,
@@ -121,17 +151,32 @@ function reprogramar(change, { novaData, novoHorario, motivo, por, nota }) {
   );
 }
 function rejeitar(change, { motivo, por, nota }) {
+  if (
+    !DeliveryModules.isEnabled("approval") ||
+    !["Planejada", "Em aprovação", "Aprovada"].includes(change.status) ||
+    !motivo?.trim() ||
+    !por?.trim()
+  )
+    return false;
   if (!requireOpen(change)) return;
   change.status = "Rejeitada";
   logHistory(change, { tipo: "rejeitada", motivo, por, nota });
   commit(change, "Change rejeitada. Issues liberadas para nova change.");
 }
 function executar(change, { nota }) {
-  change.status = "Executada";
-  logHistory(change, { tipo: "executada", nota });
-  commit(change, "Change marcada como executada.");
+  notify(
+    "Use Subida realizada para confirmar a versão implantada e validar os pré-requisitos.",
+  );
+  return false;
 }
 function naoRealizar(change, { motivo, por, nota }) {
+  if (
+    !DeliveryModules.isEnabled("production") ||
+    change.status !== "Aprovada" ||
+    !motivo?.trim() ||
+    !por?.trim()
+  )
+    return false;
   if (!requireOpen(change)) return;
   change.status = "Não realizada";
   logHistory(change, { tipo: "nao_realizada", motivo, por, nota });
@@ -163,6 +208,12 @@ function openCompose({
   presetIssueIds = null,
   presetOwner = null,
 } = {}) {
+  if (!issues.length) {
+    notify(
+      "Cadastre uma entrega em Features / Issues antes de preparar a GMUD.",
+    );
+    return;
+  }
   if (editing && !requireOpen(editing)) return;
   if (editing?.status === "Executada") {
     notify("Subida já realizada. Dados preservados para consulta.");
@@ -397,6 +448,12 @@ function actionForm(fields, onConfirm, confirmLabel) {
 }
 const actionBuilders = {
   aprovar: (change) => {
+    if (!DeliveryModules.isEnabled("approval"))
+      return element(
+        "p",
+        "",
+        "A aprovação da subida ainda não está habilitada nesta fase.",
+      );
     const st = checklistStatus(change);
     const form = actionForm(
       [
@@ -408,6 +465,11 @@ const actionBuilders = {
       ],
       (v) => {
         if (!v.por) return "Informe quem aprovou.";
+        const exceptionReason = form
+          .querySelector("[name=exceptionReason]")
+          ?.value.trim();
+        if (!checklistStatus(change).complete && !exceptionReason)
+          return "Informe o motivo da exceção de checklist.";
         const problems = productionPrerequisites(change);
         if (problems.length) return problems.join(" ");
         if (
@@ -419,6 +481,7 @@ const actionBuilders = {
           por: v.por,
           checklistIncompleto: !st.complete,
           checklistInfo: `${st.done}/${st.total}`,
+          exceptionReason,
         });
         return null;
       },
@@ -474,6 +537,12 @@ const actionBuilders = {
         reasons.push(
           "Marque “Aprovar mesmo assim” para aceitar o checklist incompleto.",
         );
+      if (
+        !latest.complete &&
+        acknowledged &&
+        !form.querySelector("[name=exceptionReason]")?.value.trim()
+      )
+        reasons.push("Informe o motivo da exceção de checklist.");
       if (!name) reasons.push("Informe o nome da gerente responsável.");
       confirm.disabled = reasons.length > 0;
       status.textContent = reasons.length
@@ -502,7 +571,17 @@ const actionBuilders = {
           ` ⚠ Checklist: ${st.pending} itens pendentes. Aprovar mesmo assim (fica registrado no histórico).`,
         ),
       );
-      warn.append(lbl, open);
+      const reasonLabel = element(
+          "label",
+          "",
+          "Motivo da exceção de checklist",
+        ),
+        reason = element("textarea");
+      reason.name = "exceptionReason";
+      reason.maxLength = 1000;
+      reason.rows = 2;
+      reasonLabel.append(reason);
+      warn.append(lbl, reasonLabel, open);
       form.insertBefore(warn, form.querySelector(".primary"));
     }
     refreshApproval();
@@ -567,6 +646,7 @@ const actionBuilders = {
         { name: "nota", label: "Observação (opcional)", type: "textarea" },
       ],
       (v) => {
+        if (!v.por || !v.motivo) return "Informe responsável e motivo.";
         rejeitar(change, v);
         return null;
       },
@@ -602,6 +682,7 @@ const actionBuilders = {
         { name: "nota", label: "Observação (opcional)", type: "textarea" },
       ],
       (v) => {
+        if (!v.por || !v.motivo) return "Informe responsável e motivo.";
         naoRealizar(change, v);
         return null;
       },
@@ -646,11 +727,11 @@ function renderDetailActions(change, autoAction) {
   const open = (key) => slot.replaceChildren(actionBuilders[key](change));
   const st = change.status;
   const approvalPhase = st === "Planejada" || st === "Em aprovação";
-  if (approvalPhase)
+  if (approvalPhase && DeliveryModules.isEnabled("approval"))
     buttons.append(
       actBtn("✓ Aprovar subida", "primary", () => open("aprovar")),
     );
-  if (st === "Aprovada") {
+  if (st === "Aprovada" && DeliveryModules.isEnabled("production")) {
     buttons.append(
       actBtn("✓ Subida realizada", "primary", () => open("confirmarSubida")),
     );
@@ -658,11 +739,16 @@ function renderDetailActions(change, autoAction) {
       actBtn("✗ Não realizada", "secondary", () => open("naoRealizar")),
     );
   }
-  if (st === "Executada" && change.aceiteProducao && !change.encerramento)
+  if (
+    DeliveryModules.isEnabled("production") &&
+    st === "Executada" &&
+    change.aceiteProducao &&
+    !change.encerramento
+  )
     buttons.append(
       actBtn("Encerrar GMUD", "primary", () => open("encerrarGmud")),
     );
-  if (st === "Executada")
+  if (DeliveryModules.isEnabled("production") && st === "Executada")
     buttons.append(
       actBtn("Registrar rollback", "secondary danger", () => {
         openScenarios(change);
@@ -673,7 +759,10 @@ function renderDetailActions(change, autoAction) {
     buttons.append(
       actBtn("↻ Reprogramar", "secondary", () => open("reprogramar")),
     );
-  if (approvalPhase || st === "Aprovada")
+  if (
+    DeliveryModules.isEnabled("approval") &&
+    (approvalPhase || st === "Aprovada")
+  )
     buttons.append(
       actBtn("✗ Rejeitar", "secondary danger", () => open("rejeitar")),
     );
@@ -1137,19 +1226,25 @@ function render() {
     tr.append(sit);
     const actions = document.createElement("td");
     actions.className = "agenda-actions";
-    if (change.status === "Planejada" || change.status === "Em aprovação")
+    if (
+      DeliveryModules.isEnabled("approval") &&
+      (change.status === "Planejada" || change.status === "Em aprovação")
+    )
       actions.append(
         actBtn("Aprovar subida", "primary small", () =>
           openQuickAction(change, "aprovar"),
         ),
       );
-    if (change.status === "Aprovada")
+    if (change.status === "Aprovada" && DeliveryModules.isEnabled("production"))
       actions.append(
         actBtn("✓ Subida realizada", "primary small", () =>
           openQuickAction(change, "confirmarSubida"),
         ),
       );
-    if (change.status === "Executada") {
+    if (
+      change.status === "Executada" &&
+      DeliveryModules.isEnabled("production")
+    ) {
       if (tests.falhou && !change.encerramento)
         actions.append(
           actBtn("Registrar rollback", "secondary small danger", () => {
@@ -1178,7 +1273,9 @@ function render() {
         : change.status === "Executada"
           ? "Próximo passo: validação do PO"
           : change.status === "Aprovada"
-            ? "Próximo passo: TL confirma a subida"
+            ? DeliveryModules.isEnabled("production")
+              ? "Próximo passo: TL confirma a subida"
+              : "GMUD aprovada · módulo de produção desativado"
             : ["Planejada", "Em aprovação"].includes(change.status)
               ? "Próximo passo: revisar e aprovar"
               : "";
@@ -1380,6 +1477,7 @@ $("#changeForm").onsubmit = (e) => {
       cenariosLink: prev.cenariosLink,
       aceiteProducao: prev.aceiteProducao,
       hoRevisionAprovada: prev.hoRevisionAprovada,
+      excecaoChecklist: prev.excecaoChecklist,
     });
     record.status = prev.status;
     record.reprogramacoes = prev.reprogramacoes || 0;
@@ -1782,21 +1880,15 @@ function stageShort(s) {
   return stageShortMap[s] || s.split(" ")[0];
 }
 function tipoBadge(t) {
-  return element(
-    "span",
-    "badge " + (t === "Automática" ? "blue" : t === "Manual" ? "gray" : "env"),
-    t === "Automática"
-      ? "Garantia automática"
-      : t === "Manual"
-        ? "Garantia manual"
-        : "Garantia N/A",
-  );
+  return element("span", "badge env", t || "Não informado");
 }
 let scenarioChangeId = null,
   scenarioDraft = [],
   productionEvents = [];
 function productionPlanLocked(change) {
   return (
+    (change.status === "Executada" &&
+      !DeliveryModules.isEnabled("production")) ||
     changeReadOnly(change) ||
     !!change?.aceiteProducao ||
     (change?.status === "Executada" && (change.cenarios || []).length > 0)
@@ -1824,7 +1916,9 @@ function openScenarios(change) {
   $("#scenarioDialog .scenario-toolbar").hidden = locked;
   $("#scenarioLink").closest("label").hidden = true;
   $("#openRollback").hidden =
-    changeReadOnly(change) || change.status !== "Executada";
+    !DeliveryModules.isEnabled("production") ||
+    changeReadOnly(change) ||
+    change.status !== "Executada";
   $("#scenarioTitle").textContent =
     `Testes de PROD · ${change.rdm || "RDM sem número"}`;
   $("#scenarioSub").textContent =
@@ -1968,9 +2062,9 @@ function renderScenarioBuilder() {
     label.append(s);
     grid.append(label);
   }
-  const tipoLabel = element("label", "", "Tipo de garantia");
+  const tipoLabel = element("label", "", qualitySettings().classificationLabel);
   const tipoSel = element("select");
-  for (const o of scenarioTipoOptions) tipoSel.append(new Option(o, o));
+  for (const o of caseTypeOptions()) tipoSel.append(new Option(o, o));
   tipoLabel.append(tipoSel);
   grid.append(tipoLabel);
   const alvoLabel = element("label", "", "Testar até");
@@ -2424,7 +2518,7 @@ function renderHOImport() {
         element(
           "small",
           "",
-          `Garantia ${sc.tipo.toLowerCase()} · Testar até ${sc.etapaAlvo} · HO: ${execStatus(sc)}`,
+          `${scenarioClassification(sc)} · Até ${sc.etapaAlvo} · ${executionStages(sc).length}/${executionFullStages(sc).length} etapas no escopo · HO: ${execStatus(sc)}`,
         ),
         status,
       );
@@ -2530,6 +2624,10 @@ function renderProductionAcceptance(box, change) {
 }
 
 function openRollback() {
+  if (!DeliveryModules.isEnabled("production")) {
+    notify("A validação de produção ainda não está habilitada nesta fase.");
+    return;
+  }
   const change = changes.find((c) => c.id === scenarioChangeId);
   if (!change || changeReadOnly(change) || change.status !== "Executada") {
     notify("O rollback só pode ser registrado após a subida realizada.");
@@ -2567,6 +2665,11 @@ $("#closeRollback").onclick = $("#cancelRollback").onclick = () =>
   $("#rollbackDialog").close();
 $("#rollbackForm").onsubmit = (e) => {
   e.preventDefault();
+  if (!DeliveryModules.isEnabled("production")) {
+    $("#rollbackError").textContent =
+      "Produção não está habilitada nesta fase.";
+    return;
+  }
   const change = changes.find((c) => c.id === scenarioChangeId),
     fields = e.target.elements,
     por = fields.por.value.trim(),
@@ -2620,6 +2723,11 @@ actionBuilders.confirmarSubida = (change) =>
         value: change.smeTl || "",
       },
       {
+        name: "releaseRef",
+        label: "Versão implantada / commit / tag",
+        placeholder: "Ex.: v1.4.2 ou hash do commit",
+      },
+      {
         name: "nota",
         label: "Observação (opcional)",
         type: "textarea",
@@ -2627,6 +2735,8 @@ actionBuilders.confirmarSubida = (change) =>
       },
     ],
     (v) => {
+      if (!DeliveryModules.isEnabled("production"))
+        return "Ative o módulo de validação de produção antes de confirmar a subida.";
       if (change.encerramento || change.status !== "Aprovada")
         return "A GMUD precisa estar aprovada e aberta.";
       if (
@@ -2643,11 +2753,13 @@ actionBuilders.confirmarSubida = (change) =>
       const problems = productionPrerequisites(change);
       if (problems.length) return problems.join(" ");
       if (!v.por) return "Informe o TL responsável pela confirmação.";
+      if (!v.releaseRef) return "Informe a versão, commit ou tag implantada.";
       change.pipeline = {
         ...change.pipeline,
         resultado: "Sucesso",
         finalizadaEm: nowStamp(),
         finalizadaPor: v.por,
+        releaseRef: v.releaseRef,
       };
       change.status = "Executada";
       logHistory(change, {
@@ -2655,6 +2767,7 @@ actionBuilders.confirmarSubida = (change) =>
         por: v.por,
         nota:
           "Subida realizada, confirmada pelo TL. Liberada para validação do PO." +
+          ` Versão: ${v.releaseRef}.` +
           (v.nota ? " " + v.nota : ""),
       });
       commit(change, "Subida confirmada. Testes liberados para o PO.");
@@ -2662,6 +2775,8 @@ actionBuilders.confirmarSubida = (change) =>
     },
     "Confirmar subida realizada",
   );
+// URLs/ações antigas passam pelo mesmo formulário e pelas mesmas validações.
+actionBuilders.executar = actionBuilders.confirmarSubida;
 actionBuilders.encerrarGmud = (change) =>
   actionForm(
     [
@@ -2672,6 +2787,8 @@ actionBuilders.encerrarGmud = (change) =>
       },
     ],
     (v) => {
+      if (!DeliveryModules.isEnabled("production"))
+        return "Produção não está habilitada nesta fase.";
       if (
         change.encerramento ||
         change.status !== "Executada" ||
@@ -2717,6 +2834,15 @@ if (requestedChangeId) {
         ? "aprovar"
         : undefined,
     );
+}
+
+if (!requestedChangeId) {
+  const requestedIssue = new URLSearchParams(location.search).get("issue");
+  if (
+    requestedIssue &&
+    availableIssues(null).some((i) => i.idIssue === requestedIssue)
+  )
+    openCompose({ presetIssueIds: [requestedIssue] });
 }
 
 window.addEventListener("focus", () => {

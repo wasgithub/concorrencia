@@ -1,0 +1,232 @@
+{
+  "status": "contract-only-no-connected-backend",
+  "basePath": "reuse-host-prefix",
+  "flag": "quality",
+  "permissions": {
+    "quality.catalog.read": "Map to existing DEV, PO, TL, manager capabilities; QA optional, never required",
+    "quality.catalog.write": "Map to existing DEV, PO, TL capabilities; reuse host authorization, no new accounts"
+  },
+  "list": {
+    "pageSize": "1..100; default25",
+    "cursor": "opaque; stable sort name,_id",
+    "scenarioFilters": [
+      "q",
+      "active",
+      "coverage",
+      "guaranteeType",
+      "component",
+      "frontId",
+      "functionalityId"
+    ],
+    "flowFilters": ["q", "active", "frontId", "functionalityId"]
+  },
+  "normalization": "trim strings; case-fold comparison keys; preserve display accents; components lower-case unique; reject object keys starting $ or containing .",
+  "serverOwned": [
+    "workspaceId",
+    "_id",
+    "code",
+    "version",
+    "schemaVersion",
+    "createdAt",
+    "updatedAt",
+    "createdBy",
+    "updatedBy",
+    "nameNormalized",
+    "classification",
+    "classificationLabel",
+    "steps-on-classic-scenario"
+  ],
+  "defaults": {
+    "classification": "Regressivo",
+    "classificationLabel": "Finalidade",
+    "coverage": "Regressivo padrão",
+    "active": true
+  },
+  "definitionItems": {
+    "test_stages": "ordered {id:string,name:string:1..200,active:boolean}[1..50]",
+    "scenario_dimensions": "{id:string,name:string:1..40,frontId?:ObjectId|null,options:{id:string,name:string:1..60,active:boolean}[0..100]}[0..50]; null=all fronts; explicit scope for new attributes",
+    "scenario_front": "[]; name is the front label",
+    "scenario_functionality": "[]; parentId references active scenario_front in same workspace"
+  },
+  "classicScenarioSteps": "Server resolves frontId/functionalityId and optional workflowId in same workspace. Active compatible workflow copies ordered prefix throughStepId and stores workflowVersion; without workflow, only legacy credit stages or unchanged saved scenario steps allowed. Snapshot preservation on edit uses existing steps, never silently refreshes from template. Labels are never IDs. Non-credit guaranteeType is not_applicable; incompatible attributes rejected. Missing fields on legacy partial updates are preserved.",
+  "errors": {
+    "400": "malformed id/query",
+    "401": "no session",
+    "403": "flag off or forbidden workspace/capability",
+    "404": "not found within authorized workspace",
+    "409": "stale version, normalized duplicate or idempotency hash mismatch",
+    "422": "invalid field or cross-workspace/inactive reference"
+  },
+  "deletePolicy": "No destructive DELETE endpoint in release1; active=false archives, preserving trail references and later history. Prototype remove is demo only.",
+  "operations": [
+    {
+      "id": "createScenario",
+      "method": "POST",
+      "path": "/delivery/scenarios",
+      "body": {
+        "name": "string:1..200",
+        "guaranteeType": "automatic|manual|not_applicable",
+        "coverage": "string:1..100",
+        "components": "string[0..100],trimmed,unique",
+        "dimensions": "object<dimensionId,optionId>",
+        "throughStepId": "stable-stage-id",
+        "active": "boolean",
+        "frontId": "workspace-front-id; required for new scenarios",
+        "functionalityId": "optional-id belonging to front",
+        "workflowId": "active compatible flow id; required for non-credit new scenarios",
+        "stepSource": "workflow|legacy_credit|preserve_saved; preserve_saved only on edit without context change"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "saveScenario",
+      "method": "PUT",
+      "path": "/delivery/scenarios/{id}",
+      "body": {
+        "expectedVersion": "integer>=0",
+        "scenario": "same-as-createScenario"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "setScenarioActive",
+      "method": "POST",
+      "path": "/delivery/scenarios/{id}/active",
+      "body": {
+        "expectedVersion": "integer>=0",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "createTrail",
+      "method": "POST",
+      "path": "/delivery/trails",
+      "body": {
+        "name": "string:1..160",
+        "scenarioIds": "objectId-string[1..200],unique,ordered",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "saveTrail",
+      "method": "PUT",
+      "path": "/delivery/trails/{id}",
+      "body": {
+        "expectedVersion": "integer>=0",
+        "name": "string:1..160",
+        "scenarioIds": "objectId-string[1..200],unique,ordered",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "createDefinition",
+      "method": "POST",
+      "path": "/delivery/definitions",
+      "body": {
+        "kind": "test_stages|scenario_dimensions|scenario_front|scenario_functionality",
+        "name": "string:1..100",
+        "parentId": "required-only-for-functionality",
+        "items": "definition-items-by-kind",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "saveDefinition",
+      "method": "PUT",
+      "path": "/delivery/definitions/{id}",
+      "body": {
+        "expectedVersion": "integer>=0",
+        "name": "string:1..100",
+        "items": "definition-items-by-kind",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "createTestFlow",
+      "method": "POST",
+      "path": "/delivery/test-flows",
+      "body": {
+        "name": "string:1..100",
+        "frontId": "objectId-string",
+        "functionalityId": "objectId-string|null",
+        "steps": "{id:string,name:string:1..200}[1..50]",
+        "active": "boolean"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "editTestFlow",
+      "method": "PUT",
+      "path": "/delivery/test-flows/{id}",
+      "body": {
+        "expectedVersion": "integer>=0",
+        "definition": "same-as-createTestFlow"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "permission": "quality.catalog.write",
+      "atomicity": "entity + audit event + idempotency receipt in same host transaction"
+    },
+    {
+      "id": "listScenarios",
+      "method": "GET",
+      "path": "/delivery/scenarios",
+      "permission": "quality.catalog.read",
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "listTrails",
+      "method": "GET",
+      "path": "/delivery/trails",
+      "permission": "quality.catalog.read",
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "listDefinitions",
+      "method": "GET",
+      "path": "/delivery/definitions",
+      "permission": "quality.catalog.read",
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    },
+    {
+      "id": "listTestFlows",
+      "method": "GET",
+      "path": "/delivery/test-flows",
+      "permission": "quality.catalog.read",
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false
+    }
+  ]
+}

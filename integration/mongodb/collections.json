@@ -29,11 +29,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -44,7 +52,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -58,7 +69,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -97,7 +111,11 @@
             },
             "environment": {
               "bsonType": "string",
-              "enum": ["ho", "ho2", "ephemeral"]
+              "enum": [
+                "ho",
+                "ho2",
+                "ephemeral"
+              ]
             },
             "hoStartDate": {
               "bsonType": "string",
@@ -116,7 +134,17 @@
             },
             "legacyId": {
               "bsonType": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "plannedChangeOpenDate": {
+              "bsonType": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
             }
           }
         }
@@ -139,6 +167,23 @@
             "hoStartDate": 1
           },
           "name": "feature_calendar"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -158,8 +203,9 @@
             "code",
             "name",
             "active",
-            "guaranteeType",
-            "steps"
+            "steps",
+            "classification",
+            "classificationLabel"
           ],
           "properties": {
             "_id": {
@@ -170,11 +216,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -185,7 +239,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -199,7 +256,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -217,18 +277,25 @@
             },
             "name": {
               "bsonType": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 200
             },
             "active": {
               "bsonType": "bool"
             },
             "guaranteeType": {
               "bsonType": "string",
-              "enum": ["automatic", "manual", "not_applicable"]
+              "enum": [
+                "automatic",
+                "manual",
+                "not_applicable"
+              ],
+              "description": "Legado de crédito; opcional e não usado como classificação genérica."
             },
             "coverage": {
               "bsonType": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 100
             },
             "components": {
               "bsonType": "array",
@@ -241,14 +308,16 @@
             },
             "dimensions": {
               "bsonType": "object",
-              "required": [],
               "properties": {}
             },
             "steps": {
               "bsonType": "array",
               "items": {
                 "bsonType": "object",
-                "required": ["id", "name"],
+                "required": [
+                  "id",
+                  "name"
+                ],
                 "properties": {
                   "id": {
                     "bsonType": "string",
@@ -262,6 +331,70 @@
               },
               "maxItems": 50,
               "minItems": 1
+            },
+            "classification": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "classificationLabel": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "preconditions": {
+              "bsonType": "string",
+              "maxLength": 2000
+            },
+            "expectedResult": {
+              "bsonType": "string",
+              "maxLength": 3000
+            },
+            "frontId": {
+              "bsonType": "objectId"
+            },
+            "frontLabel": {
+              "bsonType": "string"
+            },
+            "functionalityId": {
+              "bsonType": "objectId"
+            },
+            "functionalityLabel": {
+              "bsonType": "string"
+            },
+            "executionMode": {
+              "enum": [
+                "Manual",
+                "Automatizada"
+              ]
+            },
+            "workflowId": {
+              "bsonType": "objectId"
+            },
+            "workflowVersion": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 1
+            },
+            "stageDefinitionId": {
+              "bsonType": "objectId"
+            },
+            "stageDefinitionVersion": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 0
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
             }
           }
         }
@@ -284,6 +417,23 @@
             "components": 1
           },
           "name": "scenario_component_suggestions"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -302,7 +452,8 @@
             "updatedBy",
             "name",
             "active",
-            "scenarioIds"
+            "scenarioIds",
+            "nameNormalized"
           ],
           "properties": {
             "_id": {
@@ -313,11 +464,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -328,7 +487,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -342,7 +504,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -356,7 +521,8 @@
             },
             "name": {
               "bsonType": "string",
-              "minLength": 1
+              "minLength": 1,
+              "maxLength": 160
             },
             "active": {
               "bsonType": "bool"
@@ -368,6 +534,21 @@
               },
               "maxItems": 200,
               "minItems": 1
+            },
+            "nameNormalized": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 160
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
             }
           }
         }
@@ -382,6 +563,31 @@
             "name": 1
           },
           "name": "trail_catalog"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "nameNormalized": 1
+          },
+          "name": "trail_name_unique",
+          "unique": true
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -400,7 +606,8 @@
             "updatedBy",
             "kind",
             "name",
-            "items"
+            "items",
+            "nameNormalized"
           ],
           "properties": {
             "_id": {
@@ -411,11 +618,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -426,7 +641,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -440,7 +658,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -454,7 +675,15 @@
             },
             "kind": {
               "bsonType": "string",
-              "enum": ["test_flow", "scenario_dimensions", "change_checklist"]
+              "enum": [
+                "test_flow",
+                "scenario_dimensions",
+                "change_checklist",
+                "quality_vocabulary",
+                "scenario_front",
+                "scenario_functionality",
+                "test_stages"
+              ]
             },
             "name": {
               "bsonType": "string",
@@ -464,11 +693,31 @@
               "bsonType": "array",
               "items": {
                 "bsonType": "object",
-                "required": [],
                 "properties": {}
               },
               "maxItems": 200,
               "minItems": 0
+            },
+            "parentId": {
+              "bsonType": "objectId",
+              "description": "Required by API for scenario_functionality; references a scenario_front in the same workspace."
+            },
+            "nameNormalized": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "active": {
+              "bsonType": "bool"
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
             }
           }
         }
@@ -480,10 +729,38 @@
           "key": {
             "workspaceId": 1,
             "kind": 1,
+            "parentId": 1,
+            "nameNormalized": 1
+          },
+          "name": "definition_scope_unique",
+          "unique": true
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "kind": 1,
+            "parentId": 1,
+            "active": 1,
             "name": 1
           },
-          "name": "definition_unique",
-          "unique": true
+          "name": "scoped_quality_definitions"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -515,11 +792,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -530,7 +815,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -544,7 +832,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -560,22 +851,39 @@
               "bsonType": "objectId"
             },
             "revision": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "approvalFence": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "state": {
               "bsonType": "string",
-              "enum": ["no_plan", "testing", "awaiting_acceptance", "accepted"]
+              "enum": [
+                "no_plan",
+                "testing",
+                "awaiting_acceptance",
+                "accepted"
+              ]
             },
             "executions": {
               "bsonType": "array",
               "items": {
                 "bsonType": "object",
-                "required": ["id", "name", "guaranteeType", "steps"],
+                "required": [
+                  "id",
+                  "name",
+                  "steps",
+                  "classification",
+                  "classificationLabel"
+                ],
                 "properties": {
                   "id": {
                     "bsonType": "string",
@@ -590,7 +898,12 @@
                   },
                   "guaranteeType": {
                     "bsonType": "string",
-                    "enum": ["automatic", "manual", "not_applicable"]
+                    "enum": [
+                      "automatic",
+                      "manual",
+                      "not_applicable"
+                    ],
+                    "description": "Legado de crédito; opcional e não usado como classificação genérica."
                   },
                   "components": {
                     "bsonType": "array",
@@ -603,14 +916,17 @@
                   },
                   "dimensions": {
                     "bsonType": "object",
-                    "required": [],
                     "properties": {}
                   },
                   "steps": {
                     "bsonType": "array",
                     "items": {
                       "bsonType": "object",
-                      "required": ["id", "name", "result"],
+                      "required": [
+                        "id",
+                        "name",
+                        "result"
+                      ],
                       "properties": {
                         "id": {
                           "bsonType": "string",
@@ -622,26 +938,69 @@
                         },
                         "result": {
                           "bsonType": "string",
-                          "enum": ["pending", "ok", "failed", "not_applicable"]
+                          "enum": [
+                            "pending",
+                            "ok",
+                            "failed",
+                            "not_applicable"
+                          ]
                         },
                         "failureReason": {
                           "bsonType": "string",
                           "maxLength": 2000
                         }
-                      }
+                      },
+                      "anyOf": [
+                        {
+                          "properties": {
+                            "result": {
+                              "enum": [
+                                "pending",
+                                "ok",
+                                "not_applicable"
+                              ]
+                            }
+                          }
+                        },
+                        {
+                          "required": [
+                            "failureReason"
+                          ],
+                          "properties": {
+                            "result": {
+                              "enum": [
+                                "failed"
+                              ]
+                            },
+                            "failureReason": {
+                              "bsonType": "string",
+                              "minLength": 1,
+                              "maxLength": 2000,
+                              "pattern": "\\S"
+                            }
+                          }
+                        }
+                      ]
                     },
                     "maxItems": 50,
                     "minItems": 1
                   },
                   "source": {
                     "bsonType": "object",
-                    "required": ["hoPlanId", "hoRevision", "executionId"],
+                    "required": [
+                      "hoPlanId",
+                      "hoRevision",
+                      "executionId"
+                    ],
                     "properties": {
                       "hoPlanId": {
                         "bsonType": "objectId"
                       },
                       "hoRevision": {
-                        "bsonType": ["int", "long"],
+                        "bsonType": [
+                          "int",
+                          "long"
+                        ],
                         "minimum": 0
                       },
                       "executionId": {
@@ -649,6 +1008,114 @@
                         "minLength": 1
                       }
                     }
+                  },
+                  "classification": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "classificationLabel": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "preconditions": {
+                    "bsonType": "string",
+                    "maxLength": 2000
+                  },
+                  "expectedResult": {
+                    "bsonType": "string",
+                    "maxLength": 3000
+                  },
+                  "frontId": {
+                    "bsonType": "objectId"
+                  },
+                  "frontLabel": {
+                    "bsonType": "string"
+                  },
+                  "functionalityId": {
+                    "bsonType": "objectId"
+                  },
+                  "functionalityLabel": {
+                    "bsonType": "string"
+                  },
+                  "executionMode": {
+                    "enum": [
+                      "Manual",
+                      "Automatizada"
+                    ]
+                  },
+                  "workflowId": {
+                    "bsonType": "objectId"
+                  },
+                  "workflowVersion": {
+                    "bsonType": [
+                      "int",
+                      "long"
+                    ],
+                    "minimum": 1
+                  },
+                  "catalogVersion": {
+                    "bsonType": [
+                      "int",
+                      "long"
+                    ],
+                    "minimum": 0
+                  },
+                  "sourceSteps": {
+                    "bsonType": "array",
+                    "items": {
+                      "bsonType": "object",
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "properties": {
+                        "id": {
+                          "bsonType": "string",
+                          "minLength": 1
+                        },
+                        "name": {
+                          "bsonType": "string",
+                          "minLength": 1
+                        }
+                      }
+                    },
+                    "maxItems": 50,
+                    "minItems": 1
+                  },
+                  "scopeEndStepId": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "scopeLocked": {
+                    "bsonType": "bool"
+                  },
+                  "assignedTo": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "assigneeName": {
+                    "bsonType": "string",
+                    "maxLength": 100
+                  },
+                  "reviewerId": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "reviewerName": {
+                    "bsonType": "string",
+                    "maxLength": 100
+                  },
+                  "coverage": {
+                    "bsonType": "string",
+                    "maxLength": 100
+                  },
+                  "orderReference": {
+                    "bsonType": "string",
+                    "maxLength": 300
+                  },
+                  "testReference": {
+                    "bsonType": "string",
+                    "maxLength": 500
                   }
                 }
               },
@@ -657,11 +1124,18 @@
             },
             "acceptance": {
               "bsonType": "object",
-              "required": ["actor", "at", "revision"],
+              "required": [
+                "actor",
+                "at",
+                "revision"
+              ],
               "properties": {
                 "actor": {
                   "bsonType": "object",
-                  "required": ["userId", "displayName"],
+                  "required": [
+                    "userId",
+                    "displayName"
+                  ],
                   "properties": {
                     "userId": {
                       "bsonType": "string",
@@ -680,12 +1154,87 @@
                   "bsonType": "string"
                 },
                 "revision": {
-                  "bsonType": ["int", "long"],
+                  "bsonType": [
+                    "int",
+                    "long"
+                  ],
                   "minimum": 0
                 }
               }
+            },
+            "jiraReferences": {
+              "bsonType": "object",
+              "properties": {
+                "issue": {
+                  "bsonType": "string",
+                  "maxLength": 500
+                },
+                "execution": {
+                  "bsonType": "string",
+                  "maxLength": 500
+                }
+              },
+              "description": "Manual issue/execution links; not a pass result or Jira synchronization."
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
             }
-          }
+          },
+          "allOf": [
+            {
+              "anyOf": [
+                {
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "no_plan",
+                        "testing",
+                        "awaiting_acceptance"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "acceptance"
+                  ],
+                  "properties": {
+                    "state": {
+                      "enum": [
+                        "accepted"
+                      ]
+                    },
+                    "executions": {
+                      "minItems": 1,
+                      "items": {
+                        "properties": {
+                          "steps": {
+                            "items": {
+                              "properties": {
+                                "result": {
+                                  "enum": [
+                                    "ok",
+                                    "not_applicable"
+                                  ]
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       },
       "validationLevel": "strict",
@@ -706,6 +1255,23 @@
             "updatedAt": -1
           },
           "name": "ho_queue"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -730,7 +1296,8 @@
             "status",
             "checklist",
             "hoReferences",
-            "production"
+            "production",
+            "preparationRevision"
           ],
           "properties": {
             "_id": {
@@ -741,11 +1308,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -756,7 +1331,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -770,7 +1348,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -804,7 +1385,10 @@
             },
             "tl": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -818,7 +1402,10 @@
             },
             "po": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -832,7 +1419,12 @@
             },
             "window": {
               "bsonType": "object",
-              "required": ["date", "startAt", "endAt", "timeZone"],
+              "required": [
+                "date",
+                "startAt",
+                "endAt",
+                "timeZone"
+              ],
               "properties": {
                 "date": {
                   "bsonType": "string",
@@ -867,7 +1459,12 @@
               "bsonType": "array",
               "items": {
                 "bsonType": "object",
-                "required": ["id", "question", "required", "type"],
+                "required": [
+                  "id",
+                  "question",
+                  "required",
+                  "type"
+                ],
                 "properties": {
                   "id": {
                     "bsonType": "string",
@@ -882,7 +1479,11 @@
                   },
                   "type": {
                     "bsonType": "string",
-                    "enum": ["boolean", "number", "text"]
+                    "enum": [
+                      "boolean",
+                      "number",
+                      "text"
+                    ]
                   },
                   "answer": {
                     "bsonType": [
@@ -904,7 +1505,11 @@
               "bsonType": "array",
               "items": {
                 "bsonType": "object",
-                "required": ["featureId", "planId", "revision"],
+                "required": [
+                  "featureId",
+                  "planId",
+                  "revision"
+                ],
                 "properties": {
                   "featureId": {
                     "bsonType": "objectId"
@@ -913,7 +1518,10 @@
                     "bsonType": "objectId"
                   },
                   "revision": {
-                    "bsonType": ["int", "long"],
+                    "bsonType": [
+                      "int",
+                      "long"
+                    ],
                     "minimum": 0
                   }
                 }
@@ -923,13 +1531,24 @@
             },
             "production": {
               "bsonType": "object",
-              "required": ["executions", "state"],
+              "required": [
+                "executions",
+                "state",
+                "revision"
+              ],
               "properties": {
                 "executions": {
                   "bsonType": "array",
                   "items": {
                     "bsonType": "object",
-                    "required": ["id", "name", "guaranteeType", "steps"],
+                    "required": [
+                      "id",
+                      "name",
+                      "steps",
+                      "classification",
+                      "classificationLabel",
+                      "source"
+                    ],
                     "properties": {
                       "id": {
                         "bsonType": "string",
@@ -944,7 +1563,12 @@
                       },
                       "guaranteeType": {
                         "bsonType": "string",
-                        "enum": ["automatic", "manual", "not_applicable"]
+                        "enum": [
+                          "automatic",
+                          "manual",
+                          "not_applicable"
+                        ],
+                        "description": "Legado de crédito; opcional e não usado como classificação genérica."
                       },
                       "components": {
                         "bsonType": "array",
@@ -957,14 +1581,17 @@
                       },
                       "dimensions": {
                         "bsonType": "object",
-                        "required": [],
                         "properties": {}
                       },
                       "steps": {
                         "bsonType": "array",
                         "items": {
                           "bsonType": "object",
-                          "required": ["id", "name", "result"],
+                          "required": [
+                            "id",
+                            "name",
+                            "result"
+                          ],
                           "properties": {
                             "id": {
                               "bsonType": "string",
@@ -987,20 +1614,58 @@
                               "bsonType": "string",
                               "maxLength": 2000
                             }
-                          }
+                          },
+                          "anyOf": [
+                            {
+                              "properties": {
+                                "result": {
+                                  "enum": [
+                                    "pending",
+                                    "ok",
+                                    "not_applicable"
+                                  ]
+                                }
+                              }
+                            },
+                            {
+                              "required": [
+                                "failureReason"
+                              ],
+                              "properties": {
+                                "result": {
+                                  "enum": [
+                                    "failed"
+                                  ]
+                                },
+                                "failureReason": {
+                                  "bsonType": "string",
+                                  "minLength": 1,
+                                  "maxLength": 2000,
+                                  "pattern": "\\S"
+                                }
+                              }
+                            }
+                          ]
                         },
                         "maxItems": 50,
                         "minItems": 1
                       },
                       "source": {
                         "bsonType": "object",
-                        "required": ["hoPlanId", "hoRevision", "executionId"],
+                        "required": [
+                          "hoPlanId",
+                          "hoRevision",
+                          "executionId"
+                        ],
                         "properties": {
                           "hoPlanId": {
                             "bsonType": "objectId"
                           },
                           "hoRevision": {
-                            "bsonType": ["int", "long"],
+                            "bsonType": [
+                              "int",
+                              "long"
+                            ],
                             "minimum": 0
                           },
                           "executionId": {
@@ -1008,6 +1673,114 @@
                             "minLength": 1
                           }
                         }
+                      },
+                      "classification": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "classificationLabel": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "preconditions": {
+                        "bsonType": "string",
+                        "maxLength": 2000
+                      },
+                      "expectedResult": {
+                        "bsonType": "string",
+                        "maxLength": 3000
+                      },
+                      "frontId": {
+                        "bsonType": "objectId"
+                      },
+                      "frontLabel": {
+                        "bsonType": "string"
+                      },
+                      "functionalityId": {
+                        "bsonType": "objectId"
+                      },
+                      "functionalityLabel": {
+                        "bsonType": "string"
+                      },
+                      "executionMode": {
+                        "enum": [
+                          "Manual",
+                          "Automatizada"
+                        ]
+                      },
+                      "workflowId": {
+                        "bsonType": "objectId"
+                      },
+                      "workflowVersion": {
+                        "bsonType": [
+                          "int",
+                          "long"
+                        ],
+                        "minimum": 1
+                      },
+                      "catalogVersion": {
+                        "bsonType": [
+                          "int",
+                          "long"
+                        ],
+                        "minimum": 0
+                      },
+                      "sourceSteps": {
+                        "bsonType": "array",
+                        "items": {
+                          "bsonType": "object",
+                          "required": [
+                            "id",
+                            "name"
+                          ],
+                          "properties": {
+                            "id": {
+                              "bsonType": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "bsonType": "string",
+                              "minLength": 1
+                            }
+                          }
+                        },
+                        "maxItems": 50,
+                        "minItems": 1
+                      },
+                      "scopeEndStepId": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "scopeLocked": {
+                        "bsonType": "bool"
+                      },
+                      "assignedTo": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "assigneeName": {
+                        "bsonType": "string",
+                        "maxLength": 100
+                      },
+                      "reviewerId": {
+                        "bsonType": "string",
+                        "minLength": 1
+                      },
+                      "reviewerName": {
+                        "bsonType": "string",
+                        "maxLength": 100
+                      },
+                      "coverage": {
+                        "bsonType": "string",
+                        "maxLength": 100
+                      },
+                      "orderReference": {
+                        "bsonType": "string",
+                        "maxLength": 300
+                      },
+                      "testReference": {
+                        "bsonType": "string",
+                        "maxLength": 500
                       }
                     }
                   },
@@ -1026,11 +1799,18 @@
                 },
                 "acceptance": {
                   "bsonType": "object",
-                  "required": ["actor", "at", "revision"],
+                  "required": [
+                    "actor",
+                    "at",
+                    "revision"
+                  ],
                   "properties": {
                     "actor": {
                       "bsonType": "object",
-                      "required": ["userId", "displayName"],
+                      "required": [
+                        "userId",
+                        "displayName"
+                      ],
                       "properties": {
                         "userId": {
                           "bsonType": "string",
@@ -1049,20 +1829,86 @@
                       "bsonType": "string"
                     },
                     "revision": {
-                      "bsonType": ["int", "long"],
+                      "bsonType": [
+                        "int",
+                        "long"
+                      ],
                       "minimum": 0
                     }
                   }
+                },
+                "revision": {
+                  "bsonType": [
+                    "int",
+                    "long"
+                  ],
+                  "minimum": 0
                 }
-              }
+              },
+              "allOf": [
+                {
+                  "anyOf": [
+                    {
+                      "properties": {
+                        "state": {
+                          "enum": [
+                            "not_started",
+                            "pending",
+                            "in_progress",
+                            "failed"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "required": [
+                        "acceptance"
+                      ],
+                      "properties": {
+                        "state": {
+                          "enum": [
+                            "accepted"
+                          ]
+                        },
+                        "executions": {
+                          "minItems": 1,
+                          "items": {
+                            "properties": {
+                              "steps": {
+                                "items": {
+                                  "properties": {
+                                    "result": {
+                                      "enum": [
+                                        "ok",
+                                        "not_applicable"
+                                      ]
+                                    }
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  ]
+                }
+              ]
             },
             "approval": {
               "bsonType": "object",
-              "required": ["actor", "at", "revision"],
+              "required": [
+                "actor",
+                "at",
+                "revision"
+              ],
               "properties": {
                 "actor": {
                   "bsonType": "object",
-                  "required": ["userId", "displayName"],
+                  "required": [
+                    "userId",
+                    "displayName"
+                  ],
                   "properties": {
                     "userId": {
                       "bsonType": "string",
@@ -1078,12 +1924,18 @@
                   "bsonType": "date"
                 },
                 "revision": {
-                  "bsonType": ["int", "long"],
+                  "bsonType": [
+                    "int",
+                    "long"
+                  ],
                   "minimum": 0
                 },
                 "incompleteChecklistException": {
                   "bsonType": "object",
-                  "required": ["reason", "pendingItemIds"],
+                  "required": [
+                    "reason",
+                    "pendingItemIds"
+                  ],
                   "properties": {
                     "reason": {
                       "bsonType": "string",
@@ -1104,11 +1956,18 @@
             },
             "deployment": {
               "bsonType": "object",
-              "required": ["actor", "at", "releaseRef"],
+              "required": [
+                "actor",
+                "at",
+                "releaseRef"
+              ],
               "properties": {
                 "actor": {
                   "bsonType": "object",
-                  "required": ["userId", "displayName"],
+                  "required": [
+                    "userId",
+                    "displayName"
+                  ],
                   "properties": {
                     "userId": {
                       "bsonType": "string",
@@ -1131,11 +1990,18 @@
             },
             "closure": {
               "bsonType": "object",
-              "required": ["actor", "at", "revision"],
+              "required": [
+                "actor",
+                "at",
+                "revision"
+              ],
               "properties": {
                 "actor": {
                   "bsonType": "object",
-                  "required": ["userId", "displayName"],
+                  "required": [
+                    "userId",
+                    "displayName"
+                  ],
                   "properties": {
                     "userId": {
                       "bsonType": "string",
@@ -1154,18 +2020,28 @@
                   "bsonType": "string"
                 },
                 "revision": {
-                  "bsonType": ["int", "long"],
+                  "bsonType": [
+                    "int",
+                    "long"
+                  ],
                   "minimum": 0
                 }
               }
             },
             "rollback": {
               "bsonType": "object",
-              "required": ["actor", "at", "reason"],
+              "required": [
+                "actor",
+                "at",
+                "reason"
+              ],
               "properties": {
                 "actor": {
                   "bsonType": "object",
-                  "required": ["userId", "displayName"],
+                  "required": [
+                    "userId",
+                    "displayName"
+                  ],
                   "properties": {
                     "userId": {
                       "bsonType": "string",
@@ -1196,8 +2072,212 @@
             },
             "previousChangeId": {
               "bsonType": "objectId"
+            },
+            "preparationRevision": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 0
+            },
+            "notes": {
+              "bsonType": "string",
+              "maxLength": 4000
+            },
+            "executorTeamId": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "executorTeamName": {
+              "bsonType": "string",
+              "maxLength": 200
+            },
+            "checklistDefinitionId": {
+              "bsonType": "objectId"
+            },
+            "checklistDefinitionVersion": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 0
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "reason": {
+              "bsonType": "string",
+              "maxLength": 1000
+            },
+            "changeTime": {
+              "bsonType": "string",
+              "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$"
+            },
+            "plannedOpenDate": {
+              "bsonType": "string",
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+            },
+            "participation": {
+              "bsonType": "object",
+              "properties": {
+                "flex": {
+                  "bsonType": "bool"
+                },
+                "on": {
+                  "bsonType": "bool"
+                },
+                "onJustification": {
+                  "bsonType": "string",
+                  "maxLength": 1000
+                }
+              }
             }
-          }
+          },
+          "allOf": [
+            {
+              "anyOf": [
+                {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "awaiting_approval",
+                        "rejected",
+                        "not_performed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "approval"
+                  ],
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "approved",
+                        "deployed",
+                        "closed",
+                        "rollback"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "anyOf": [
+                {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "awaiting_approval",
+                        "approved",
+                        "rejected",
+                        "not_performed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "deployment"
+                  ],
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "deployed",
+                        "closed",
+                        "rollback"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "anyOf": [
+                {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "awaiting_approval",
+                        "approved",
+                        "deployed",
+                        "closed",
+                        "rejected",
+                        "not_performed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "rollback"
+                  ],
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "rollback"
+                      ]
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "anyOf": [
+                {
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "draft",
+                        "awaiting_approval",
+                        "approved",
+                        "deployed",
+                        "rollback",
+                        "rejected",
+                        "not_performed"
+                      ]
+                    }
+                  }
+                },
+                {
+                  "required": [
+                    "closure"
+                  ],
+                  "properties": {
+                    "status": {
+                      "enum": [
+                        "closed"
+                      ]
+                    },
+                    "production": {
+                      "required": [
+                        "acceptance"
+                      ],
+                      "properties": {
+                        "state": {
+                          "enum": [
+                            "accepted"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          ]
         }
       },
       "validationLevel": "strict",
@@ -1240,6 +2320,23 @@
             "createdAt": -1
           },
           "name": "feature_change_history"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -1268,11 +2365,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -1283,7 +2388,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1297,7 +2405,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1367,11 +2478,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -1382,7 +2501,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1396,7 +2518,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1417,15 +2542,18 @@
             },
             "startDate": {
               "bsonType": "string",
-              "minLength": 1
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "endDate": {
               "bsonType": "string",
-              "minLength": 1
+              "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
             },
             "scope": {
               "bsonType": "string",
-              "enum": ["all", "components"]
+              "enum": [
+                "all",
+                "components"
+              ]
             },
             "components": {
               "bsonType": "array",
@@ -1435,6 +2563,27 @@
               },
               "maxItems": 100,
               "minItems": 0
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
+            },
+            "description": {
+              "bsonType": "string",
+              "maxLength": 1000
+            },
+            "matchMode": {
+              "bsonType": "string",
+              "enum": [
+                "contains",
+                "exact"
+              ]
             }
           }
         }
@@ -1450,6 +2599,23 @@
             "endDate": 1
           },
           "name": "freeze_window"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     },
@@ -1484,11 +2650,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -1499,7 +2673,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1513,7 +2690,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1534,14 +2714,18 @@
                 "ho_plan",
                 "change",
                 "definition",
-                "freeze"
+                "freeze",
+                "test_flow"
               ]
             },
             "entityId": {
               "bsonType": "objectId"
             },
             "entityVersion": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "commandId": {
@@ -1554,7 +2738,10 @@
             },
             "actor": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1571,7 +2758,6 @@
             },
             "details": {
               "bsonType": "object",
-              "required": [],
               "properties": {}
             }
           }
@@ -1599,6 +2785,22 @@
             "_id": -1
           },
           "name": "audit_history"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "entityId": 1,
+            "details.hoRevision": 1
+          },
+          "name": "ho_accepted_revision_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "entityType": "ho_plan",
+            "type": "ho.accepted",
+            "details.hoRevision": {
+              "$type": "number"
+            }
+          }
         }
       ]
     },
@@ -1629,11 +2831,19 @@
               "minLength": 1
             },
             "schemaVersion": {
-              "bsonType": ["int", "long"],
-              "enum": [1]
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
             },
             "version": {
-              "bsonType": ["int", "long"],
+              "bsonType": [
+                "int",
+                "long"
+              ],
               "minimum": 0
             },
             "createdAt": {
@@ -1644,7 +2854,10 @@
             },
             "createdBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1658,7 +2871,10 @@
             },
             "updatedBy": {
               "bsonType": "object",
-              "required": ["userId", "displayName"],
+              "required": [
+                "userId",
+                "displayName"
+              ],
               "properties": {
                 "userId": {
                   "bsonType": "string",
@@ -1684,7 +2900,6 @@
             },
             "result": {
               "bsonType": "object",
-              "required": [],
               "properties": {}
             }
           }
@@ -1701,6 +2916,318 @@
           },
           "name": "command_idempotency_unique",
           "unique": true
+        }
+      ]
+    },
+    "delivery_module_settings": {
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "required": [
+            "_id",
+            "workspaceId",
+            "schemaVersion",
+            "version",
+            "createdAt",
+            "updatedAt",
+            "createdBy",
+            "updatedBy",
+            "flags"
+          ],
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "workspaceId": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "schemaVersion": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
+            },
+            "version": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 0
+            },
+            "createdAt": {
+              "bsonType": "date"
+            },
+            "updatedAt": {
+              "bsonType": "date"
+            },
+            "createdBy": {
+              "bsonType": "object",
+              "required": [
+                "userId",
+                "displayName"
+              ],
+              "properties": {
+                "userId": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "displayName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "updatedBy": {
+              "bsonType": "object",
+              "required": [
+                "userId",
+                "displayName"
+              ],
+              "properties": {
+                "userId": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "displayName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "flags": {
+              "bsonType": "object",
+              "required": [
+                "delivery",
+                "quality",
+                "gmud",
+                "production",
+                "planning",
+                "homologation",
+                "approval"
+              ],
+              "properties": {
+                "delivery": {
+                  "bsonType": "bool"
+                },
+                "quality": {
+                  "bsonType": "bool"
+                },
+                "gmud": {
+                  "bsonType": "bool"
+                },
+                "production": {
+                  "bsonType": "bool"
+                },
+                "planning": {
+                  "bsonType": "bool"
+                },
+                "homologation": {
+                  "bsonType": "bool"
+                },
+                "approval": {
+                  "bsonType": "bool"
+                }
+              }
+            }
+          }
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error",
+      "indexes": [
+        {
+          "key": {
+            "workspaceId": 1
+          },
+          "name": "module_settings_workspace_unique",
+          "unique": true
+        }
+      ]
+    },
+    "delivery_test_flows": {
+      "validator": {
+        "$jsonSchema": {
+          "bsonType": "object",
+          "required": [
+            "_id",
+            "workspaceId",
+            "schemaVersion",
+            "version",
+            "createdAt",
+            "updatedAt",
+            "createdBy",
+            "updatedBy",
+            "name",
+            "nameNormalized",
+            "frontId",
+            "functionalityId",
+            "active",
+            "steps"
+          ],
+          "properties": {
+            "_id": {
+              "bsonType": "objectId"
+            },
+            "workspaceId": {
+              "bsonType": "string",
+              "minLength": 1
+            },
+            "schemaVersion": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "enum": [
+                1
+              ]
+            },
+            "version": {
+              "bsonType": [
+                "int",
+                "long"
+              ],
+              "minimum": 0
+            },
+            "createdAt": {
+              "bsonType": "date"
+            },
+            "updatedAt": {
+              "bsonType": "date"
+            },
+            "createdBy": {
+              "bsonType": "object",
+              "required": [
+                "userId",
+                "displayName"
+              ],
+              "properties": {
+                "userId": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "displayName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "updatedBy": {
+              "bsonType": "object",
+              "required": [
+                "userId",
+                "displayName"
+              ],
+              "properties": {
+                "userId": {
+                  "bsonType": "string",
+                  "minLength": 1
+                },
+                "displayName": {
+                  "bsonType": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "name": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "nameNormalized": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "frontId": {
+              "bsonType": "objectId"
+            },
+            "functionalityId": {
+              "bsonType": [
+                "objectId",
+                "null"
+              ]
+            },
+            "active": {
+              "bsonType": "bool"
+            },
+            "steps": {
+              "bsonType": "array",
+              "items": {
+                "bsonType": "object",
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "properties": {
+                  "id": {
+                    "bsonType": "string",
+                    "minLength": 1
+                  },
+                  "name": {
+                    "bsonType": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                }
+              },
+              "maxItems": 50,
+              "minItems": 1
+            },
+            "legacySource": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 100
+            },
+            "legacyId": {
+              "bsonType": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          }
+        }
+      },
+      "validationLevel": "strict",
+      "validationAction": "error",
+      "indexes": [
+        {
+          "key": {
+            "workspaceId": 1,
+            "frontId": 1,
+            "functionalityId": 1,
+            "nameNormalized": 1
+          },
+          "name": "unique_flow_name_in_scope",
+          "unique": true
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "frontId": 1,
+            "active": 1,
+            "name": 1
+          },
+          "name": "flow_catalog"
+        },
+        {
+          "key": {
+            "workspaceId": 1,
+            "legacySource": 1,
+            "legacyId": 1
+          },
+          "name": "legacy_origin_unique",
+          "unique": true,
+          "partialFilterExpression": {
+            "legacySource": {
+              "$type": "string"
+            },
+            "legacyId": {
+              "$type": "string"
+            }
+          }
         }
       ]
     }

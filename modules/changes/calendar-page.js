@@ -182,7 +182,11 @@ function render() {
           : link.href;
       event.append(note);
     }
-    if (state.key === "deployed" && (change.cenarios || []).length) {
+    if (
+      state.key === "deployed" &&
+      DeliveryModules.isEnabled("production") &&
+      (change.cenarios || []).length
+    ) {
       const validate = node("a", "gmud-validate", "Validar em PROD →");
       validate.href = "producao.html?change=" + encodeURIComponent(change.id);
       event.append(validate);

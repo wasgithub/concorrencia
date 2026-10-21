@@ -1,12 +1,20 @@
 # IssueFlow
 
+**Primeira release: somente Testes**, entrada em [testes.html](testes.html). [Fluxo, campos MongoDB, collections e critérios de aceite](integration/releases/tests-first/README.md). Os demais módulos ficam desativados por padrão, inclusive para configurações antigas, sem apagar registros.
+
+As telas de cenários e homologação voltaram ao formato anterior em 21/10/2026. Consulte [o registro da reversão](docs/retorno-cenarios-ho.md) para distinguir o fluxo disponível das propostas preservadas nos documentos de integração.
+
+O roteiro por release está na pasta [plano-implementacao](plano-implementacao/README.md), com escopo, dependências, validação e acompanhamento.
+
 Abra `index.html` no navegador, sem instalar dependências.
 
 ## Changes / RDM e testes
 
 Abra `changes.html` para compor uma change com issues de uma ou mais squads, definir o time responsável e acompanhar aprovação, reprogramação, rejeição e execução com histórico. Ao vincular issues ou reprogramar a change, as datas de produção e abertura da CHANGE das issues são atualizadas. O painel também oferece calendário de freeze e checklist editável. Issues e Calendário exibem o status da change vinculada.
 
-Abra `testes.html` para cadastrar casos reutilizáveis, definir o tipo de garantia (automática ou manual), cobertura e etapa final do teste, e editar as etapas do fluxo e as dimensões do montador de nomes. Na change, use “Selecionar do catálogo” ou monte um cenário avulso para escolher os testes daquela implantação. O plano mantém uma cópia dos cenários e do fluxo. Changes é usada para selecionar os testes; os resultados por etapa são preenchidos pelo PO em Validação de PROD, sem documentos ou evidências.
+`fluxos.html` mantém o cadastro independente de modelos por frente/funcionalidade. A escolha de modelos no cadastro de cenários foi retirada com a restauração da interface anterior.
+
+Abra `testes.html` para cadastrar casos reutilizáveis, definir tipo, cobertura e etapa final, e editar as etapas do fluxo e as dimensões do montador de nomes. Na GMUD, selecione os cenários completos de HO que serão repetidos em produção. O plano mantém uma cópia dos cenários e do fluxo. Changes é usada para selecionar os testes; os resultados por etapa são preenchidos pelo PO em Validação de PROD, sem documentos ou evidências.
 
 `modules/test-catalog/catalog-store.js` e `shared/testing/execution.js` compartilha catálogo, etapas e dimensões entre as páginas de Changes e Testes. Os dados ficam no localStorage deste navegador. Na tela Issues, clique em **Testes de homologação** na issue. Clique em **Selecionar cenários** para abrir as abas **Sugeridos**, **Catálogo** e **Trilhas**. Busque e filtre por cobertura ou garantia, confira o contador de seleção e clique em **Adicionar ao plano** (ou **Adicionar trilha**). A seleção é mantida entre filtros e abas; cancelar não altera o plano. Use **Cenário avulso** para um teste específico. Abra os cenários do plano para informar resultados por etapa, responsável, pedido e evidências; clique em **Salvar plano e execução**. Para aprovar, o PM/PO informa nome e parecer; todos os cenários precisam estar OK ou N/A. Alterações posteriores invalidam o aceite e ficam registradas no histórico.
 
@@ -146,3 +154,9 @@ A lista mostra seis colunas principais: feature/descrição, squad/ambiente, per
 ## Identidade visual
 
 A cor principal segue o verde e-agro, com azul secundário, amarelo de atenção e superfícies brancas. Tokens compartilhados em `shared/ui/theme.css`; decisões de contraste e reutilização em [docs/tema.md](docs/tema.md).
+
+## Módulos configuráveis e Qualidade genérica
+
+Abra `configuracoes.html` para ativar módulos e definir classificações. Cenários podem ter passos próprios, pré-condições e resultado esperado, sem depender de um fluxo de crédito. Configuração, releases, dependências e limites: [docs/releases-e-customizacao.md](docs/releases-e-customizacao.md).
+
+A [revisão de todas as fases](integration/releases/all-phases/README.md) descreve os ajustes de fluxo, o banco e as pendências de validação real. O perfil inicial continua somente Testes.

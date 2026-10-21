@@ -8,12 +8,17 @@ const root = path.resolve(__dirname, ".."),
 fs.mkdirSync(out, { recursive: true });
 const suites = [
   "unit",
+  "tests-first-browser",
+  "scenario-front-form-browser",
+  "phased-flow-browser",
   "navigation-browser",
   "feature-actions-browser",
   "reset-flow-browser",
   "homologacao-browser",
+  "ho-audit-browser",
   "production-picker-browser",
   "flow-guards-browser",
+  "change-edge-cases-browser",
   "po-workflow-browser",
   "timeline-outcomes-browser",
   "gmud-timeline-browser",
@@ -97,7 +102,7 @@ async function main() {
     startedAt: new Date().toISOString(),
     baseUrl: base,
     scope:
-      "Protótipo HTML/JS: browser contexts isolados; nenhum MongoDB ou deploy real executado.",
+      "Protótipo HTML/JS: contextos isolados. tests-first-browser usa o perfil real de somente Testes; as regressões das próximas releases habilitam módulos explicitamente por fixture. Nenhum MongoDB ou deploy real executado.",
     results: [],
   };
   try {
@@ -112,7 +117,12 @@ async function main() {
                 .sort()
                 .map((f) => path.join(__dirname, f)),
             ]
-          : [path.join(__dirname, suite + ".cjs")];
+          : [
+              ...(["tests-first-browser", "phased-flow-browser"].includes(suite)
+                ? []
+                : ["--require", path.join(__dirname, "full-profile.cjs")]),
+              path.join(__dirname, suite + ".cjs"),
+            ];
       const started = Date.now();
       const result = await new Promise((resolve) => {
         const child = spawn(process.execPath, args, {
@@ -143,6 +153,14 @@ async function main() {
       });
       const row = {
         suite,
+        profile:
+          suite === "phased-flow-browser"
+            ? "phase-boundaries"
+            : suite === "tests-first-browser"
+              ? "tests-first-v1"
+              : suite === "unit"
+                ? "unit"
+                : "full-regression-fixture",
         status: result.code === 0 ? "passed" : "failed",
         durationMs: Date.now() - started,
         timedOut: !!result.timedOut,

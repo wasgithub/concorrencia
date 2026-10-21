@@ -1,5 +1,7 @@
 # Modelo MongoDB proposto
 
+**Release atual: somente Testes.** O escopo de collections/campos está em `../releases/tests-first/manifest.json` e `campos.md`. Para preparar esta release, usar o wrapper `../releases/tests-first/apply-schema.cjs`; o bootstrap geral abaixo inclui módulos futuros.
+
 Proposta para adaptar ao sistema hospedeiro; não foi aplicada a um banco. Nomes têm prefixo `delivery_` para evitar colisões com funcionalidades existentes. O mapeamento para driver/ODM e migrations deve seguir a stack real.
 
 ## Coleções e agregados
@@ -9,7 +11,8 @@ Proposta para adaptar ao sistema hospedeiro; não foi aplicada a um banco. Nomes
 | `delivery_features` | Features | Entrega, ID externo, equipe, componentes e datas de planejamento |
 | `delivery_scenarios` | Catálogo | Caso reutilizável, dimensões, componentes e etapas |
 | `delivery_trails` | Catálogo | Grupo de referências a cenários |
-| `delivery_definitions` | Catálogo / GMUD | Fluxo de teste, dimensões e modelo de checklist, distinguídos por `kind` |
+| `delivery_definitions` | Catálogo / GMUD | Frentes, funcionalidades, vocabulário, dimensões e checklist por `kind`; `test_flow` é legado |
+| `delivery_test_flows` | Catálogo | Sequência reutilizável por frente/funcionalidade, com etapas limitadas e versão |
 | `delivery_ho_plans` | HO | Um plano corrente por feature, snapshots de cenários, resultados, revisão e aceite |
 | `delivery_changes` | GMUD | Uma tentativa de implantação, features vinculadas, janela, checklist e resultados de PROD |
 | `delivery_feature_locks` | GMUD | Associação exclusiva de uma feature com a GMUD ativa; restrição de integridade |
@@ -84,3 +87,21 @@ Uma segunda importação deve reconhecer IDs de origem e não duplicar registros
 ## Fundamentação
 
 A recomendação de snapshots embutidos limitados e referências para entidades compartilhadas segue a [documentação de modelagem do MongoDB](https://www.mongodb.com/docs/manual/data-modeling/embedding/). O filtro de versão usa a [atomicidade de atualização de documento](https://www.mongodb.com/docs/manual/core/write-operations-atomicity/). Os validators e índices usam [JSON Schema BSON](https://www.mongodb.com/docs/manual/core/schema-validation/specify-json-schema/) e [índices parciais](https://www.mongodb.com/docs/manual/core/index-partial/). Transações seguem a [documentação oficial](https://www.mongodb.com/docs/manual/core/transactions/). O desenho das coleções e estados é uma proposta específica deste fluxo.
+
+## Qualidade genérica e flags por responsabilidade
+
+Cenários e execuções usam classification/classificationLabel configuráveis, steps próprios, dimensions e snapshots. guaranteeType é legado opcional, não um enum obrigatório para todos os testes. A configuração de vocabulário usa delivery_definitions com kind quality_vocabulary. A coleção delivery_module_settings guarda flags versionadas por workspace. Permissões e flags são verificadas nos comandos; ativar produção exige GMUD e seus requisitos. Pré-condições e resultado esperado são opcionais e entram no snapshot. Consulte docs/releases-e-customizacao.md para a divisão por releases.
+
+Veja [cadastro de qualidade: telas e MongoDB](../../plano-implementacao/05-cadastro-qualidade-e-mongodb.md) para a separação entre frente, funcionalidade, fluxo reutilizável, cenário e execução.
+
+Veja [escopo por US/TP, Jira e responsáveis](../../plano-implementacao/07-escopo-por-us-e-jira.md) para a configuração de alcance sem alterar o catálogo e sua propagação para PROD.
+
+## Revisão de todas as fases em 21/10/2026
+
+O contrato consolidado está em `../releases/all-phases/README.md` e `campos.md`. HO e aprovação possuem flags explícitas; não inferir habilitação de uma fase pela presença de suas dependências. `applyPhaseSchema` prepara somente o fecho de dependências, inclusive quando Planejamento é liberado antes de GMUD.
+
+Campos acrescentados: plannedChangeOpenDate; notes/reason/executorTeamId/changeTime/plannedOpenDate/participation na GMUD; preparationRevision e production.revision; coverage/orderReference/testReference nos snapshots. Freeze distingue matchMode=contains/exact. LegacySource/legacyId e índice parcial garantem identificação estável da origem importada.
+
+Aceites HO históricos ficam em eventos imutáveis ho.accepted com snapshot limitado, consultáveis por revisão; isso evita que a correção de uma issue substitua a prova da tentativa anterior. Validators exigem motivo para failed, origem HO em PROD, provas mínimas nos estados approved/deployed/closed/rollback e plano concluído para accepted. Referências/identidades, revisões correspondentes e ordem das operações continuam sendo regras do servidor.
+
+Preflight de `applyExistingValidators` recusa documentos incompatíveis antes de qualquer collMod. O inspector adicional, somente leitura, detecta duplicatas e conflitos de índices. Nunca fazer correção/backfill ou apagar índices automaticamente. O teste Mongo descartável foi preparado, mas ficou BLOCKED porque o Docker daemon não estava disponível; nenhuma collection real foi criada.

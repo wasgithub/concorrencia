@@ -1,0 +1,69 @@
+{
+  "id": "tests-first-v1",
+  "status": "pending-host-integration",
+  "prototypeProfile": {
+    "delivery": false,
+    "quality": true,
+    "gmud": false,
+    "production": false,
+    "planning": false,
+    "homologation": false,
+    "approval": false
+  },
+  "entryPage": "testes.html",
+  "phaseOrder": [
+    "02-catalog",
+    "01-features",
+    "03-homologation",
+    "04-changes",
+    "04b-approval",
+    "05-production",
+    "06-calendars",
+    "07-migration"
+  ],
+  "collections": [
+    "delivery_scenarios",
+    "delivery_trails",
+    "delivery_definitions",
+    "delivery_test_flows",
+    "delivery_audit_events",
+    "delivery_commands"
+  ],
+  "definitionKinds": [
+    "test_stages",
+    "scenario_dimensions",
+    "scenario_front",
+    "scenario_functionality"
+  ],
+  "excluded": [
+    "delivery_features",
+    "delivery_ho_plans",
+    "delivery_changes",
+    "delivery_feature_locks",
+    "delivery_freezes"
+  ],
+  "schema": "../../mongodb/collections.json",
+  "api": "api.json",
+  "fieldDictionary": "campos.md",
+  "rules": [
+    "workspace-and-actor-from-host-session",
+    "compare-and-increment-version",
+    "idempotency-with-request-hash",
+    "audit-with-same-transaction",
+    "archive-instead-of-delete",
+    "no-ho-or-production-execution-in-this-release"
+  ],
+  "sources": [
+    "testes.html",
+    "fluxos.html",
+    "configuracoes.html",
+    "modules/test-catalog/catalog-page.js",
+    "modules/test-catalog/catalog-store.js",
+    "modules/test-catalog/flows-page.js",
+    "modules/settings/",
+    "shared/config/",
+    "shared/storage/",
+    "shared/ui/"
+  ],
+  "prototypeExecutionModel": "localStorage-only; no connected API or MongoDB"
+}

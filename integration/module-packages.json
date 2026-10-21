@@ -1,0 +1,161 @@
+{
+  "version": 1,
+  "purpose": "Referência para implementar por responsabilidade no sistema hospedeiro; não são pacotes npm ou serviços independentes.",
+  "shared": [
+    "shared/ui/",
+    "shared/storage/",
+    "shared/config/"
+  ],
+  "modules": [
+    {
+      "id": "delivery",
+      "name": "Entregas",
+      "flag": "delivery",
+      "sources": [
+        "index.html",
+        "modules/features/"
+      ],
+      "capabilities": {
+        "features": {
+          "requires": []
+        }
+      },
+      "collections": [
+        "delivery_features"
+      ],
+      "releases": [
+        "01-features"
+      ]
+    },
+    {
+      "id": "quality",
+      "name": "Qualidade",
+      "flag": "quality",
+      "sources": [
+        "testes.html",
+        "modules/test-catalog/",
+        "homologacao.html",
+        "validacao-ho.html",
+        "modules/homologation/",
+        "shared/testing/",
+        "fluxos.html"
+      ],
+      "capabilities": {
+        "catalog": {
+          "requires": [],
+          "releaseManifest": "releases/tests-first/manifest.json",
+          "collections": [
+            "delivery_scenarios",
+            "delivery_trails",
+            "delivery_definitions",
+            "delivery_test_flows",
+            "delivery_audit_events",
+            "delivery_commands"
+          ]
+        },
+        "homologation": {
+          "requires": [
+            "delivery",
+            "quality"
+          ],
+          "flag": "homologation"
+        }
+      },
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_ho_plans",
+        "delivery_test_flows"
+      ],
+      "releases": [
+        "02-catalog",
+        "03-homologation"
+      ]
+    },
+    {
+      "id": "gmud",
+      "name": "GMUD",
+      "flag": "gmud",
+      "sources": [
+        "changes.html",
+        "gmud-timeline.html",
+        "modules/changes/"
+      ],
+      "capabilities": {
+        "preparation": {
+          "requires": [
+            "homologation"
+          ]
+        },
+        "approval": {
+          "requires": [
+            "gmud"
+          ],
+          "flag": "approval"
+        },
+        "confirmDeployment": {
+          "requires": [
+            "production"
+          ]
+        }
+      },
+      "collections": [
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "releases": [
+        "04-changes",
+        "04b-approval"
+      ]
+    },
+    {
+      "id": "production",
+      "name": "Validação de produção",
+      "flag": "production",
+      "sources": [
+        "producao.html",
+        "modules/production/",
+        "shared/testing/"
+      ],
+      "capabilities": {
+        "validation": {
+          "requires": [
+            "gmud"
+          ]
+        }
+      },
+      "collections": [
+        "delivery_changes"
+      ],
+      "releases": [
+        "05-production"
+      ]
+    },
+    {
+      "id": "planning",
+      "name": "Planejamento",
+      "flag": "planning",
+      "sources": [
+        "timeline.html",
+        "modules/planning/"
+      ],
+      "capabilities": {
+        "calendar": {
+          "requires": [
+            "delivery"
+          ]
+        }
+      },
+      "collections": [
+        "delivery_features"
+      ],
+      "releases": [
+        "06-calendars"
+      ]
+    }
+  ],
+  "firstRelease": "releases/tests-first/manifest.json",
+  "allPhasesRelease": "releases/all-phases/manifest.json"
+}

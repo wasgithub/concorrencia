@@ -1,0 +1,731 @@
+{
+  "delivery_definitions": [
+    {
+      "_id": {
+        "$oid": "000000000000000000000001"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "kind": "test_stages",
+      "name": "stages-default",
+      "nameNormalized": "stages-default",
+      "active": true,
+      "items": [
+        {
+          "id": "step-simulate",
+          "name": "Simulação",
+          "active": true
+        },
+        {
+          "id": "step-contract",
+          "name": "Contrato",
+          "active": true
+        }
+      ]
+    },
+    {
+      "_id": {
+        "$oid": "000000000000000000000002"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "kind": "scenario_front",
+      "name": "Marketplace",
+      "nameNormalized": "marketplace",
+      "active": true,
+      "items": []
+    },
+    {
+      "_id": {
+        "$oid": "000000000000000000000003"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "kind": "scenario_functionality",
+      "name": "Compra",
+      "nameNormalized": "compra",
+      "parentId": {
+        "$oid": "000000000000000000000002"
+      },
+      "active": true,
+      "items": []
+    },
+    {
+      "_id": {
+        "$oid": "000000000000000000000004"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "kind": "scenario_dimensions",
+      "name": "dimensions-default",
+      "nameNormalized": "dimensions-default",
+      "active": true,
+      "items": [
+        {
+          "id": "dim-person",
+          "name": "Pessoa",
+          "options": [
+            {
+              "id": "option-pf",
+              "name": "PF",
+              "active": true
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "delivery_scenarios": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000000a"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "code": "SCN-EXEMPLO-CPR",
+      "name": "CPR PF até Contrato",
+      "guaranteeType": "manual",
+      "coverage": "Regressivo padrão",
+      "components": [
+        "api-cpr"
+      ],
+      "dimensions": {
+        "dim-person": "option-pf"
+      },
+      "steps": [
+        {
+          "id": "step-simulate",
+          "name": "Simulação"
+        },
+        {
+          "id": "step-contract",
+          "name": "Contrato"
+        }
+      ],
+      "stageDefinitionId": {
+        "$oid": "000000000000000000000001"
+      },
+      "stageDefinitionVersion": {
+        "$numberInt": "0"
+      },
+      "classification": "Regressivo",
+      "classificationLabel": "Finalidade",
+      "active": true
+    }
+  ],
+  "delivery_trails": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000000b"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "name": "Regressivo CPR",
+      "nameNormalized": "regressivo cpr",
+      "active": true,
+      "scenarioIds": [
+        {
+          "$oid": "00000000000000000000000a"
+        }
+      ]
+    }
+  ],
+  "delivery_test_flows": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000000c"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "name": "Compra Marketplace",
+      "nameNormalized": "compra marketplace",
+      "frontId": {
+        "$oid": "000000000000000000000002"
+      },
+      "functionalityId": {
+        "$oid": "000000000000000000000003"
+      },
+      "active": true,
+      "steps": [
+        {
+          "id": "step-cart",
+          "name": "Adicionar ao carrinho"
+        },
+        {
+          "id": "step-payment",
+          "name": "Efetuar pagamento"
+        }
+      ]
+    }
+  ],
+  "delivery_audit_events": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000000d"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "entityType": "scenario",
+      "entityId": {
+        "$oid": "00000000000000000000000a"
+      },
+      "entityVersion": {
+        "$numberInt": "0"
+      },
+      "commandId": "command-example-1",
+      "type": "scenario.created",
+      "actor": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "at": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "details": {
+        "code": "SCN-EXEMPLO-CPR"
+      }
+    }
+  ],
+  "delivery_commands": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000000e"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "actorId": "user-do-hospedeiro",
+      "key": "idempotency-example-1",
+      "requestHash": "example-only-compute-real-hash-on-server",
+      "result": {
+        "status": {
+          "$numberInt": "201"
+        },
+        "body": {
+          "id": "00000000000000000000000a",
+          "version": {
+            "$numberInt": "0"
+          }
+        }
+      }
+    }
+  ],
+  "delivery_features": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000001f"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "externalId": "E2E-31",
+      "title": "Entrega validada por fases",
+      "teamId": "team-1",
+      "components": [
+        "api-cpr"
+      ],
+      "environment": "ho",
+      "hoStartDate": "2030-01-10",
+      "hoEndDate": "2030-01-12",
+      "plannedChangeOpenDate": "2030-01-15",
+      "plannedProductionDate": "2030-01-20",
+      "activeChangeId": {
+        "$oid": "000000000000000000000028"
+      }
+    }
+  ],
+  "delivery_ho_plans": [
+    {
+      "_id": {
+        "$oid": "000000000000000000000014"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "featureId": {
+        "$oid": "00000000000000000000001f"
+      },
+      "revision": {
+        "$numberInt": "0"
+      },
+      "approvalFence": {
+        "$numberInt": "0"
+      },
+      "state": "accepted",
+      "executions": [
+        {
+          "id": "execution-1",
+          "catalogScenarioId": {
+            "$oid": "00000000000000000000000a"
+          },
+          "name": "CPR PF até Contrato",
+          "classification": "Regressivo",
+          "classificationLabel": "Finalidade",
+          "guaranteeType": "manual",
+          "coverage": "Regressivo padrão",
+          "components": [
+            "api-cpr"
+          ],
+          "steps": [
+            {
+              "id": "step-simulate",
+              "name": "Simulação",
+              "result": "ok"
+            },
+            {
+              "id": "step-contract",
+              "name": "Contrato",
+              "result": "ok"
+            }
+          ]
+        }
+      ],
+      "acceptance": {
+        "actor": {
+          "userId": "user-do-hospedeiro",
+          "displayName": "Pessoa autenticada"
+        },
+        "at": {
+          "$date": "2026-10-21T12:00:00Z"
+        },
+        "revision": {
+          "$numberInt": "0"
+        },
+        "note": "HO validada"
+      }
+    }
+  ],
+  "delivery_changes": [
+    {
+      "_id": {
+        "$oid": "000000000000000000000028"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "rdm": "RDM-E2E-40",
+      "featureIds": [
+        {
+          "$oid": "00000000000000000000001f"
+        }
+      ],
+      "teamId": "team-1",
+      "tl": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "po": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "window": {
+        "date": "2030-01-20",
+        "startAt": {
+          "$date": "2030-01-20T22:00:00Z"
+        },
+        "endAt": {
+          "$date": "2030-01-20T23:00:00Z"
+        },
+        "timeZone": "America/Sao_Paulo"
+      },
+      "status": "draft",
+      "preparationRevision": {
+        "$numberInt": "0"
+      },
+      "checklist": [
+        {
+          "id": "availability",
+          "question": "Gera indisponibilidade?",
+          "required": true,
+          "type": "boolean",
+          "answer": false
+        }
+      ],
+      "hoReferences": [
+        {
+          "featureId": {
+            "$oid": "00000000000000000000001f"
+          },
+          "planId": {
+            "$oid": "000000000000000000000014"
+          },
+          "revision": {
+            "$numberInt": "0"
+          }
+        }
+      ],
+      "production": {
+        "revision": {
+          "$numberInt": "0"
+        },
+        "state": "pending",
+        "executions": [
+          {
+            "id": "execution-1",
+            "catalogScenarioId": {
+              "$oid": "00000000000000000000000a"
+            },
+            "name": "CPR PF até Contrato",
+            "classification": "Regressivo",
+            "classificationLabel": "Finalidade",
+            "guaranteeType": "manual",
+            "coverage": "Regressivo padrão",
+            "components": [
+              "api-cpr"
+            ],
+            "steps": [
+              {
+                "id": "step-simulate",
+                "name": "Simulação",
+                "result": "pending"
+              },
+              {
+                "id": "step-contract",
+                "name": "Contrato",
+                "result": "pending"
+              }
+            ],
+            "source": {
+              "hoPlanId": {
+                "$oid": "000000000000000000000014"
+              },
+              "hoRevision": {
+                "$numberInt": "0"
+              },
+              "executionId": "execution-1"
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "delivery_feature_locks": [
+    {
+      "_id": {
+        "$oid": "000000000000000000000029"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "featureId": {
+        "$oid": "00000000000000000000001f"
+      },
+      "changeId": {
+        "$oid": "000000000000000000000028"
+      }
+    }
+  ],
+  "delivery_freezes": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000002a"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "name": "Freeze de teste",
+      "active": true,
+      "startDate": "2030-02-01",
+      "endDate": "2030-02-02",
+      "scope": "all",
+      "components": []
+    }
+  ],
+  "delivery_module_settings": [
+    {
+      "_id": {
+        "$oid": "00000000000000000000002b"
+      },
+      "workspaceId": "workspace-do-hospedeiro",
+      "schemaVersion": {
+        "$numberInt": "1"
+      },
+      "version": {
+        "$numberInt": "0"
+      },
+      "createdAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "updatedAt": {
+        "$date": "2026-10-21T12:00:00Z"
+      },
+      "createdBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "updatedBy": {
+        "userId": "user-do-hospedeiro",
+        "displayName": "Pessoa autenticada"
+      },
+      "flags": {
+        "quality": true,
+        "delivery": false,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      }
+    }
+  ]
+}

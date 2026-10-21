@@ -2,9 +2,9 @@
 
 Status: pendente no sistema real. O protótipo é referência funcional.
 
-Módulos: `modules/demo`
+Módulos: demo
 
-## Aceite
+## Critérios de aceite
 
 - [ ] Importação explícita idempotente; sem seed automático.
 - [ ] Revisar exemplos inconsistentes; não inventar aceites.
@@ -12,4 +12,4 @@ Módulos: `modules/demo`
 
 ## Entrega
 
-Registrar arquivos alterados no sistema hospedeiro, decisões de mapeamento, validações executadas e limitações. Atualizar o plano JSON somente após a funcionalidade estar integrada e testada.
+Registrar arquivos integrados no sistema hospedeiro, mapeamentos e testes executados. A implementação só está concluída após frontend, backend e persistência reais; a existência da tela do protótipo não conclui a release.

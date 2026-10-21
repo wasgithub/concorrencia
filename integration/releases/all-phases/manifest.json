@@ -1,0 +1,439 @@
+{
+  "version": 1,
+  "defaultPhase": "02-catalog",
+  "optionalInfrastructureCollections": [
+    "delivery_module_settings"
+  ],
+  "optionalInfrastructurePolicy": "Reutilizar flags do hospedeiro; criar delivery_module_settings apenas por decisao explicita. Auditoria/comandos tambem podem ser mapeados para infraestrutura existente.",
+  "phases": [
+    {
+      "id": "02-catalog",
+      "name": "Testes",
+      "status": "pending-host-integration",
+      "dependsOn": [],
+      "flags": {
+        "quality": true,
+        "delivery": false,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "newCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands"
+      ],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": false,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "01-features",
+      "name": "Entregas",
+      "status": "pending-host-integration",
+      "dependsOn": [],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "newCollections": [
+        "delivery_features"
+      ],
+      "collections": [
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features"
+      ],
+      "minimumFlags": {
+        "quality": false,
+        "delivery": true,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "03-homologation",
+      "name": "Homologacao",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "01-features",
+        "02-catalog"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "newCollections": [
+        "delivery_ho_plans"
+      ],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "04-changes",
+      "name": "Preparacao GMUD",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "03-homologation"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "newCollections": [
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": false,
+        "production": false,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "04b-approval",
+      "name": "Aprovacao e agenda",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "04-changes"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": false,
+        "planning": false
+      },
+      "newCollections": [],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": false,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "05-production",
+      "name": "Implantacao e validacao PROD",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "04b-approval"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": true,
+        "planning": false
+      },
+      "newCollections": [],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": true,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "06-calendars",
+      "name": "Planejamento",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "01-features"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": true,
+        "planning": true
+      },
+      "newCollections": [],
+      "collections": [
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "minimumFlags": {
+        "quality": false,
+        "delivery": true,
+        "homologation": false,
+        "gmud": false,
+        "approval": false,
+        "production": false,
+        "planning": true
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    },
+    {
+      "id": "07-migration",
+      "name": "Migracao e consolidacao",
+      "status": "pending-host-integration",
+      "dependsOn": [
+        "05-production"
+      ],
+      "flags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": true,
+        "planning": true
+      },
+      "newCollections": [],
+      "collections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "schemaChanges": "Reutilizar validators canonicos. DDL incremental, nunca recriar/remover collections anteriores; preflight e backfill antes de collMod.",
+      "gate": "E2E real da fase + regressao das fases anteriores + validacao MongoDB na topologia hospedeira",
+      "rolloutCollections": [
+        "delivery_scenarios",
+        "delivery_trails",
+        "delivery_definitions",
+        "delivery_test_flows",
+        "delivery_audit_events",
+        "delivery_commands",
+        "delivery_features",
+        "delivery_ho_plans",
+        "delivery_changes",
+        "delivery_feature_locks",
+        "delivery_freezes"
+      ],
+      "minimumFlags": {
+        "quality": true,
+        "delivery": true,
+        "homologation": true,
+        "gmud": true,
+        "approval": true,
+        "production": true,
+        "planning": false
+      },
+      "flagsPolicy": "flags reproduz rollout sequencial; minimumFlags permite testar a fase opcional somente com suas dependencias."
+    }
+  ],
+  "sharedCollections": [
+    "delivery_audit_events",
+    "delivery_commands"
+  ],
+  "collectionPolicy": "collections inclui apenas fecho de dependencias tecnicas + auditoria/comandos; rolloutCollections documenta o conjunto acumulado na ordem sugerida. Planejamento nao cria HO ou GMUD."
+}

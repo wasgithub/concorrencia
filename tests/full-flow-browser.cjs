@@ -141,6 +141,9 @@ const assert = require("node:assert/strict"),
         await fill("#quickActionBody", "por", "Gerente Demo");
         assert(await p.locator("#quickActionBody .primary").isDisabled());
         await p.locator(".ack-incomplete input").check();
+        await p
+          .locator("[name=exceptionReason]")
+          .fill("Exceção controlada do teste ponta a ponta");
         assert(await p.locator("#quickActionBody .primary").isEnabled());
         await p.locator("#quickActionBody .primary").click();
         assert.equal(
@@ -197,6 +200,18 @@ const assert = require("node:assert/strict"),
       await row()
         .getByRole("button", { name: "✓ Subida realizada", exact: true })
         .click();
+      await p.locator("#quickActionBody .primary").click();
+      assert.equal(
+        await p.evaluate((id) => changes.find((c) => c.id === id).status, id),
+        "Aprovada",
+      );
+      assert.match(
+        await p.textContent("#quickActionBody"),
+        /versão|commit|tag/,
+      );
+      await p
+        .locator("#quickActionBody [name=releaseRef]")
+        .fill("e2e-release-1");
       await p.locator("#quickActionBody .primary").click();
       assert.equal(
         await p.evaluate((id) => changes.find((c) => c.id === id).status, id),
@@ -338,10 +353,16 @@ const assert = require("node:assert/strict"),
         .click();
       await fill("#quickActionBody", "por", "Gerente Correção");
       await p.locator(".ack-incomplete input").check();
+      await p
+        .locator("[name=exceptionReason]")
+        .fill("Exceção controlada do teste ponta a ponta");
       await p.locator("#quickActionBody .primary").click();
       await retryRow()
         .getByRole("button", { name: "✓ Subida realizada", exact: true })
         .click();
+      await p
+        .locator("#quickActionBody [name=releaseRef]")
+        .fill("e2e-release-corrigida");
       await p.locator("#quickActionBody .primary").click();
       await p.goto(base + "/producao.html?change=" + retryId);
       await p.locator(".po-all-ok").click();
@@ -380,7 +401,12 @@ const assert = require("node:assert/strict"),
       const all = {};
       for (let i = 0; i < localStorage.length; i++) {
         const key = localStorage.key(i);
-        all[key] = JSON.parse(localStorage.getItem(key));
+        const raw = localStorage.getItem(key);
+        try {
+          all[key] = JSON.parse(raw);
+        } catch {
+          all[key] = raw;
+        }
       }
       return all;
     });

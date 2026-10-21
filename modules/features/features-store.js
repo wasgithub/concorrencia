@@ -1,5 +1,6 @@
 // A limpeza das issues desativa a recriação dos exemplos.
 const issueDemoSeedsEnabled = (() => {
+  if (typeof DeliveryModules !== "undefined" && !DeliveryModules.isEnabled("delivery")) return false;
   try { return localStorage.getItem("issueflow.demo.issueSeeds.v1") !== "false"; }
   catch { return true; }
 })();

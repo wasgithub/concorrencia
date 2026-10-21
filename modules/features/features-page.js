@@ -161,6 +161,8 @@ function render() {
     const ho = document.createElement("a");
     ho.href = "homologacao.html?issue=" + encodeURIComponent(issue.idIssue);
     ho.className = "feature-action feature-action-ho";
+    ho.dataset.deliveryModule = "homologation";
+    ho.hidden = !DeliveryModules.isEnabled("homologation");
     ho.setAttribute("aria-label", `Testes de homologação de ${issue.idIssue}`);
     ho.title = "Testes de homologação";
     ho.append(featureActionIcon("tests"), document.createTextNode("HO"));

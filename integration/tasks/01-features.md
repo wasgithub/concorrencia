@@ -1,10 +1,10 @@
-# Features e planejamento
+# Entregas: cadastro e consulta
 
 Status: pendente no sistema real. O protótipo é referência funcional.
 
-Módulos: `modules/features`, `modules/planning`
+Módulos: features
 
-## Aceite
+## Critérios de aceite
 
 - [ ] Cadastro e edição da feature/issue.
 - [ ] Consulta paginada por squad, período e componente.
@@ -12,4 +12,4 @@ Módulos: `modules/features`, `modules/planning`
 
 ## Entrega
 
-Registrar arquivos alterados no sistema hospedeiro, decisões de mapeamento, validações executadas e limitações. Atualizar o plano JSON somente após a funcionalidade estar integrada e testada.
+Registrar arquivos integrados no sistema hospedeiro, mapeamentos e testes executados. A implementação só está concluída após frontend, backend e persistência reais; a existência da tela do protótipo não conclui a release.

@@ -6,11 +6,10 @@
     <title>IssueFlow · Cenários e trilhas</title>
     <link rel="stylesheet" href="shared/ui/theme.css" />
     <link rel="stylesheet" href="shared/ui/styles.css" />
-    <script src="modules/features/features-store.js" defer></script>
+    <script src="shared/config/modules.js" defer></script>
     <script src="shared/storage/local-storage.js" defer></script>
     <script src="modules/test-catalog/catalog-store.js" defer></script>
     <script src="shared/testing/execution.js" defer></script>
-    <script src="modules/homologation/plans-store.js" defer></script>
     <script src="modules/test-catalog/catalog-page.js" defer></script>
     <script src="shared/ui/navigation.js" defer></script>
   </head>
@@ -74,7 +73,8 @@
             ><span class="stat-icon purple-text">⇥</span
             ><strong id="statStages">0</strong
             ><small
-              ><i class="dot purple-bg"></i> Do início ao desembolso</small
+              ><i class="dot purple-bg"></i> Etapas configuradas para
+              crédito</small
             >
           </article>
         </section>
@@ -84,7 +84,7 @@
             <div>
               <h2>Casos de teste</h2>
               <p>
-                Nome do fluxo, tipo de garantia, até onde testar e cobertura.
+                Cenários por frente, fluxo de etapas, cobertura e componentes.
               </p>
             </div>
           </div>
@@ -148,7 +148,7 @@
               >Nome da trilha<input
                 name="nome"
                 required
-                maxlength="100"
+                maxlength="160"
                 placeholder="Ex.: Regressivo CPR"
                 aria-label="Nome da trilha" /></label
             ><span class="trail-caption">Cenários da trilha</span>
@@ -167,8 +167,9 @@
               <div>
                 <h2>Etapas do fluxo</h2>
                 <p>
-                  As colunas do "Status execução dos testes". A ordem define até
-                  onde cada caso é testado.
+                  Modelo de etapas para novos cenários. A ordem define até onde
+                  cada caso será planejado; resultados de execução ficam para
+                  outra release.
                 </p>
               </div>
             </div>
@@ -176,7 +177,7 @@
             <form id="stageAddForm" class="dim-add-dimension">
               <input
                 name="nome"
-                maxlength="40"
+                maxlength="200"
                 placeholder="Nova etapa (ex.: Averbação)"
               /><button type="submit" class="secondary">
                 ＋ Adicionar etapa
@@ -188,8 +189,8 @@
               <div>
                 <h2>Dimensões do montador</h2>
                 <p>
-                  Perfil · Tipo · Linha · Garantia · Variação — geram o nome do
-                  fluxo.
+                  Configure os campos e as frentes em que aparecem — ajudam a
+                  montar o nome do fluxo.
                 </p>
               </div>
             </div>
@@ -205,7 +206,10 @@
             </form>
           </section>
         </section>
-        <div class="bottom-note">Cadastra uma vez, executa em toda change.</div>
+        <div class="bottom-note">
+          Cadastre cenários e organize trilhas. A execução será habilitada nas
+          próximas releases.
+        </div>
       </main>
     </div>
 
@@ -225,19 +229,42 @@
         </button>
       </div>
       <p class="modal-intro">
-        Monte o nome pelo montador (ou edite livremente) e defina até onde o
-        caso deve ser testado.
+        Escolha a frente e a funcionalidade. Depois, configure o cenário e as
+        etapas do fluxo.
       </p>
       <form id="caseForm">
+        <div class="form-grid case-context">
+          <label
+            >Frente<select name="frente" aria-label="Frente"></select
+          ></label>
+          <label
+            >Produto / funcionalidade<select
+              name="funcionalidade"
+              aria-label="Produto / funcionalidade"
+            ></select
+          ></label>
+          <label class="full"
+            >Fluxo de teste<select
+              name="workflowId"
+              aria-label="Fluxo de teste"
+            ></select>
+            <small class="field-hint"
+              >Os fluxos são cadastrados na Biblioteca de fluxos. As etapas são
+              copiadas para preservar o histórico.</small
+            >
+          </label>
+        </div>
         <div id="caseBuilder" class="builder-grid"></div>
         <div class="form-grid">
           <label class="full"
-            >Nome do fluxo<input
+            >Nome do cenário<input
               name="nome"
               maxlength="200"
               placeholder="Gerado pelo montador — editável"
           /></label>
-          <label>Tipo de garantia<select name="tipo"></select></label>
+          <label id="caseGuaranteeField"
+            >Tipo de garantia<select name="tipo"></select
+          ></label>
           <label
             >Testar até (etapa alvo)<select name="etapaAlvo"></select
           ></label>
@@ -245,7 +272,7 @@
             >Cobertura<input
               name="cobertura"
               list="coverageList"
-              maxlength="40"
+              maxlength="100"
               placeholder="Ex.: Regressivo padrão"
           /></label>
           <label class="full"
@@ -253,10 +280,11 @@
               name="componentes"
               list="testComponentList"
               maxlength="1000"
-              placeholder="Ex.: api-credito, web-credito"
+              placeholder="Ex.: api-pedidos, web-marketplace"
             /><small class="field-hint"
-              >Separe por vírgulas. Se a issue alterar qualquer um desses
-              componentes, o cenário será sugerido em homologação.</small
+              >Separe os identificadores por vírgulas. Eles classificam a
+              cobertura do cenário; a sugestão por issue será habilitada em
+              outra release.</small
             ></label
           >
           <label class="ck-required"

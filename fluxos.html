@@ -1,0 +1,214 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IssueFlow · Fluxos de testes</title>
+    <link rel="stylesheet" href="shared/ui/theme.css" />
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <script src="shared/config/modules.js" defer></script>
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="shared/testing/execution.js" defer></script>
+    <script src="modules/test-catalog/flows-page.js" defer></script>
+    <script src="shared/ui/navigation.js" defer></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-icon">i<span>f</span></span
+        >IssueFlow</a
+      >
+      <div class="workspace">WORKSPACE<span>Gestão de operações</span></div>
+      <nav class="operation-nav" aria-label="Menu principal"></nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Ambiente de demonstração<small
+          >Dados salvos neste navegador</small
+        >
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <span
+          >Workspace <span class="slash">/</span>
+          <strong>Fluxos de testes</strong></span
+        >
+        <div class="profile">
+          <span class="demo">DEMO</span><span class="avatar">AD</span>
+        </div>
+      </header>
+      <main>
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">QUALIDADE / CADASTROS</div>
+            <h1>Fluxos de testes</h1>
+            <p>
+              Defina uma sequência de etapas para cada frente. Reutilize nos
+              cenários sem misturar processos.
+            </p>
+          </div>
+          <div class="quality-actions">
+            <button id="manageAreas" class="secondary">
+              Frentes e funcionalidades</button
+            ><button id="newFlow" class="primary">＋ Novo fluxo</button>
+          </div>
+        </div>
+        <nav class="quality-tabs" aria-label="Cadastros de qualidade">
+          <a href="testes.html">Cenários e trilhas</a
+          ><a href="fluxos.html" aria-current="page">Fluxos de testes</a>
+        </nav>
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Fluxos cadastrados</h2>
+              <p>
+                Ex.: Crédito → CPR → Contratação; Marketplace → Compra →
+                Finalização do pedido.
+              </p>
+            </div>
+          </div>
+          <div class="filters">
+            <label class="search"
+              ><input
+                id="flowSearch"
+                type="search"
+                placeholder="Buscar fluxo ou etapa"
+                aria-label="Buscar fluxo" /></label
+            ><select id="flowArea" aria-label="Filtrar frente"></select
+            ><select
+              id="flowFunction"
+              aria-label="Filtrar funcionalidade"
+            ></select
+            ><label class="conflict-toggle"
+              ><input id="activeFlows" type="checkbox" checked /> Apenas
+              ativos</label
+            >
+          </div>
+          <div id="flowCards" class="flow-cards"></div>
+          <footer class="panel-footer">
+            <span id="flowCount" role="status"></span
+            ><a href="testes.html">Cadastrar um cenário</a>
+          </footer>
+        </section>
+        <section class="flow-explanation">
+          <h2>Fluxo, cenário e trilha</h2>
+          <p>
+            <strong>Fluxo</strong> é a sequência reutilizável.
+            <strong>Cenário</strong> define o que validar usando essa sequência
+            ou passos próprios. <strong>Trilha</strong> reúne cenários para uma
+            rodada de testes.
+          </p>
+          <p>
+            A execução em HO ou PROD guarda a versão usada. Uma falha fica
+            registrada na etapa correspondente; editar um fluxo não muda testes
+            já planejados ou executados.
+          </p>
+        </section>
+      </main>
+    </div>
+
+    <dialog id="flowDialog" aria-labelledby="flowTitle">
+      <div class="modal-heading">
+        <div>
+          <div class="eyebrow">FLUXO REUTILIZÁVEL</div>
+          <h2 id="flowTitle">Novo fluxo</h2>
+        </div>
+        <button
+          type="button"
+          class="icon-button"
+          id="closeFlow"
+          aria-label="Fechar"
+        >
+          ×
+        </button>
+      </div>
+      <form id="flowForm" class="quality-form">
+        <p class="settings-hint">
+          Escolha onde este fluxo será usado e organize suas etapas. Resultados
+          são preenchidos depois, em HO ou PROD.
+        </p>
+        <div class="form-grid">
+          <label>Frente<select name="frente" required></select></label
+          ><label>Funcionalidade<select name="funcionalidade"></select></label
+          ><label class="full"
+            >Nome do fluxo<input
+              name="nome"
+              required
+              maxlength="100"
+              placeholder="Ex.: Finalização do pedido"
+          /></label>
+        </div>
+        <div class="flow-step-heading">
+          <h3>Etapas do fluxo</h3>
+          <span id="flowStepCount"></span>
+        </div>
+        <ol id="flowSteps" class="flow-step-editor"></ol>
+        <button id="addFlowStep" class="secondary" type="button">
+          ＋ Adicionar etapa
+        </button>
+        <p class="settings-hint">
+          Use os botões para ordenar. A última etapa é apenas o fim deste fluxo;
+          não há uma etapa global obrigatória.
+        </p>
+        <label class="ck-required"
+          ><input name="ativo" type="checkbox" checked /> Disponível para novos
+          cenários</label
+        >
+        <p id="flowError" class="settings-error" role="alert"></p>
+        <div class="modal-actions">
+          <button id="cancelFlow" class="secondary" type="button">
+            Cancelar</button
+          ><button class="primary" type="submit">Salvar fluxo</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="areasDialog" aria-labelledby="areasTitle">
+      <div class="modal-heading">
+        <div>
+          <div class="eyebrow">ORGANIZAÇÃO</div>
+          <h2 id="areasTitle">Frentes e funcionalidades</h2>
+        </div>
+        <button
+          type="button"
+          class="icon-button"
+          id="closeAreas"
+          aria-label="Fechar frentes"
+        >
+          ×
+        </button>
+      </div>
+      <div class="quality-form">
+        <p class="settings-hint">
+          Frente é o produto ou área; funcionalidade é a parte testada. Cadastre
+          uma por vez e reutilize ao criar fluxos e cenários.
+        </p>
+        <div id="areaList" class="flow-area-list"></div>
+        <form id="areaForm">
+          <label
+            >Nova frente<input
+              name="area"
+              required
+              maxlength="80"
+              placeholder="Ex.: Marketplace"
+          /></label>
+          <p id="areaError" role="alert" class="settings-error"></p>
+          <button type="submit" class="secondary">Adicionar frente</button>
+        </form>
+        <form id="functionForm" class="form-grid">
+          <label>Frente<select name="frente" required></select></label
+          ><label
+            >Nova funcionalidade<input
+              name="nome"
+              required
+              maxlength="80"
+              placeholder="Ex.: Compra" /></label
+          ><button type="submit" class="secondary">
+            Adicionar funcionalidade
+          </button>
+          <p id="functionError" role="alert" class="settings-error"></p>
+        </form>
+      </div>
+    </dialog>
+    <div id="toast" role="status" hidden></div>
+  </body>
+</html>

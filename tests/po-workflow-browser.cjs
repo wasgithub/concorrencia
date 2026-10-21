@@ -94,13 +94,16 @@ const assert = require("node:assert/strict");
       .locator("#detailActions")
       .getByText("✓ Subida realizada", { exact: true })
       .click();
-    await admin.locator(".action-form input").fill("");
+    await admin.locator(".action-form input[name=por]").fill("");
     await admin.locator(".action-form .primary").click();
     assert.equal(
       await admin.evaluate((id) => changes.find((c) => c.id === id).status, id),
       "Aprovada",
     );
-    await admin.locator(".action-form input").fill("TL Teste");
+    await admin.locator(".action-form input[name=por]").fill("TL Teste");
+    await admin
+      .locator(".action-form input[name=releaseRef]")
+      .fill("release-po-e2e");
     await admin.locator(".action-form .primary").click();
     assert.equal(
       await admin.evaluate((id) => changes.find((c) => c.id === id).status, id),
@@ -125,7 +128,8 @@ const assert = require("node:assert/strict");
     await po.click("#poSave");
     assert.match(await po.textContent("#poNotice"), /decisão técnica/);
     await po.screenshot({ path: "/tmp/po-failure.png" });
-    await po.locator(".po-all-ok").click();
+    assert(await po.locator(".po-all-ok").isDisabled());
+    await po.locator("#poScenarios select").nth(1).selectOption("OK");
     await po.click("#poFinish");
     assert.match(await po.textContent("#poNotice"), /Validação concluída/);
     assert.equal(await po.locator("#poSave").isDisabled(), true);

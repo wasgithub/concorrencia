@@ -27,7 +27,7 @@ Guards técnicos de HO (`approvalFence`) não criam nova versão de negócio/eve
 - Revisão de plano/checklist/janela/features invalida aprovação. Mudança de observação não invalida. Aprovação captura revisões de HO. Confirmar deploy exige referências ainda válidas; se HO mudou, retornar erro de negócio e orientar nova aprovação. A projeção informa aprovação desatualizada; o gerente pode executar approve novamente em uma GMUD approved com referência desatualizada, verificando todos os requisitos e registrando outro evento. Não fingir que a tentativa de deploy foi realizada nem alterar status ao abortar o comando.
 - Freeze sobre a janela bloqueia aprovação/confirmação segundo regra acordada. Proposta inicial: sem exceção implícita. Confirmar deploy registra o ocorrido externamente; não programa execução real e não é liberado automaticamente pela data.
 - Apenas `approved` pode virar `deployed`. Reprogramar é permitido antes da subida; exige motivo e nova aprovação. Rejeição ocorre antes do deploy; não realizada registra uma subida aprovada que não foi executada.
-- PROD só recebe resultados depois do deploy e antes do aceite. Step failed exige motivo não vazio. “Marcar tudo OK” produz resultados para todas etapas aplicáveis, em um comando com mesma versão e auditoria. Corrigir uma falha não apaga o evento da falha original.
+- PROD só recebe resultados depois do deploy e antes do aceite. Step failed exige motivo não vazio em HO e PROD. “Marcar pendências como OK” atua somente em etapas pendentes, preserva N/A e não fica disponível enquanto houver falha no cenário. O comando usa a mesma revisão e auditoria; o reteste de uma falha é uma alteração explícita da etapa. Corrigir uma falha não apaga o evento da falha original.
 - Aceite PROD só com plano não vazio e todas etapas OK/N/A. Encerramento TL exige deploy e aceite; closed não aceita alterações.
 - Rollback exige deploy confirmado, motivo e identidade TL. Se a causa é um cenário/etapa, ambos IDs devem existir. Closed/rollback são terminais somente leitura. Nova versão ou tentativa após rollback é outra GMUD, same featureId e previousChangeId; nunca apagar registros anteriores.
 
@@ -38,3 +38,13 @@ Usar 401 sem sessão, 403 sem permissão, 404 para entidade inexistente/no escop
 Todas consultas incluem workspace e limites de paginação. Filtrar calendários por faixa de datas e filas por situação, PO/equipe e período. Não carregar todas coleções para filtrar no navegador. Escape/limite de busca deve impedir consultas regex irrestritas; escolher estratégia de busca conforme capacidades da instalação real. Projeções de timeline e fila são derivadas das mesmas entidades e status do servidor.
 
 Auditoria não possui endpoint de edição/exclusão e não usa TTL por padrão. Os detalhes do evento devem conter apenas alterações relevantes e limites de tamanho, sem dados sigilosos extras do sistema hospedeiro.
+
+A comparação entre cenário de origem HO e snapshot PROD inclui frente/funcionalidade, instruções, resultado esperado, classificação, modo de execução, versão/IDs das etapas, cobertura e componentes, além do nome e sequência. Alteração da definição exige selecionar novamente antes de aprovar; nomes e etapas iguais sozinhos não comprovam equivalência.
+
+## Escopo por entrega e atribuições
+
+O cenário do catálogo é reutilizável; a seleção no plano copia sua versão e sequência completa e escolhe um prefixo contínuo. Fora do escopo não recebe OK/N/A nem entra no denominador da execução. Depois do primeiro resultado, o alcance fica bloqueado mesmo que resultados voltem a pending; novo escopo exige nova execução e preservação da anterior na auditoria. A API cria o snapshot a partir da origem confiável e não aceita redefinição da origem ou desbloqueio pelo cliente.
+
+Responsável/revisor usam usuários do hospedeiro, com escopo validado; atribuição não é aceite. Referências Jira são metadados manuais com chave/URL validada, sem aprovação presumida ou requisição arbitrária ao endereço. Alterações do plano/atribuições/referências invalidam o aceite e são auditadas. PROD recebe somente o prefixo homologado, com resultados novos e origem/versão preservadas; não ampliar durante seleção ou execução de PROD.
+
+No modelo de qualidade compartilhada, `DEV` nas operações de catálogo/HO representa permissões do desenvolvedor no sistema hospedeiro, não um cadastro ou perfil novo obrigatório. Mapear os papéis ilustrativos para a autorização existente. Atribuição de revisor é informativa; não concede aceite de produto nem aprovação de subida.
