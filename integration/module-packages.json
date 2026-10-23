@@ -38,7 +38,9 @@
         "validacao-ho.html",
         "modules/homologation/",
         "shared/testing/",
-        "fluxos.html"
+        "fluxos.html",
+        "acompanhamento-testes.html",
+        "modules/test-runs/"
       ],
       "capabilities": {
         "catalog": {
@@ -59,6 +61,14 @@
             "quality"
           ],
           "flag": "homologation"
+        },
+        "testRunPreview": {
+          "requires": [
+            "quality"
+          ],
+          "prototypeOnly": true,
+          "documentation": "../modules/test-runs/README.md",
+          "hostIntegration": "pending-scope-review; not implicitly added to catalog release"
         }
       },
       "collections": [

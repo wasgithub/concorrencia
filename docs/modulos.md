@@ -65,3 +65,7 @@ O desenho de persistência e o roteiro para portar os módulos estão em [IMPLEM
 ## Configuração e implementação por partes
 
 Configuração de módulos em `shared/config/modules.js`, UI em `modules/settings/` e cadastro genérico no módulo de catálogo. Veja [releases e customização](releases-e-customizacao.md). O catálogo não exige carregar o store de Features; HO continua dependendo de uma entrega identificada.
+
+## Prévia de acompanhamento do regressivo
+
+[Acompanhamento por ciclo](../modules/test-runs/README.md), em acompanhamento-testes.html, reúne progresso, times, cenários e painel de etapas. Usa quality, com exemplos e persistência separados. Não altera aceites/plano HO das issues nem amplia automaticamente o escopo da primeira integração.

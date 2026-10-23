@@ -40,7 +40,7 @@ const assert = require("node:assert/strict");
       await p
         .locator(".operation-nav a.nav")
         .evaluateAll((nodes) => nodes.map((n) => n.getAttribute("href"))),
-      ["testes.html", "fluxos.html"],
+      ["testes.html", "fluxos.html", "acompanhamento-testes.html"],
     );
     assert.equal(await p.evaluate(() => typeof issues), "undefined");
     for (const route of [
@@ -202,25 +202,40 @@ const assert = require("node:assert/strict");
         ),
       ),
     );
-    const flowBefore = await p.evaluate(() => testFlows().find(f => f.nome === "E2E R1 fluxo independente"));
-    const flowCard = p.locator(".flow-card").filter({ hasText: "E2E R1 fluxo independente" });
+    const flowBefore = await p.evaluate(() =>
+      testFlows().find((f) => f.nome === "E2E R1 fluxo independente"),
+    );
+    const flowCard = p
+      .locator(".flow-card")
+      .filter({ hasText: "E2E R1 fluxo independente" });
     await flowCard.getByRole("button", { name: "Editar", exact: true }).click();
-    await p.getByRole("textbox", { name: "Etapa 1", exact: true }).fill("Escolher produto");
+    await p
+      .getByRole("textbox", { name: "Etapa 1", exact: true })
+      .fill("Escolher produto");
     await p.uncheck("#flowForm [name=ativo]");
     await p.locator("#flowForm button[type=submit]").click();
-    const flowAfter = await p.evaluate(id => testFlows().find(f => f.id === id), flowBefore.id);
+    const flowAfter = await p.evaluate(
+      (id) => testFlows().find((f) => f.id === id),
+      flowBefore.id,
+    );
     assert.equal(flowAfter.version, flowBefore.version + 1);
     assert.equal(flowAfter.steps[0].id, flowBefore.steps[0].id);
     assert.equal(flowAfter.ativo, false);
     await p.uncheck("#activeFlows");
-    await flowCard.getByRole("button", { name: "Duplicar", exact: true }).click();
+    await flowCard
+      .getByRole("button", { name: "Duplicar", exact: true })
+      .click();
     await p.fill("#flowForm [name=nome]", "E2E R1 fluxo cópia");
     await p.check("#flowForm [name=ativo]");
     await p.locator("#flowForm button[type=submit]").click();
     await p.reload();
-    const copy = await p.evaluate(() => testFlows().find(f => f.nome === "E2E R1 fluxo cópia"));
+    const copy = await p.evaluate(() =>
+      testFlows().find((f) => f.nome === "E2E R1 fluxo cópia"),
+    );
     assert(copy.ativo);
-    assert(copy.steps.every(s => !flowAfter.steps.some(old => old.id === s.id)));
+    assert(
+      copy.steps.every((s) => !flowAfter.steps.some((old) => old.id === s.id)),
+    );
     await p.goto(base + "/testes.html");
     await p.setViewportSize({ width: 390, height: 844 });
     assert(

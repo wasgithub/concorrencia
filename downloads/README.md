@@ -1,13 +1,15 @@
 # Projeto compactado atualizado
 
-Baixe [concorrencia-e4c5089.zip](concorrencia-e4c5089.zip). O nome original foi mantido para preservar o link de download; o conteúdo foi atualizado em 21/10/2026.
+Baixe [concorrencia-e4c5089.zip](concorrencia-e4c5089.zip). Atualizado em 23/10/2026; o nome original foi mantido para preservar o link de download.
 
-Pacote gerado a partir dos arquivos atuais da pasta de trabalho, incluindo alterações ainda não publicadas na main. Esta branch contém a mesma versão dos fontes incluídos no ZIP. O identificador e4c5089 no nome do arquivo é histórico e não representa a versão atual do conteúdo.
+Origem: main, commit `46b5e0292f47000f440097469d52515a97b42699`. O ZIP contém exatamente os arquivos versionados desse commit; os fontes desta branch foram sincronizados com a mesma versão. O identificador e4c5089 no nome do ZIP é histórico.
 
-Inclui cadastro de cenários por frente/funcionalidade e fluxo, campos condicionais para Crédito/Marketplace/Site, trilhas, correções de HO e histórico, perfil inicial somente Testes, contratos MongoDB e plano de implementação gradual.
+Inclui cenários por frente/funcionalidade, fluxos, módulos configuráveis, plano de implementação gradual, acompanhamento do regressivo, planilha por datas de produção, múltipla seleção de datas, agenda e links de evidências no Jira. As opções de reutilizar cenários e as abas Por time/Cobertura planejada foram retiradas.
 
-Validação local anterior ao empacotamento: 42 testes unitários e 17 suítes aprovados, 0 falhas. Sem conexão com banco real. Evidências em concorrencia/integration/releases/all-phases/validacao.md.
+Verificações anteriores: 51 testes unitários e 21 suítes aprovados; após retirar as abas, 51 unitários e o teste de navegador afetado foram novamente aprovados. Sem conexão com banco real. O pacote foi conferido por CRC e comparado arquivo a arquivo com a origem.
 
-Após extrair, consulte concorrencia/README.md, concorrencia/IMPLEMENTAR_NO_SISTEMA.md e concorrencia/plano-implementacao/ORDEM-DE-IMPLEMENTACAO.md. O ZIP não contém .git, dados do navegador ou resultados temporários dos testes.
+Após extrair, consulte concorrencia/README.md, concorrencia/IMPLEMENTAR_NO_SISTEMA.md e concorrencia/plano-implementacao/ORDEM-DE-IMPLEMENTACAO.md. Não inclui .git, dados do navegador nem resultados temporários dos testes.
 
-Arquivos: 145. SHA-256: `f9b8ddbcf92eb67d41259030bb5d88de3408072cae4593bf547ea28cf6ec619b`.
+Arquivos: 164. Tamanho: 1307918 bytes.
+
+SHA-256: `d5704298b8523f15087357ed6a7435dceddafbd86b43609769da4f7868da9b1f`.

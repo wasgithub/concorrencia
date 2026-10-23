@@ -13,6 +13,7 @@ function renderDeliveryNavigation() {
       [
         ["testes.html", "✓", "Cenários e trilhas"],
         ["fluxos.html", "⇥", "Fluxos de testes"],
+        ["acompanhamento-testes.html", "◫", "Acompanhamento de testes"],
         ["validacao-ho.html", "◉", "Validação de homologação"],
       ],
     ],

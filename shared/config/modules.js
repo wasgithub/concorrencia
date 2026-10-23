@@ -25,6 +25,7 @@
     "index.html": "delivery",
     "testes.html": "quality",
     "fluxos.html": "quality",
+    "acompanhamento-testes.html": "quality",
     "homologacao.html": "homologation",
     "validacao-ho.html": "homologation",
     "changes.html": "gmud",

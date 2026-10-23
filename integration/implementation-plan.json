@@ -256,15 +256,15 @@
   },
   "localValidation": {
     "status": "passed",
-    "startedAt": "2026-10-21T18:33:35.564Z",
-    "finishedAt": "2026-10-21T18:35:08.930Z",
-    "suiteCount": 17,
+    "startedAt": "2026-10-23T20:11:27.534Z",
+    "finishedAt": "2026-10-23T20:13:14.038Z",
+    "suiteCount": 21,
     "failedSuites": 0,
-    "unitTestsPassed": 42,
+    "unitTestsPassed": 51,
     "command": "node tests/run-e2e.cjs",
     "databaseConnection": false,
     "report": "releases/all-phases/validacao.md",
     "integrationStatusUnchanged": true,
-    "supplementary": "Revalidacao completa apos correcoes de nome automatico, dimensoes explicitas, ampliacao do snapshot salvo e indicacao de inativos nas trilhas."
+    "supplementary": "Retiradas opcoes de reutilizacao; evidencia Jira opcional por execucao/ciclo, validacao HTTP/HTTPS, consulta em lista/planilha, edicao/remocao e historico. Suite de evidencia reexecutada apos limpeza da mensagem de URL ao corrigir o campo."
   }
 }

@@ -160,3 +160,11 @@ A cor principal segue o verde e-agro, com azul secundário, amarelo de atenção
 Abra `configuracoes.html` para ativar módulos e definir classificações. Cenários podem ter passos próprios, pré-condições e resultado esperado, sem depender de um fluxo de crédito. Configuração, releases, dependências e limites: [docs/releases-e-customizacao.md](docs/releases-e-customizacao.md).
 
 A [revisão de todas as fases](integration/releases/all-phases/README.md) descreve os ajustes de fluxo, o banco e as pendências de validação real. O perfil inicial continua somente Testes.
+
+## Acompanhamento do regressivo por ciclo
+
+Abra [acompanhamento-testes.html](acompanhamento-testes.html) ou Qualidade → Acompanhamento de testes. A prévia inclui ciclos demonstrativos, progresso, times e painel lateral de etapas; permite criar um ciclo do catálogo e registrar links de evidências no Jira. Os registros são separados dos planos das issues. [Funcionamento e limites](modules/test-runs/README.md).
+
+A tela de acompanhamento também oferece [Planilha de etapas](acompanhamento-testes.html?view=matrix) e [Agenda dos times](acompanhamento-testes.html?view=agenda), com filtro de período e ambiente para consultar ciclos sobrepostos. A agenda usa o período de validação, separado da janela de implantação.
+
+Na Planilha de etapas, Exibir → Por data de produção reúne os ciclos previstos para o mesmo dia; Todos os ciclos mostra o consolidado. A faixa temporal compara validação e implantação. O cadastro de novos ciclos seleciona os cenários ativos do catálogo.
