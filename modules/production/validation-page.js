@@ -235,7 +235,7 @@ function renderScenarios() {
       el(
         "small",
         "",
-        `Garantia ${sc.tipo.toLowerCase()}${sc.sourceIssueId ? " · Issue " + sc.sourceIssueId : ""} · ${executionStages(sc).length} etapas do fluxo`,
+        `${scenarioClassification(sc)}${sc.sourceIssueId ? " · Issue " + sc.sourceIssueId : ""} · ${executionStages(sc).length} etapas do fluxo`,
       ),
     );
     head.append(
@@ -247,19 +247,32 @@ function renderScenarios() {
       ),
     );
     card.append(head);
+    for (const [label, value] of scenarioInstructions(sc))
+      card.append(el("p", "scenario-instructions", `${label}: ${value}`));
+    const excluded = executionExcludedStages(sc);
+    if (excluded.length)
+      card.append(
+        el(
+          "p",
+          "prod-scope-note",
+          `${executionStages(sc).length}/${executionFullStages(sc).length} etapas homologadas · Fora do escopo: ${excluded.join(" → ")}.`,
+        ),
+      );
     const controls = el("div", "po-scenario-controls"),
-      allOK = el("button", "secondary", "✓ Marcar fluxo como OK");
+      allOK = el("button", "secondary", "✓ Marcar pendências como OK");
     allOK.type = "button";
     allOK.classList.add("po-all-ok");
     allOK.disabled =
       !writable() ||
-      executionStages(sc).every((stage) => sc.etapas[stage] === "OK");
+      execStatus(sc) === "Falhou" ||
+      !pendingExecutionStages(sc).length;
     allOK.onclick = () => {
-      for (const stage of executionStages(sc)) recordStep(sc, stage, "OK");
+      for (const stage of pendingExecutionStages(sc))
+        recordStep(sc, stage, "OK");
       renderScenarios();
     };
     controls.append(allOK);
-    card.append(controls);
+    card.append(controls, el("p", "execution-position", executionPosition(sc)));
     if (["Falhou", "Em execução"].includes(sc.resultadoProducao))
       card.append(
         el(

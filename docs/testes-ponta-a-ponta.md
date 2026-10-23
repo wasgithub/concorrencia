@@ -60,3 +60,7 @@ O percurso completo cria cinco entregas de demonstração em sua sessão isolada
 Executar a suíte não reescreve `modules/demo/examples.json`. Para regenerar a massa de exemplos explicitamente, execute apenas `tests/full-flow-browser.cjs` com `UPDATE_EXAMPLES=1` e as variáveis do navegador; a exportação mantém os cinco exemplos de referência, sem a tentativa adicional da regressão.
 
 Os testes de navegador executam o protótipo e seu localStorage. Confirmar subida e registrar rollback simulam registros operacionais: não executam pipelines ou reversões. O teste MongoDB verifica o blueprint e o bootstrap com adaptador simulado; não conecta a um banco, não comprova validators/índices em uma instalação real e não valida autenticação ou permissões de um backend futuro.
+
+## Módulos e cenários genéricos
+
+A suíte inclui customization-browser (flags, acesso direto, vocabulário e fluxo independente) e generic-flow-browser (o percurso completo com categoria API, passos de autenticação e resultado esperado, sem etapas de crédito). Os unitários cobrem dependências das flags e preservação de snapshots após mudanças de configuração. Ao testar limpeza, a massa usa cenários com fluxo explícito, como o cadastro atual; a limpeza deve mantê-los integralmente.

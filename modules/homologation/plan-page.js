@@ -18,6 +18,7 @@ let plan = structuredClone(
 );
 let baseline = JSON.stringify(plan.cenarios);
 let savedPlanRevision = JSON.stringify(hoPlans()[issueId] || null);
+let pendingStepEvents = [];
 let pickerTab = "catalog";
 const selectedCases = new Set();
 const expandedCases = new Set();
@@ -51,15 +52,73 @@ function save() {
     return false;
   }
   if (JSON.stringify(plan.cenarios) !== baseline) changed();
-  all[issueId] = plan;
+  for (const sc of plan.cenarios)
+    for (const stage of executionStages(sc))
+      if (
+        sc.etapas?.[stage] === "Falhou" &&
+        !sc.motivosEtapas?.[stage]?.trim()
+      ) {
+        $("#hoError").textContent =
+          `Informe o motivo da falha em ${sc.nome} · ${stage}.`;
+        return false;
+      }
+  const previousScenarios = JSON.parse(baseline);
+  const reasonEvents = [];
+  for (const sc of plan.cenarios)
+    for (const [stage, reason] of Object.entries(sc.motivosEtapas || {})) {
+      const old =
+        previousScenarios.find((c) => c.id === sc.id)?.motivosEtapas?.[stage] ||
+        "";
+      if (
+        reason !== old &&
+        !pendingStepEvents.some(
+          (e) =>
+            e.cenarioId === sc.id && e.etapa === stage && e.para === "Falhou",
+        )
+      )
+        reasonEvents.push({
+          tipo: "motivo_ho",
+          quando: new Date().toISOString(),
+          cenarioId: sc.id,
+          etapa: stage,
+          motivo: reason,
+          texto: `Motivo atualizado · ${sc.nome} · ${stage}: ${reason}`,
+        });
+    }
+  const candidate = structuredClone(plan);
+  candidate.historico = [
+    ...(candidate.historico || []),
+    ...pendingStepEvents,
+    ...reasonEvents,
+  ];
+  all[issueId] = candidate;
   if (!saveTestData(hoPlansKey, all)) {
     notify("Não foi possível salvar. Tente novamente.");
     return false;
   }
+  plan.historico = candidate.historico;
+  pendingStepEvents = [];
+  $("#hoError").textContent = "";
   baseline = JSON.stringify(plan.cenarios);
   savedPlanRevision = JSON.stringify(plan);
+  renderAcceptance();
   renderSaveState();
   return true;
+}
+function recordStep(sc, stage, value) {
+  const previous = sc.etapas[stage] || "";
+  if (previous === value) return;
+  sc.etapas[stage] = value;
+  pendingStepEvents.push({
+    tipo: "teste_ho",
+    quando: new Date().toISOString(),
+    cenarioId: sc.id,
+    etapa: stage,
+    de: previous || "Pendente",
+    para: value || "Pendente",
+    motivo: sc.motivosEtapas?.[stage] || "",
+    texto: `${sc.nome} · ${stage}: ${previous || "Pendente"} → ${value || "Pendente"}`,
+  });
 }
 function add(casos) {
   let count = 0;
@@ -136,6 +195,7 @@ function render() {
     box.append(empty);
   }
   plan.cenarios.forEach((sc, index) => {
+    sc.etapas = sc.etapas || {};
     const card = el("details", "ho-case");
     card.dataset.execution = sc.id;
     card.open = expandedCases.has(sc.id);
@@ -166,14 +226,18 @@ function render() {
     const body = el("div", "ho-case-body"),
       grid = el("div", "ho-stage-grid"),
       stageHeading = el("div", "ho-stage-heading"),
-      fillOK = el("button", "secondary ho-fill-ok", "✓ Marcar fluxo como OK");
+      fillOK = el(
+        "button",
+        "secondary ho-fill-ok",
+        "✓ Marcar pendências como OK",
+      );
     fillOK.type = "button";
     fillOK.setAttribute(
       "aria-label",
       `Marcar todas as etapas de ${sc.nome} como OK`,
     );
     fillOK.title =
-      "Marca todas as etapas aplicáveis como OK, substituindo resultados anteriores.";
+      "Marca apenas etapas pendentes. Reteste falhas individualmente; N/A é preservado.";
     function updateScenarioResults() {
       updateProgress();
       const result = execStatus(sc);
@@ -183,14 +247,14 @@ function render() {
       title.querySelector("small").textContent =
         `Garantia ${sc.tipo.toLowerCase()} · Até ${sc.etapaAlvo} · ${executionStages(sc).filter((s) => ["OK", "N/A"].includes(sc.etapas[s])).length}/${executionStages(sc).length} etapas concluídas`;
       fillOK.disabled =
-        !executionStages(sc).length ||
-        executionStages(sc).every((s) => sc.etapas[s] === "OK");
+        execStatus(sc) === "Falhou" || !pendingExecutionStages(sc).length;
     }
     fillOK.onclick = () => {
-      for (const stage of executionStages(sc)) sc.etapas[stage] = "OK";
+      for (const stage of pendingExecutionStages(sc))
+        recordStep(sc, stage, "OK");
       for (const select of grid.querySelectorAll("select")) {
-        select.value = "OK";
-        select.dataset.result = "OK";
+        select.value = sc.etapas[select.dataset.stage] || "";
+        select.dataset.result = select.value;
       }
       changed();
       updateScenarioResults();
@@ -212,15 +276,56 @@ function render() {
       ])
         select.append(new Option(text, value));
       select.value = sc.etapas[stage] || "";
+      select.dataset.stage = stage;
       select.dataset.result = select.value;
+      const reasonLabel = el(
+          "label",
+          "ho-step-reason",
+          "Motivo da falha / defeito",
+        ),
+        reason = el("textarea");
+      reason.rows = 2;
+      reason.maxLength = 1000;
+      reason.dataset.stage = stage;
+      reason.value = sc.motivosEtapas?.[stage] || "";
+      reason.setAttribute("aria-label", `Motivo: ${sc.nome}: ${stage}`);
+      reasonLabel.hidden = sc.etapas[stage] !== "Falhou" && !reason.value;
+      reasonLabel.append(reason);
+      reason.oninput = () => {
+        sc.motivosEtapas = sc.motivosEtapas || {};
+        sc.motivosEtapas[stage] = reason.value;
+        const event = pendingStepEvents
+          .filter(
+            (e) =>
+              e.cenarioId === sc.id && e.etapa === stage && e.para === "Falhou",
+          )
+          .at(-1);
+        if (event) {
+          event.motivo = reason.value;
+          event.texto = `${sc.nome} · ${stage}: ${event.de} → Falhou · ${reason.value}`;
+        }
+        changed();
+      };
       select.onchange = () => {
-        sc.etapas[stage] = select.value;
+        if (
+          sc.etapas[stage] === "Falhou" &&
+          !sc.motivosEtapas?.[stage]?.trim()
+        ) {
+          select.value = "Falhou";
+          notify("Registre o motivo da falha antes de informar o reteste.");
+          reason.focus();
+          return;
+        }
+        recordStep(sc, stage, select.value);
+        reasonLabel.hidden = select.value !== "Falhou" && !reason.value;
         select.dataset.result = select.value;
         changed();
         updateScenarioResults();
       };
       label.append(select);
-      grid.append(label);
+      const field = el("div", "ho-step-field");
+      field.append(label, reasonLabel);
+      grid.append(field);
     }
     updateScenarioResults();
     body.append(grid);
@@ -248,6 +353,22 @@ function render() {
     remove.type = "button";
     remove.setAttribute("aria-label", `Remover ${sc.nome} do plano`);
     remove.onclick = () => {
+      if (
+        executionStages(sc).some(
+          (stage) =>
+            sc.etapas[stage] === "Falhou" && !sc.motivosEtapas?.[stage]?.trim(),
+        )
+      ) {
+        notify("Informe o motivo da falha antes de remover o cenário.");
+        return;
+      }
+      pendingStepEvents.push({
+        tipo: "cenario_ho_removido",
+        quando: new Date().toISOString(),
+        cenarioId: sc.id,
+        snapshot: structuredClone(sc),
+        texto: `Cenário removido do plano: ${sc.nome}. Resultados anteriores preservados neste histórico.`,
+      });
       plan.cenarios = plan.cenarios.filter((s) => s.id !== sc.id);
       expandedCases.delete(sc.id);
       changed();
@@ -672,6 +793,8 @@ if (!issue) {
     plan.historico.push({
       quando: plan.aceite.quando,
       texto: `Homologação aprovada por ${por}: ${nota}`,
+      aceiteSnapshot: structuredClone(plan.aceite),
+      cenariosSnapshot: structuredClone(plan.cenarios),
     });
     if (save()) {
       renderAcceptance();

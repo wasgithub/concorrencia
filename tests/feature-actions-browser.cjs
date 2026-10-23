@@ -38,6 +38,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
     await first.locator(".feature-action-ho").focus();
     await p.keyboard.press("Enter");
     await p.waitForURL("**/homologacao.html?issue=" + id);
+    await p.waitForFunction(
+      (issueId) => document.querySelector("#hoTitle")?.textContent.includes(issueId),
+      id,
+    );
     assert(p.url().includes("homologacao.html?issue=" + id));
     assert.match(await p.textContent("#hoTitle"), new RegExp(id));
     await p.goto(base + "/index.html");

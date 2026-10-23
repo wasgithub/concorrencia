@@ -1,0 +1,125 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>IssueFlow · Configurações</title>
+    <link rel="stylesheet" href="shared/ui/theme.css" />
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <script src="shared/config/modules.js" defer></script>
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="modules/settings/settings-page.js" defer></script>
+    <script src="shared/ui/navigation.js" defer></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-icon">i<span>f</span></span
+        >IssueFlow</a
+      >
+      <div class="workspace">WORKSPACE<span>Gestão de operações</span></div>
+      <nav class="operation-nav" aria-label="Menu principal"></nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Ambiente de demonstração<small
+          >Dados salvos neste navegador</small
+        >
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <span>Workspace / <strong>Configurações</strong></span>
+      </header>
+      <main>
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">MÓDULOS E QUALIDADE</div>
+            <h1>Configurações</h1>
+            <p>
+              Ative partes do fluxo e adapte o vocabulário de testes ao seu
+              processo.
+            </p>
+          </div>
+        </div>
+        <section class="panel">
+          <div class="panel-heading">
+            <div>
+              <h2>Módulos disponíveis</h2>
+              <p>
+                Libere por responsabilidade. Desativar um módulo preserva seus
+                registros.
+              </p>
+            </div>
+          </div>
+          <form id="moduleSettings" class="settings-content">
+            <div id="moduleChoices"></div>
+            <p class="settings-hint">
+              Testes funciona de forma independente. Habilite cada fase explicitamente: Entregas → Homologação → Preparação GMUD → Aprovação → Produção. Ativar Entregas não libera HO, e preparar uma GMUD não autoriza sua subida.
+            </p>
+            <p id="moduleError" class="settings-error" role="alert"></p>
+            <button type="submit" class="primary">Salvar módulos</button>
+            <p id="moduleSuccess" class="settings-success" role="status"></p>
+          </form>
+        </section>
+        <section class="panel" style="margin-top: 24px" hidden>
+          <div class="panel-heading">
+            <div>
+              <h2>Vocabulário futuro dos cenários</h2>
+              <p>
+                Configuração reservada para uma release futura. O cadastro atual mantém Tipo de garantia, separado do modo de execução.
+              </p>
+            </div>
+          </div>
+          <form id="qualitySettings" class="settings-content" hidden>
+            <label
+              >Nome da classificação<input
+                name="label"
+                maxlength="60"
+                required
+                placeholder="Categoria, Tipo de teste, Modalidade…" /></label
+            ><label
+              >Classificações disponíveis<textarea
+                name="types"
+                maxlength="5000"
+                required
+                placeholder="Uma opção por linha: Funcional, API, Interface…"
+              ></textarea>
+            </label>
+            <p class="settings-hint">
+              Nesta release, configure etapas e atributos em Cenários e trilhas.
+              <a href="testes.html#workflowConfig"
+                >Configurar etapas e atributos</a
+              >.
+            </p>
+            <p id="qualityError" class="settings-error" role="alert"></p>
+            <button type="submit" class="primary">Salvar qualidade</button>
+            <p id="qualitySuccess" class="settings-success" role="status"></p>
+          </form>
+        </section>
+        <section
+          id="scenarioOrganization"
+          class="panel"
+          style="margin-top: 24px"
+        >
+          <div class="panel-heading">
+            <div>
+              <h2>Organização dos testes</h2>
+              <p>
+                Frentes, funcionalidades e sequências de etapas têm um cadastro
+                próprio.
+              </p>
+            </div>
+            <a class="secondary" href="fluxos.html"
+              >Gerenciar fluxos de testes</a
+            >
+          </div>
+        </section>
+        <p class="settings-hint" style="margin-top: 20px">
+          Configuração local deste protótipo. Na implementação real, as flags,
+          permissões e validações também devem ser aplicadas no backend do
+          sistema.
+        </p>
+      </main>
+    </div>
+  </body>
+</html>

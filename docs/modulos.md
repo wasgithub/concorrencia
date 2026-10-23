@@ -61,3 +61,11 @@ Ordem sugerida de implementação: features → catálogo → HO → GMUD/aprova
 ## Preparação MongoDB
 
 O desenho de persistência e o roteiro para portar os módulos estão em [IMPLEMENTAR_NO_SISTEMA.md](../IMPLEMENTAR_NO_SISTEMA.md) e [integration/mongodb/model.md](../integration/mongodb/model.md). Eles descrevem a arquitetura futura; não alteram os dados locais ou conectam este protótipo a um banco. No protótipo e no sistema real, após deploy/rollback, uma nova tentativa usa outra GMUD; reprogramação da mesma tentativa é permitida antes do deploy.
+
+## Configuração e implementação por partes
+
+Configuração de módulos em `shared/config/modules.js`, UI em `modules/settings/` e cadastro genérico no módulo de catálogo. Veja [releases e customização](releases-e-customizacao.md). O catálogo não exige carregar o store de Features; HO continua dependendo de uma entrega identificada.
+
+## Prévia de acompanhamento do regressivo
+
+[Acompanhamento por ciclo](../modules/test-runs/README.md), em acompanhamento-testes.html, reúne progresso, times, cenários e painel de etapas. Usa quality, com exemplos e persistência separados. Não altera aceites/plano HO das issues nem amplia automaticamente o escopo da primeira integração.

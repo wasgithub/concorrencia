@@ -1,5 +1,5 @@
 {
-  "contractVersion": 1,
+  "contractVersion": 2,
   "status": "proposal-not-implemented",
   "basePath": "/delivery",
   "authorization": "existing-host-session",
@@ -20,222 +20,352 @@
       "module": "features",
       "method": "GET",
       "path": "/delivery/features",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Lista paginada por squad, componente, período e busca",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "01-features"
     },
     {
       "id": "createFeature",
       "module": "features",
       "method": "POST",
       "path": "/delivery/features",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Cria registro de entrega",
       "body": {
         "externalId": "string",
         "title": "string",
         "teamId": "host-team-id",
-        "components": ["string"],
+        "components": [
+          "string"
+        ],
         "environment": "ho|ho2|ephemeral",
         "hoStartDate": "YYYY-MM-DD",
         "hoEndDate": "YYYY-MM-DD",
-        "plannedProductionDate": "YYYY-MM-DD"
+        "plannedProductionDate": "YYYY-MM-DD",
+        "plannedChangeOpenDate": "YYYY-MM-DD optional"
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "01-features"
     },
     {
       "id": "editFeature",
       "module": "features",
       "method": "PATCH",
       "path": "/delivery/features/{id}",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Edita campos permitidos; data de GMUD vinculada só pelo comando da GMUD",
       "body": {
         "expectedVersion": "integer",
         "patch": "allowed-feature-fields"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "01-features"
     },
     {
       "id": "listScenarios",
       "module": "test-catalog",
       "method": "GET",
       "path": "/delivery/scenarios",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER",
+        "DEV"
+      ],
       "purpose": "Filtra PF/PJ, linha, garantia, componente, cobertura e busca",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "saveScenario",
       "module": "test-catalog",
       "method": "PUT",
       "path": "/delivery/scenarios/{id}",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Altera caso reutilizável sem mudar snapshots antigos",
       "body": {
         "expectedVersion": "integer",
         "scenario": "scenario-definition"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "createScenario",
       "module": "test-catalog",
       "method": "POST",
       "path": "/delivery/scenarios",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Cria caso reutilizável",
       "body": {
         "scenario": "scenario-definition"
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "listTrails",
       "module": "test-catalog",
       "method": "GET",
       "path": "/delivery/trails",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER",
+        "DEV"
+      ],
       "purpose": "Lista trilhas e referências a casos",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "saveTrail",
       "module": "test-catalog",
       "method": "PUT",
       "path": "/delivery/trails/{id}",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Altera trilha; verifica casos no mesmo workspace",
       "body": {
         "expectedVersion": "integer",
         "name": "string",
-        "scenarioIds": ["objectId-string"]
+        "scenarioIds": [
+          "objectId-string"
+        ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "createTrail",
       "module": "test-catalog",
       "method": "POST",
       "path": "/delivery/trails",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Cria trilha",
       "body": {
         "name": "string",
-        "scenarioIds": ["objectId-string"]
+        "scenarioIds": [
+          "objectId-string"
+        ]
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "listDefinitions",
       "module": "test-catalog",
       "method": "GET",
       "path": "/delivery/definitions",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
-      "purpose": "Lista fluxo, dimensões e checklist por kind",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER",
+        "DEV"
+      ],
+      "purpose": "Lista frentes, funcionalidades, vocabulário, dimensões e checklist por kind; test_flow somente legado",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "saveDefinition",
       "module": "test-catalog",
       "method": "PUT",
       "path": "/delivery/definitions/{id}",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Versiona configuração compartilhada; checklist só TL",
       "body": {
         "expectedVersion": "integer",
-        "items": ["definition-item"]
+        "items": [
+          "definition-item"
+        ],
+        "name": "string",
+        "parentId": "front-id-for-functionality",
+        "active": "boolean"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "createDefinition",
       "module": "test-catalog",
       "method": "POST",
       "path": "/delivery/definitions",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
       "purpose": "Cria definição conforme permissões por kind",
       "body": {
-        "kind": "test_flow|scenario_dimensions|change_checklist",
+        "kind": "test_stages|scenario_front|scenario_functionality|scenario_dimensions|change_checklist|quality_vocabulary",
         "name": "string",
-        "items": ["definition-item"]
+        "items": [
+          "definition-item"
+        ],
+        "parentId": "required-front-id-for-scenario_functionality",
+        "active": "boolean"
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
     },
     {
       "id": "listHOQueue",
       "module": "homologation",
       "method": "GET",
       "path": "/delivery/ho-plans",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Lista por estado, feature e squad; inclui features sem plano",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "getHOPlan",
       "module": "homologation",
       "method": "GET",
       "path": "/delivery/features/{id}/ho-plan",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Plano corrente e revisão; ausência retorna plano vazio na projeção",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "createHOPlan",
       "module": "homologation",
       "method": "POST",
       "path": "/delivery/features/{id}/ho-plan",
-      "roles": ["QA", "TL"],
+      "roles": [
+        "QA",
+        "TL",
+        "DEV"
+      ],
       "purpose": "Cria plano corrente único, revision=0",
       "body": {
-        "scenarioIds": ["objectId-string"],
-        "trailIds": ["objectId-string"]
+        "scenarioIds": [
+          "objectId-string"
+        ],
+        "trailIds": [
+          "objectId-string"
+        ]
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "selectHOScenarios",
       "module": "homologation",
       "method": "POST",
       "path": "/delivery/ho-plans/{id}/select-scenarios",
-      "roles": ["QA", "TL"],
-      "purpose": "Servidor cria snapshots e invalida aceite",
+      "roles": [
+        "QA",
+        "TL",
+        "DEV"
+      ],
+      "purpose": "Servidor copia origem/versão e prefixo escolhido, valida etapas e responsáveis; invalida aceite. selections substitui scenarioIds para seleção com escopo; trilhas usam cenário completo salvo override explícito.",
       "body": {
         "expectedVersion": "integer",
-        "scenarioIds": ["objectId-string"],
-        "trailIds": ["objectId-string"],
-        "removeExecutionIds": ["string"]
+        "scenarioIds": [
+          "objectId-string"
+        ],
+        "trailIds": [
+          "objectId-string"
+        ],
+        "removeExecutionIds": [
+          "string"
+        ],
+        "selections": [
+          {
+            "scenarioId": "catalog-scenario-id",
+            "throughStepId": "optional; omission selects full available scenario",
+            "assignedTo": "optional-host-user-id",
+            "reviewerId": "optional-host-user-id"
+          }
+        ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "saveHOResults",
       "module": "homologation",
       "method": "POST",
       "path": "/delivery/ho-plans/{id}/results",
-      "roles": ["QA", "PO", "TL"],
+      "roles": [
+        "QA",
+        "PO",
+        "TL",
+        "DEV"
+      ],
       "purpose": "Resultados por IDs de execução e etapa, motivos obrigatórios para falhas",
       "body": {
         "expectedVersion": "integer",
@@ -246,86 +376,126 @@
             "result": "pending|ok|failed|not_applicable",
             "failureReason": "string-if-failed"
           }
+        ],
+        "executionMetadata": [
+          {
+            "executionId": "string",
+            "assignedTo": "optional-host-user-id",
+            "orderReference": "optional string <=300",
+            "testReference": "optional string <=500"
+          }
         ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "acceptHO",
       "module": "homologation",
       "method": "POST",
       "path": "/delivery/ho-plans/{id}/accept",
-      "roles": ["PO"],
+      "roles": [
+        "PO"
+      ],
       "purpose": "Aceita plano não vazio, com todas etapas concluídas",
       "body": {
         "expectedVersion": "integer",
         "note": "string"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation"
     },
     {
       "id": "listChanges",
       "module": "changes",
       "method": "GET",
       "path": "/delivery/changes",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Lista calendário/gestão/fila PROD com filtros e paginação",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "04-changes"
     },
     {
       "id": "getChange",
       "module": "changes",
       "method": "GET",
       "path": "/delivery/changes/{id}",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Consulta completa para tela e modal",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "04-changes"
     },
     {
       "id": "createChange",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes",
-      "roles": ["TL"],
-      "purpose": "Cria tentativa e adquire vínculos de features",
+      "roles": [
+        "TL"
+      ],
+      "purpose": "Cria tentativa e adquire vínculos de features; preparationRevision muda somente em campos operacionais, notes nao invalida aprovacao",
       "body": {
         "rdm": "optional-real-string",
-        "featureIds": ["objectId-string"],
+        "featureIds": [
+          "objectId-string"
+        ],
         "teamId": "host-team-id",
         "tlId": "host-user-id",
         "poId": "host-user-id",
         "window": "date,startAt,endAt,timeZone",
-        "previousChangeId": "optional-objectId-string"
+        "previousChangeId": "optional-objectId-string",
+        "notes": "optional string <=4000",
+        "executorTeamId": "optional host-team-id",
+        "participation": "optional flex:boolean,on:boolean,onJustification:string; justification required when on=true",
+        "reason": "optional string",
+        "changeTime": "optional HH:mm",
+        "plannedOpenDate": "server-derived YYYY-MM-DD"
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "editChange",
       "module": "changes",
       "method": "PATCH",
       "path": "/delivery/changes/{id}",
-      "roles": ["TL"],
-      "purpose": "Campos permitidos; plano/janela/vínculos invalidam aprovação; texto simples não",
+      "roles": [
+        "TL"
+      ],
+      "purpose": "Campos permitidos; plano/janela/vínculos invalidam aprovação; texto simples não; preparationRevision muda somente em campos operacionais, notes nao invalida aprovacao",
       "body": {
         "expectedVersion": "integer",
         "patch": "allowed-change-fields"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "saveChecklist",
       "module": "changes",
       "method": "PUT",
       "path": "/delivery/changes/{id}/checklist",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Salva respostas no snapshot; Não conta como resposta válida",
       "body": {
         "expectedVersion": "integer",
@@ -337,14 +507,17 @@
         ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "selectProdScenarios",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/production-plan",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Copia cenários completos de HO aceita e ainda válida",
       "body": {
         "expectedVersion": "integer",
@@ -357,28 +530,34 @@
         ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "approveChange",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/approve",
-      "roles": ["MANAGER"],
+      "roles": [
+        "MANAGER"
+      ],
       "purpose": "Verifica HO, plano PROD e checklist no servidor, registra referências de revisão",
       "body": {
         "expectedVersion": "integer",
         "incompleteChecklistException": "optional reason + pendingItemIds"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04b-approval"
     },
     {
       "id": "rescheduleChange",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/reschedule",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Antes do deploy altera janela, invalida aprovação e atualiza projeção das features",
       "body": {
         "expectedVersion": "integer",
@@ -386,28 +565,34 @@
         "reason": "string"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "rejectChange",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/reject",
-      "roles": ["MANAGER"],
+      "roles": [
+        "MANAGER"
+      ],
       "purpose": "Rejeita subida e libera vínculos, preservando histórico",
       "body": {
         "expectedVersion": "integer",
         "reason": "string"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04b-approval"
     },
     {
       "id": "confirmDeployment",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/confirm-deployment",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Registra implantação externa realizada; exige aprovação válida, release e HO ainda válida",
       "body": {
         "expectedVersion": "integer",
@@ -415,28 +600,34 @@
         "occurredAt": "ISO8601"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "notPerformed",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/not-performed",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Registra implantação não realizada e libera vínculos",
       "body": {
         "expectedVersion": "integer",
         "reason": "string"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "saveProdResults",
       "module": "production",
       "method": "POST",
       "path": "/delivery/changes/{id}/production-results",
-      "roles": ["PO"],
+      "roles": [
+        "PO"
+      ],
       "purpose": "Salva resultados sem reescrever plano; só após deploy e antes do aceite",
       "body": {
         "expectedVersion": "integer",
@@ -450,40 +641,49 @@
         ]
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "05-production"
     },
     {
       "id": "acceptProduction",
       "module": "production",
       "method": "POST",
       "path": "/delivery/changes/{id}/accept-production",
-      "roles": ["PO"],
+      "roles": [
+        "PO"
+      ],
       "purpose": "Aceita todos os cenários concluídos OK/N/A, plano não vazio",
       "body": {
         "expectedVersion": "integer"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "05-production"
     },
     {
       "id": "closeChange",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/close",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Encerra apenas com deploy e aceite PROD; libera vínculos e trava alterações",
       "body": {
         "expectedVersion": "integer"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "registerRollback",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/changes/{id}/rollback",
-      "roles": ["TL"],
+      "roles": [
+        "TL"
+      ],
       "purpose": "Preserva resultados e registra reversão externa, etapa e motivo",
       "body": {
         "expectedVersion": "integer",
@@ -493,60 +693,363 @@
         "occurredAt": "ISO8601"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "listFreezes",
       "module": "changes",
       "method": "GET",
       "path": "/delivery/freezes",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Lista bloqueios por janela/componente",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "04-changes"
     },
     {
       "id": "createFreeze",
       "module": "changes",
       "method": "POST",
       "path": "/delivery/freezes",
-      "roles": ["TL", "MANAGER"],
+      "roles": [
+        "TL",
+        "MANAGER"
+      ],
       "purpose": "Cria restrição de implantação",
       "body": {
         "name": "string",
         "startDate": "YYYY-MM-DD",
         "endDate": "YYYY-MM-DD",
         "scope": "all|components",
-        "components": ["string"]
+        "components": [
+          "string"
+        ],
+        "matchMode": "contains|exact, default contains",
+        "description": "optional string <=1000"
       },
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "editFreeze",
       "module": "changes",
       "method": "PUT",
       "path": "/delivery/freezes/{id}",
-      "roles": ["TL", "MANAGER"],
+      "roles": [
+        "TL",
+        "MANAGER"
+      ],
       "purpose": "Atualiza freeze versionado",
       "body": {
         "expectedVersion": "integer",
-        "patch": "allowed-freeze-fields"
+        "patch": "allowed-freeze-fields",
+        "matchMode": "contains|exact, default contains",
+        "description": "optional string <=1000"
       },
       "requiresExpectedVersion": true,
-      "requiresIdempotencyKey": true
+      "requiresIdempotencyKey": true,
+      "introducedIn": "04-changes"
     },
     {
       "id": "history",
       "module": "audit",
       "method": "GET",
       "path": "/delivery/history",
-      "roles": ["TL", "QA", "PO", "MANAGER"],
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
       "purpose": "Histórico append-only por entidade, com cursor e limite",
       "body": {},
       "requiresExpectedVersion": false,
-      "requiresIdempotencyKey": false
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "getModuleSettings",
+      "module": "settings",
+      "method": "GET",
+      "path": "/delivery/module-settings",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER"
+      ],
+      "purpose": "Configuração versionada de módulos ou vocabulário genérico",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "saveModuleSettings",
+      "module": "settings",
+      "method": "PUT",
+      "path": "/delivery/module-settings",
+      "roles": [
+        "MANAGER"
+      ],
+      "purpose": "Configuração versionada de módulos ou vocabulário genérico",
+      "body": {
+        "expectedVersion": "integer",
+        "configuration": "explicit delivery,quality,homologation,gmud,approval,production,planning booleans; validate dependencies server-side"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "getQualitySettings",
+      "module": "test-catalog",
+      "method": "GET",
+      "path": "/delivery/quality-settings",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER",
+        "DEV"
+      ],
+      "purpose": "Configuração versionada de módulos ou vocabulário genérico",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog",
+      "optionalIncrement": "generic-quality-or-scoped-ho",
+      "requiredForInitialPhase": false
+    },
+    {
+      "id": "saveQualitySettings",
+      "module": "test-catalog",
+      "method": "PUT",
+      "path": "/delivery/quality-settings",
+      "roles": [
+        "QA",
+        "TL",
+        "DEV",
+        "PO"
+      ],
+      "purpose": "Configuração versionada de módulos ou vocabulário genérico",
+      "body": {
+        "expectedVersion": "integer",
+        "configuration": "module flags or classificationLabel/types"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog",
+      "optionalIncrement": "generic-quality-or-scoped-ho",
+      "requiredForInitialPhase": false
+    },
+    {
+      "id": "listTestFlows",
+      "module": "test-catalog",
+      "method": "GET",
+      "path": "/delivery/test-flows",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "MANAGER",
+        "DEV"
+      ],
+      "purpose": "Lista paginada por frente, funcionalidade, situação e busca",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "createTestFlow",
+      "module": "test-catalog",
+      "method": "POST",
+      "path": "/delivery/test-flows",
+      "roles": [
+        "TL",
+        "QA",
+        "DEV",
+        "PO"
+      ],
+      "purpose": "Cria sequência reutilizável; valida escopo e unicidade das etapas",
+      "body": {
+        "definition": "testFlowDefinition"
+      },
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "editTestFlow",
+      "module": "test-catalog",
+      "method": "PUT",
+      "path": "/delivery/test-flows/{id}",
+      "roles": [
+        "TL",
+        "QA",
+        "DEV",
+        "PO"
+      ],
+      "purpose": "Edita/inativa modelo sem alterar cenários e execuções existentes",
+      "body": {
+        "expectedVersion": "integer",
+        "definition": "testFlowDefinition"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "02-catalog"
+    },
+    {
+      "id": "configureHOExecution",
+      "module": "homologation",
+      "method": "PUT",
+      "path": "/delivery/ho-plans/{id}/executions/{executionId}/configuration",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "DEV"
+      ],
+      "purpose": "Configura escopo a partir do snapshot original e responsáveis; nenhuma edição no catálogo; invalida aceite",
+      "body": {
+        "expectedVersion": "integer",
+        "throughStepId": "optional; change allowed only before first result",
+        "assignedTo": "optional-host-user-id",
+        "reviewerId": "optional-host-user-id"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation",
+      "optionalIncrement": "generic-quality-or-scoped-ho",
+      "requiredForInitialPhase": false
+    },
+    {
+      "id": "setHOJiraReferences",
+      "module": "homologation",
+      "method": "PUT",
+      "path": "/delivery/ho-plans/{id}/jira-references",
+      "roles": [
+        "TL",
+        "QA",
+        "PO",
+        "DEV"
+      ],
+      "purpose": "Referências externas manuais, com validação de URL e sem atribuir resultado de execução",
+      "body": {
+        "expectedVersion": "integer",
+        "issue": "optional-jira-key-or-http-url",
+        "execution": "optional-jira-key-or-http-url"
+      },
+      "requiresExpectedVersion": true,
+      "requiresIdempotencyKey": true,
+      "introducedIn": "03-homologation",
+      "optionalIncrement": "generic-quality-or-scoped-ho",
+      "requiredForInitialPhase": false
+    },
+    {
+      "id": "getAcceptedHORevision",
+      "module": "homologation",
+      "method": "GET",
+      "path": "/delivery/ho-plans/{id}/acceptances/{revision}",
+      "roles": [
+        "TL",
+        "DEV",
+        "PO",
+        "QA",
+        "MANAGER"
+      ],
+      "purpose": "Consulta snapshot imutavel do aceite historico no evento ho.accepted; nao devolve plano atual em lugar da revisao solicitada",
+      "body": {},
+      "requiresExpectedVersion": false,
+      "requiresIdempotencyKey": false,
+      "introducedIn": "03-homologation"
     }
-  ]
+  ],
+  "scenarioDefinition": {
+    "name": "string",
+    "classification": "configured-string",
+    "classificationLabel": "configured-label-snapshot",
+    "steps": "immutable-copy-for-this-scenario; stable step IDs; 1..50 steps",
+    "dimensions": "map of configured attributes",
+    "components": [
+      "string"
+    ],
+    "coverage": "string",
+    "active": "boolean",
+    "preconditions": "optional-string",
+    "expectedResult": "optional-string",
+    "frontId": "workspace-front-id (optional for legacy)",
+    "functionalityId": "workspace-functionality-id (optional)",
+    "executionMode": "Manual | Automatizada (descriptive; does not launch automation)",
+    "workflowId": "optional-flow-id",
+    "workflowVersion": "optional-positive-integer"
+  },
+  "scenarioOrganization": {
+    "storage": "delivery_definitions",
+    "kinds": [
+      "scenario_front",
+      "scenario_functionality"
+    ],
+    "rules": [
+      "Functionality references its front in the same workspace",
+      "Attributes can be scoped to a front; no credit-specific mandatory fields",
+      "Execution snapshots preserve front/functionality labels and execution mode",
+      "Legacy guarantee classification is not an execution mode",
+      "Front and functionality are individual delivery_definitions documents; functionality.parentId references front",
+      "Reusable sequences live in delivery_test_flows; test_flow definition kind is legacy only",
+      "Flow scope checked server-side; selecting a template copies a bounded steps array and workflow version",
+      "Partial flow selection is an explicit scenario scope, independent of stopping execution because of failure"
+    ]
+  },
+  "testFlowDefinition": {
+    "name": "string 1..100",
+    "frontId": "required-id",
+    "functionalityId": "optional-id-in-front; null means all functionalities of the front",
+    "steps": [
+      {
+        "id": "stable-string",
+        "name": "string 1..200"
+      }
+    ],
+    "active": "boolean",
+    "version": "positive-integer"
+  },
+  "hoExecutionScope": {
+    "catalogVersion": "server-captured catalog version",
+    "sourceSteps": "server-captured original scenario steps, 1..50, immutable",
+    "steps": "selected non-empty ordered prefix of sourceSteps; results only for these steps",
+    "scopeEndStepId": "last selected step ID",
+    "scopeLocked": "monotonic; true after first recorded result; resetting results does not unlock",
+    "assignedTo": "optional authenticated host user ID for execution",
+    "reviewerId": "optional host user ID; assignment does not imply review approval"
+  },
+  "testsFirstRelease": "../releases/tests-first/api.json",
+  "allPhasesRelease": "../releases/all-phases/manifest.json",
+  "revisionPolicy": {
+    "version": "CAS for every business command",
+    "hoPlan.revision": "HO selection, results, metadata and acceptance validity",
+    "change.preparationRevision": "operational selection/checklist/window/features; notes only does not increment",
+    "approval.revision": "snapshot of preparationRevision",
+    "change.production.revision": "PROD plan/results; acceptance.revision captures it"
+  },
+  "acceptedHOHistory": {
+    "eventType": "ho.accepted",
+    "entityType": "ho_plan",
+    "details": [
+      "hoRevision",
+      "featureId",
+      "executions",
+      "acceptance"
+    ],
+    "policy": "Immutable bounded snapshot on acceptance; read requested historical revision from audit, never substitute current HO. Maximum accepted snapshot 1 MiB enforced in API. Existing host audit must retain/query this data equivalently."
+  }
 }

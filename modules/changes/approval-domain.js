@@ -17,20 +17,9 @@ function productionPrerequisites(change) {
         !(change.issueIds || []).includes(sc.sourceIssueId) ||
         !origin ||
         execStatus(origin) !== "OK" ||
-        JSON.stringify([
-          origin.nome,
-          origin.tipo,
-          executionStages(origin),
-          caseDimensions(origin),
-          normalizeTestComponents(origin.componentes),
-        ]) !==
-          JSON.stringify([
-            sc.nome,
-            sc.tipo,
-            executionStages(sc),
-            caseDimensions(sc),
-            normalizeTestComponents(sc.componentes),
-          ])
+        !executionScopeValid(origin) ||
+        !executionScopeValid(sc) ||
+        scenarioDefinitionSignature(origin) !== scenarioDefinitionSignature(sc)
       )
         problems.push(
           `Cenário ${sc.nome}: origem de HO alterada. Remova e selecione novamente.`,

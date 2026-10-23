@@ -20,11 +20,27 @@ function fakeDB(names = []) {
     },
     command: async (command) => calls.push(["command", command]),
     collection: (name) => ({
+      countDocuments: async () => 0,
       createIndex: async (key, options) =>
         calls.push(["index", name, key, options]),
     }),
   };
 }
+test("required vazio ou duplicado é inválido no parser BSON JSON Schema do MongoDB", () => {
+  function visit(value, location) {
+    if (!value || typeof value !== "object") return;
+    if (!Array.isArray(value) && Object.hasOwn(value,"required")) {
+      assert(Array.isArray(value.required) && value.required.length > 0, location);
+      assert.equal(new Set(value.required).size,value.required.length,location);
+    }
+    for (const [key, child] of Object.entries(value.properties || {})) visit(child,location+".properties."+key);
+    if (value.items) visit(value.items,location+".items");
+    for (const keyword of ["allOf","anyOf","oneOf"])
+      for (const [index,child] of (value[keyword] || []).entries()) visit(child,location+"."+keyword+"."+index);
+  }
+  for (const [name,definition] of Object.entries(specification.collections))
+    visit(definition.validator.$jsonSchema,name);
+});
 test("blueprint tem escopo, revisão e índices exclusivos para vínculos ativos e histórico", () => {
   for (const [name, c] of Object.entries(specification.collections)) {
     assert(name.startsWith("delivery_"));
@@ -93,4 +109,11 @@ test("plano aponta tarefas existentes e contratos protegem alterações concorre
       .find((o) => o.id === "approveChange")
       .roles.includes("MANAGER"),
   );
+});
+test('fluxos e funcionalidades possuem unicidade no escopo e etapas limitadas',()=>{
+ const flows=specification.collections.delivery_test_flows,defs=specification.collections.delivery_definitions;
+ assert.equal(flows.validator.$jsonSchema.properties.steps.maxItems,50);
+ assert(flows.indexes.some(i=>i.unique && i.key.frontId===1 && i.key.functionalityId===1 && i.key.nameNormalized===1));
+ assert(defs.indexes.some(i=>i.unique && i.key.parentId===1 && i.key.nameNormalized===1));
+ assert(!defs.indexes.some(i=>i.unique && i.key.name===1 && !i.key.parentId));
 });

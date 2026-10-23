@@ -1,2 +1,86 @@
-const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright'),assert=require('node:assert/strict');
-(async()=>{const browser=await chromium.launch({headless:true,...(process.env.CHROME_PATH?{executablePath:process.env.CHROME_PATH}:{})});try{const p=await browser.newPage({viewport:{width:1440,height:1000}}),errors=[];p.on('pageerror',e=>errors.push(e.message));const base=process.env.ISSUEFLOW_URL||'http://localhost:8080';for(const file of ['index.html','timeline.html','testes.html','validacao-ho.html','changes.html','gmud-timeline.html','producao.html']){await p.goto(base+'/'+file);assert.equal(await p.locator('.operation-nav .nav').count(),7);assert.equal(await p.locator('.operation-nav [aria-current=page]').getAttribute('href'),file);assert.equal(await p.locator('.nav-section').count(),3);assert(await p.locator('.nav-module').getAttribute('open')!==null);await p.locator('.nav-module-toggle').click();assert.equal(await p.locator('.operation-nav .nav').first().isVisible(),false);await p.locator('.nav-module-toggle').click();assert(await p.locator('.operation-nav .nav').first().isVisible());}await p.goto(base+'/exemplos.html');await p.click('#loadExamples');await p.waitForFunction(()=>document.querySelector('#exampleStatus').textContent.includes('Exemplos disponíveis'));await p.goto(base+'/validacao-ho.html');await p.selectOption('#hoQueueStatus','accepted');assert.match(await p.textContent('#hoQueueCards'),/DEMO-E2E-SUCESSO/);await p.fill('#hoQueueSearch','DEMO-E2E-SUCESSO');await p.locator('.ho-queue-actions a').click();assert(p.url().includes('homologacao.html?issue=DEMO-E2E-SUCESSO'));assert.equal(await p.locator('.operation-nav [aria-current=page]').getAttribute('href'),'validacao-ho.html');await p.goto(base+'/validacao-ho.html');await p.setViewportSize({width:390,height:844});assert(await p.evaluate(()=>document.documentElement.scrollWidth<=innerWidth));await p.screenshot({path:'/tmp/issueflow-navigation-mobile.png',fullPage:true});assert.deepEqual(errors,[]);console.log('PASS menu compartilhado, grupos, página ativa, fila HO, histórico, acesso ao plano e mobile');}finally{await browser.close();}})().catch(e=>{console.error(e);process.exitCode=1});
+const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
+  assert = require("node:assert/strict");
+(async () => {
+  const browser = await chromium.launch({
+    headless: true,
+    ...(process.env.CHROME_PATH
+      ? { executablePath: process.env.CHROME_PATH }
+      : {}),
+  });
+  try {
+    const p = await browser.newPage({
+        viewport: { width: 1440, height: 1000 },
+      }),
+      errors = [];
+    p.on("pageerror", (e) => errors.push(e.message));
+    const base = process.env.ISSUEFLOW_URL || "http://localhost:8080";
+    for (const file of [
+      "index.html",
+      "timeline.html",
+      "testes.html",
+      "fluxos.html",
+      "acompanhamento-testes.html",
+      "validacao-ho.html",
+      "changes.html",
+      "gmud-timeline.html",
+      "producao.html",
+    ]) {
+      await p.goto(base + "/" + file);
+      assert.equal(await p.locator(".operation-nav .nav").count(), 9);
+      assert.equal(
+        await p
+          .locator(".operation-nav [aria-current=page]")
+          .getAttribute("href"),
+        file,
+      );
+      assert.equal(await p.locator(".nav-section").count(), 4);
+      assert((await p.locator(".nav-module").getAttribute("open")) !== null);
+      await p.locator(".nav-module-toggle").click();
+      assert.equal(
+        await p.locator(".operation-nav .nav").first().isVisible(),
+        false,
+      );
+      await p.locator(".nav-module-toggle").click();
+      assert(await p.locator(".operation-nav .nav").first().isVisible());
+    }
+    await p.goto(base + "/exemplos.html");
+    await p.click("#loadExamples");
+    await p.waitForFunction(() =>
+      document
+        .querySelector("#exampleStatus")
+        .textContent.includes("Exemplos disponíveis"),
+    );
+    await p.goto(base + "/validacao-ho.html");
+    await p.selectOption("#hoQueueStatus", "accepted");
+    assert.match(await p.textContent("#hoQueueCards"), /DEMO-E2E-SUCESSO/);
+    await p.fill("#hoQueueSearch", "DEMO-E2E-SUCESSO");
+    await p.locator(".ho-queue-actions a").click();
+    assert(p.url().includes("homologacao.html?issue=DEMO-E2E-SUCESSO"));
+    assert.equal(
+      await p
+        .locator(".operation-nav [aria-current=page]")
+        .getAttribute("href"),
+      "validacao-ho.html",
+    );
+    await p.goto(base + "/validacao-ho.html");
+    await p.setViewportSize({ width: 390, height: 844 });
+    assert(
+      await p.evaluate(
+        () => document.documentElement.scrollWidth <= innerWidth,
+      ),
+    );
+    await p.screenshot({
+      path: "/tmp/issueflow-navigation-mobile.png",
+      fullPage: true,
+    });
+    assert.deepEqual(errors, []);
+    console.log(
+      "PASS menu compartilhado, grupos, página ativa, fila HO, histórico, acesso ao plano e mobile",
+    );
+  } finally {
+    await browser.close();
+  }
+})().catch((e) => {
+  console.error(e);
+  process.exitCode = 1;
+});

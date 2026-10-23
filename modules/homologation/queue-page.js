@@ -92,6 +92,27 @@ function renderHOQueue() {
         `${done}/${scenarios.length} cenários concluídos`,
       ),
     );
+    const blocked = scenarios.find((sc) => execStatus(sc) === "Falhou"),
+      pending = scenarios.find((sc) => !["OK", "N/A"].includes(execStatus(sc)));
+    if (blocked || pending) {
+      const sc = blocked || pending;
+      card.append(
+        hoQueueNode(
+          "small",
+          "ho-queue-meta",
+          `${executionPosition(sc)} · Responsável: ${sc.resp || "não definido"}${sc.reviewer ? " · Revisor: " + sc.reviewer : ""}`,
+        ),
+      );
+    }
+    const missing = scenarios.filter((sc) => !sc.resp?.trim()).length;
+    if (missing)
+      card.append(
+        hoQueueNode(
+          "small",
+          "ho-queue-meta",
+          `${missing} cenário(s) sem responsável atribuído`,
+        ),
+      );
     const track = hoQueueNode("div", "ho-queue-progress"),
       fill = hoQueueNode("span");
     fill.style.width = `${scenarios.length ? (100 * done) / scenarios.length : 0}%`;

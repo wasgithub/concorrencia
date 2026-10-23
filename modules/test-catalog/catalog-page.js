@@ -13,6 +13,22 @@ function notify(message) {
   clearTimeout(notify.timer);
   notify.timer = setTimeout(() => ($("#toast").hidden = true), 4000);
 }
+function changeSettings(kind, change) {
+  const previous = structuredClone(
+    kind === "stages" ? testStages : scenarioDims,
+  );
+  change();
+  const saved = kind === "stages" ? persistTestStages() : persistScenarioDims();
+  if (!saved) {
+    if (kind === "stages") testStages = previous;
+    else scenarioDims = previous;
+    render();
+    notify("Não foi possível salvar. A alteração não foi aplicada.");
+    return false;
+  }
+  render();
+  return true;
+}
 function tipoBadge(t) {
   return element(
     "span",
@@ -109,16 +125,26 @@ function render() {
     );
     tg.type = "button";
     tg.onclick = () => {
-      caso.ativo = !caso.ativo;
-      persistScenarioCatalog();
+      const next = scenarioCatalog.map((c) =>
+        c.id === caso.id ? { ...c, ativo: !c.ativo } : c,
+      );
+      if (!saveTestData(scenarioCatalogKey, next))
+        return notify("Não foi possível salvar.");
+      scenarioCatalog = next;
       render();
     };
     acts.append(tg);
     const rm = element("button", "secondary small danger", "Remover");
     rm.type = "button";
     rm.onclick = () => {
-      scenarioCatalog = scenarioCatalog.filter((x) => x.id !== caso.id);
-      persistScenarioCatalog();
+      if (testTrails().some((t) => t.casoIds.includes(caso.id)))
+        return notify(
+          "Este cenário está em uma trilha. Remova o vínculo ou desative o cenário.",
+        );
+      const next = scenarioCatalog.filter((x) => x.id !== caso.id);
+      if (!saveTestData(scenarioCatalogKey, next))
+        return notify("Não foi possível salvar.");
+      scenarioCatalog = next;
       render();
       notify("Caso removido.");
     };
@@ -142,8 +168,14 @@ function openCase(caso) {
   const f = $("#caseForm"),
     el = f.elements;
   delete f.dataset.nomeEdited;
-  el.tipo.replaceChildren(...scenarioTipoOptions.map((o) => new Option(o, o)));
-  el.etapaAlvo.replaceChildren(...testStages.map((s) => new Option(s, s)));
+  const availableTypes = [
+    ...new Set([...scenarioTipoOptions, ...(caso?.tipo ? [caso.tipo] : [])]),
+  ];
+  el.tipo.replaceChildren(...availableTypes.map((o) => new Option(o, o)));
+  const availableStages = [
+    ...new Set([...testStages, ...(caso ? scenarioFlow(caso) : [])]),
+  ];
+  el.etapaAlvo.replaceChildren(...availableStages.map((s) => new Option(s, s)));
   el.nome.value = caso?.nome || "";
   el.tipo.value = caso?.tipo || "Automática";
   el.etapaAlvo.value = caso?.etapaAlvo || lastStage();
@@ -151,43 +183,146 @@ function openCase(caso) {
   el.ativo.checked = caso ? caso.ativo : true;
   el.componentes.value = normalizeTestComponents(caso?.componentes).join(", ");
   const components = normalizeTestComponents([
-    ...issues.flatMap((i) => i.servicos),
     ...scenarioCatalog.flatMap((c) => normalizeTestComponents(c.componentes)),
   ]).sort();
   $("#testComponentList").replaceChildren(
     ...components.map((c) => new Option(c, c)),
   );
   if (caso) f.dataset.nomeEdited = "1";
-  renderCaseBuilder(caso);
+  setupCaseContext(caso);
   $("#caseError").textContent = "";
   $("#caseDialog").showModal();
 }
-function renderCaseBuilder(caso) {
+function setupCaseContext(caso) {
+  const f = $("#caseForm"),
+    el = f.elements;
+  const context = caso
+    ? scenarioContext(caso)
+    : { frente: "Crédito", funcionalidade: "" };
+  f.scenarioDimensions = { ...caseDimensions(caso || { nome: "" }) };
+  f.caseOriginal = caso;
+  const fronts = [
+    ...new Set([
+      ...scenarioAreas().map((a) => a.nome),
+      ...(context.frente ? [context.frente] : []),
+    ]),
+  ];
+  el.frente.replaceChildren(
+    new Option("Selecione a frente", ""),
+    ...fronts.map((v) => new Option(v, v)),
+  );
+  el.frente.value = context.frente || "";
+  function functions() {
+    const values =
+      scenarioAreas().find((a) => a.nome === el.frente.value)
+        ?.funcionalidades || [];
+    const existing =
+      caso && context.frente === el.frente.value ? context.funcionalidade : "";
+    el.funcionalidade.replaceChildren(
+      new Option("Toda a frente", ""),
+      ...[...new Set([...values, ...(existing ? [existing] : [])])].map(
+        (v) => new Option(v, v),
+      ),
+    );
+    el.funcionalidade.value = existing || "";
+  }
+  functions();
+  function flows(preserve) {
+    const options = compatibleTestFlows(
+      el.frente.value,
+      el.funcionalidade.value,
+    );
+    el.workflowId.replaceChildren(
+      new Option(
+        el.frente.value === "Crédito"
+          ? "Etapas configuradas de crédito"
+          : "Selecione um fluxo",
+        "",
+      ),
+    );
+    if (preserve && caso)
+      el.workflowId.append(
+        new Option("Manter etapas salvas do cenário", "__saved"),
+      );
+    options.forEach((flow) =>
+      el.workflowId.append(new Option(flow.nome, flow.id)),
+    );
+    el.workflowId.value = preserve && caso ? "__saved" : "";
+    updateCaseStages();
+  }
+  el.frente.onchange = () => {
+    f.scenarioDimensions = {};
+    if (!f.dataset.nomeEdited) f.elements.nome.value = "";
+    functions();
+    flows(false);
+    renderCaseBuilder();
+  };
+  el.funcionalidade.onchange = () => {
+    flows(false);
+  };
+  el.workflowId.onchange = () => updateCaseStages();
+  flows(true);
+  renderCaseBuilder();
+}
+function selectedCaseSteps() {
+  const f = $("#caseForm"),
+    el = f.elements;
+  if (el.workflowId.value === "__saved" && f.caseOriginal) {
+    const original = f.caseOriginal;
+    const names = original.sourceFlow?.length
+      ? original.sourceFlow
+      : scenarioFlow(original);
+    return names.map((nome) => ({
+      id:
+        (original.sourceStepDefinitions || original.stepDefinitions)?.find(
+          (s) => s.nome === nome,
+        )?.id || nome,
+      nome,
+    }));
+  }
+  const flow = compatibleTestFlows(
+    el.frente.value,
+    el.funcionalidade.value,
+  ).find((x) => x.id === el.workflowId.value);
+  if (flow) return flow.steps.map((s) => ({ ...s }));
+  return el.frente.value === "Crédito"
+    ? testStages.map((nome) => ({ id: nome, nome }))
+    : [];
+}
+function updateCaseStages() {
+  $("#caseError").textContent = "";
+  const el = $("#caseForm").elements,
+    previous = el.etapaAlvo.value;
+  const steps = selectedCaseSteps();
+  el.etapaAlvo.replaceChildren(...steps.map((s) => new Option(s.nome, s.nome)));
+  if (steps.some((s) => s.nome === previous)) el.etapaAlvo.value = previous;
+  else el.etapaAlvo.value = steps.at(-1)?.nome || "";
+}
+function renderCaseBuilder() {
   const box = $("#caseBuilder");
   box.replaceChildren();
-  const f = $("#caseForm");
-  const sel = caseDimensions(caso || { nome: "" });
-  f.scenarioDimensions = sel;
-  for (const d of scenarioDims) {
-    const label = element(
-        "label",
-        "",
-        d.nome === "Tipo" ? "Pessoa (PF/PJ)" : d.nome,
-      ),
+  const f = $("#caseForm"),
+    front = f.elements.frente.value;
+  const credit = !front || front === "Crédito";
+  $("#caseGuaranteeField").hidden = !credit;
+  f.elements.tipo.disabled = !credit;
+  const sel = f.scenarioDimensions;
+  const dimensions = scenarioDims.filter((d) => dimensionApplies(d, front));
+  // Linha é a primeira dimensão específica; Frente determina sua aplicabilidade.
+  dimensions.sort((a, b) => (b.nome === "Linha") - (a.nome === "Linha"));
+  for (const d of dimensions) {
+    const label = element("label", "", dimensionLabel(d)),
       select = element("select");
     select.append(new Option("Não informado", ""));
-    const options = [
+    for (const o of [
       ...new Set([...d.opcoes, ...(sel[d.nome] ? [sel[d.nome]] : [])]),
-    ];
-    for (const o of options) select.append(new Option(o, o));
+    ])
+      select.append(new Option(o, o));
     select.value = sel[d.nome] || "";
     select.onchange = () => {
       sel[d.nome] = select.value;
       const name = composeScenarioName(sel);
-      if (name) {
-        f.elements.nome.value = name;
-        delete f.dataset.nomeEdited;
-      }
+      if (!f.dataset.nomeEdited) f.elements.nome.value = name;
     };
     label.append(select);
     box.append(label);
@@ -200,25 +335,87 @@ $("#caseForm").onsubmit = (e) => {
   e.preventDefault();
   const el = e.target.elements;
   const nome = el.nome.value.trim();
-  if (!nome) {
+  $("#caseError").textContent = "";
+  if (!nome || nome.length > 200) {
     $("#caseError").textContent =
       "Informe o nome do fluxo (monte pelas dimensões ou digite).";
     return;
   }
+  const frente = el.frente.value;
+  const original = scenarioCatalog.find((c) => c.id === editingCaseId);
+  if (!frente && !original) {
+    $("#caseError").textContent = "Selecione a frente do cenário.";
+    return;
+  }
+  const steps = selectedCaseSteps();
+  const end = steps.findIndex((s) => s.nome === el.etapaAlvo.value);
+  if (end < 0) {
+    $("#caseError").textContent =
+      "Selecione um fluxo com etapas para esta frente. Cadastre-o na Biblioteca de fluxos, se necessário.";
+    return;
+  }
+  const flow = testFlows().find((x) => x.id === el.workflowId.value);
   const rec = {
     nome,
-    dimensoes: { ...e.target.scenarioDimensions },
+    frente,
+    funcionalidade: el.funcionalidade.value,
+    workflowId:
+      el.workflowId.value === "__saved"
+        ? original?.workflowId || ""
+        : flow?.id || "",
+    workflowVersion:
+      el.workflowId.value === "__saved"
+        ? original?.workflowVersion || null
+        : flow?.version || null,
+    stepDefinitions: steps.slice(0, end + 1).map((s) => ({ ...s })),
+    sourceFlow:
+      el.workflowId.value === "__saved"
+        ? [...(original?.sourceFlow || steps.map((s) => s.nome))]
+        : steps.map((s) => s.nome),
+    sourceStepDefinitions:
+      el.workflowId.value === "__saved"
+        ? (original?.sourceStepDefinitions || steps).map((s) => ({ ...s }))
+        : steps.map((s) => ({ ...s })),
+    catalogVersion: (original?.catalogVersion || original?.version || 0) + 1,
+    dimensoes: Object.fromEntries(
+      Object.entries(e.target.scenarioDimensions).filter(
+        ([key]) =>
+          scenarioDims.some(
+            (d) => d.nome === key && dimensionApplies(d, frente),
+          ) ||
+          (original &&
+            scenarioContext(original).frente === frente &&
+            !scenarioDims.some((d) => d.nome === key)),
+      ),
+    ),
     componentes: normalizeTestComponents(el.componentes.value),
-    tipo: el.tipo.value,
+    tipo: frente && frente !== "Crédito" ? "N/A" : el.tipo.value,
     etapaAlvo: el.etapaAlvo.value,
     cobertura: el.cobertura.value.trim() || "Regressivo padrão",
     ativo: el.ativo.checked,
   };
+  rec.fluxo = steps.slice(0, end + 1).map((s) => s.nome);
+  if (!rec.fluxo.length || rec.fluxo.length > 50 || !rec.tipo) {
+    $("#caseError").textContent =
+      "Cadastre uma etapa e selecione o tipo de garantia antes de salvar.";
+    return;
+  }
+  if (rec.cobertura.length > 100 || rec.componentes.length > 100) {
+    $("#caseError").textContent =
+      "Use cobertura com até 100 caracteres e no máximo 100 componentes.";
+    return;
+  }
+  const next = structuredClone(scenarioCatalog);
   if (editingCaseId) {
-    const c = scenarioCatalog.find((x) => x.id === editingCaseId);
+    const c = next.find((x) => x.id === editingCaseId);
     if (c) Object.assign(c, rec);
-  } else scenarioCatalog.push({ id: nextCatalogId(), ...rec });
-  persistScenarioCatalog();
+  } else next.push({ id: nextCatalogId(), ...rec });
+  if (!saveTestData(scenarioCatalogKey, next)) {
+    $("#caseError").textContent =
+      "Não foi possível salvar. Seus dados continuam no formulário.";
+    return;
+  }
+  scenarioCatalog = next;
   $("#caseDialog").close();
   render();
   notify("Caso salvo no catálogo.");
@@ -242,25 +439,23 @@ function renderStages() {
     up.type = "button";
     up.disabled = i === 0;
     up.onclick = () => {
-      [testStages[i - 1], testStages[i]] = [testStages[i], testStages[i - 1]];
-      persistTestStages();
-      render();
+      changeSettings("stages", () => {
+        [testStages[i - 1], testStages[i]] = [testStages[i], testStages[i - 1]];
+      });
     };
     const down = element("button", "secondary small", "↓");
     down.type = "button";
     down.disabled = i === testStages.length - 1;
     down.onclick = () => {
-      [testStages[i + 1], testStages[i]] = [testStages[i], testStages[i + 1]];
-      persistTestStages();
-      render();
+      changeSettings("stages", () => {
+        [testStages[i + 1], testStages[i]] = [testStages[i], testStages[i + 1]];
+      });
     };
     const rm = element("button", "secondary small danger", "×");
     rm.type = "button";
     rm.title = "Remover etapa";
     rm.onclick = () => {
-      testStages.splice(i, 1);
-      persistTestStages();
-      render();
+      changeSettings("stages", () => testStages.splice(i, 1));
     };
     acts.append(up, down, rm);
     row.append(acts);
@@ -271,11 +466,15 @@ $("#stageAddForm").onsubmit = (e) => {
   e.preventDefault();
   const inp = $("#stageAddForm").elements.nome;
   const v = inp.value.trim();
-  if (v && !testStages.includes(v)) {
-    testStages.push(v);
-    persistTestStages();
-    inp.value = "";
-    render();
+  if (testStages.length >= 50 || v.length > 200)
+    return notify("Use no máximo 50 etapas com até 200 caracteres.");
+  if (
+    v &&
+    !testStages.some(
+      (s) => s.toLocaleLowerCase("pt-BR") === v.toLocaleLowerCase("pt-BR"),
+    )
+  ) {
+    if (changeSettings("stages", () => testStages.push(v))) inp.value = "";
   }
 };
 
@@ -290,21 +489,45 @@ function renderDims() {
     const del = element("button", "secondary small danger", "Remover");
     del.type = "button";
     del.onclick = () => {
-      scenarioDims.splice(di, 1);
-      persistScenarioDims();
-      render();
+      changeSettings("dimensions", () => scenarioDims.splice(di, 1));
     };
     head.append(del);
     sec.append(head);
+    const scopeLabel = element("label", "", "Aplicar em"),
+      scope = element("select");
+    scope.setAttribute("aria-label", "Frente do campo " + d.nome);
+    const defaultScope = [
+      "Perfil",
+      "Tipo",
+      "Linha",
+      "Garantia",
+      "Variação",
+    ].includes(d.nome)
+      ? "Crédito"
+      : "";
+    const currentScope = d.frente === undefined ? defaultScope : d.frente;
+    scope.append(new Option("Todas as frentes", ""));
+    for (const front of [
+      ...new Set([
+        ...scenarioAreas().map((a) => a.nome),
+        ...(currentScope ? [currentScope] : []),
+      ]),
+    ])
+      scope.append(new Option(front, front));
+    scope.value = currentScope;
+    scope.onchange = () =>
+      changeSettings("dimensions", () => {
+        d.frente = scope.value;
+      });
+    scopeLabel.append(scope);
+    sec.append(scopeLabel);
     const chips = element("div", "dim-chips");
     d.opcoes.forEach((o, oi) => {
       const chip = element("span", "dim-chip", o);
       const x = element("button", "chip-x", "×");
       x.type = "button";
       x.onclick = () => {
-        d.opcoes.splice(oi, 1);
-        persistScenarioDims();
-        render();
+        changeSettings("dimensions", () => d.opcoes.splice(oi, 1));
       };
       chip.append(x);
       chips.append(chip);
@@ -321,9 +544,7 @@ function renderDims() {
       ev.preventDefault();
       const v = inp.value.trim();
       if (v && !d.opcoes.includes(v)) {
-        d.opcoes.push(v);
-        persistScenarioDims();
-        render();
+        changeSettings("dimensions", () => d.opcoes.push(v));
       }
     };
     sec.append(addForm);
@@ -335,10 +556,12 @@ $("#dimAddForm").onsubmit = (e) => {
   const inp = $("#dimAddForm").elements.nome;
   const v = inp.value.trim();
   if (v && !scenarioDims.some((d) => d.nome === v)) {
-    scenarioDims.push({ nome: v, opcoes: [] });
-    persistScenarioDims();
-    inp.value = "";
-    render();
+    if (
+      changeSettings("dimensions", () =>
+        scenarioDims.push({ nome: v, opcoes: [] }),
+      )
+    )
+      inp.value = "";
   }
 };
 
@@ -406,7 +629,11 @@ function renderTrailCases(ids = []) {
     const info = element("span", "issue-check-info");
     info.append(
       element("strong", "", caso.nome),
-      element("small", "", "Testar até: " + caso.etapaAlvo),
+      element(
+        "small",
+        "",
+        `${caso.ativo ? "" : "Inativo · "}Testar até: ${caso.etapaAlvo}`,
+      ),
     );
     label.append(cb, info);
     box.append(label);
@@ -425,13 +652,24 @@ $("#trailForm").onsubmit = (e) => {
     casoIds = [...$("#trailCases").querySelectorAll("input:checked")].map(
       (c) => c.value,
     );
-  if (!nome || !casoIds.length) {
+  if (!nome || nome.length > 160 || !casoIds.length || casoIds.length > 200) {
     $("#trailError").textContent =
       "Informe o nome e selecione pelo menos um cenário.";
     return;
   }
   const trails = testTrails(),
     item = { id: editingTrailId || "trail-" + Date.now(), nome, casoIds };
+  if (
+    trails.some(
+      (t) =>
+        t.id !== editingTrailId &&
+        t.nome.trim().toLocaleLowerCase("pt-BR") ===
+          nome.toLocaleLowerCase("pt-BR"),
+    )
+  ) {
+    $("#trailError").textContent = "Já existe uma trilha com este nome.";
+    return;
+  }
   const i = trails.findIndex((t) => t.id === editingTrailId);
   if (i < 0) trails.push(item);
   else trails[i] = item;

@@ -1,93 +1,270 @@
 {
   "name": "delivery-management-reference",
-  "version": 1,
+  "version": 2,
   "backend": "use-host-system",
   "database": "MongoDB",
   "entryGuide": "IMPLEMENTAR_NO_SISTEMA.md",
   "phases": [
     {
+      "id": "02-catalog",
+      "name": "Catálogo e trilhas",
+      "modules": [
+        "test-catalog"
+      ],
+      "dependsOn": [],
+      "status": "pending",
+      "acceptance": [
+        "Somente quality habilitado, sem dependencia de Features/HO/GMUD/PROD",
+        "Cadastro classico de cenarios com garantia, cobertura, componentes, dimensoes e snapshot das etapas ate o alvo",
+        "Biblioteca de trilhas com referencias validas, sem exclusao destrutiva e com tratamento de inativos",
+        "Etapas e dimensoes configuraveis com IDs estaveis e snapshots existentes preservados",
+        "Frontend e backend do hospedeiro com MongoDB real usando as collections da R1",
+        "Workspace, permissoes, comparacao de versao, idempotencia, auditoria e limites validados no servidor",
+        "Testes E2E da integracao real e migration em homologacao, sem mocks marcados como integracao concluida",
+        "Cadastro com Frente, funcionalidade e fluxo compativel; dimensoes por frente e garantia N/A fora de credito",
+        "Snapshot de etapas e versao do fluxo preservado em edicoes e execucoes anteriores"
+      ],
+      "futureIncrements": [
+        "Cenários e etapas com IDs estáveis",
+        "Trilhas e vínculo explícito com componentes",
+        "Snapshots não são atualizados por alterações posteriores do catálogo",
+        "Classificações e atributos configuráveis sem vínculo obrigatório com crédito",
+        "Passos próprios por cenário e snapshots independentes de HO/PROD",
+        "Catálogo disponível mesmo com Entregas, GMUD e PROD desativados",
+        "Frentes e funcionalidades configuráveis com atributos por frente e filtros no catálogo/HO",
+        "Forma de execução separada da classificação legada de garantia; snapshots preservam contexto",
+        "Cadastro próprio de fluxos reutilizáveis por frente/funcionalidade, com etapas ordenadas e IDs estáveis"
+      ],
+      "releaseContract": "releases/tests-first/manifest.json",
+      "databaseRelease": "releases/all-phases/manifest.json#02-catalog"
+    },
+    {
       "id": "01-features",
-      "name": "Features e planejamento",
-      "modules": ["features", "planning"],
+      "name": "Entregas: cadastro e consulta",
+      "modules": [
+        "features"
+      ],
       "dependsOn": [],
       "status": "pending",
       "acceptance": [
         "Cadastro e edição da feature/issue",
         "Consulta paginada por squad, período e componente",
         "ID externo único no workspace e referências a equipes existentes"
-      ]
-    },
-    {
-      "id": "02-catalog",
-      "name": "Catálogo e trilhas",
-      "modules": ["test-catalog"],
-      "dependsOn": ["01-features"],
-      "status": "pending",
-      "acceptance": [
-        "Cenários e etapas com IDs estáveis",
-        "Trilhas e vínculo explícito com componentes",
-        "Snapshots não são atualizados por alterações posteriores do catálogo"
-      ]
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#01-features"
     },
     {
       "id": "03-homologation",
       "name": "Homologação e aceite",
-      "modules": ["homologation"],
-      "dependsOn": ["02-catalog"],
+      "modules": [
+        "homologation"
+      ],
+      "dependsOn": [
+        "01-features",
+        "02-catalog"
+      ],
       "status": "pending",
       "acceptance": [
         "Fila de HO por situação",
         "Execução por etapa e motivo de falha",
-        "Aceite de PO apenas com plano não vazio concluído; alteração posterior invalida aceite"
-      ]
+        "Aceite de PO apenas com plano não vazio concluído; alteração posterior invalida aceite",
+        "Motivos por etapa, histórico de reteste e ação rápida que preserva falhas/N/A",
+        "Orientação de próximo passo e preparação da GMUD a partir da entrega aceita"
+      ],
+      "futureIncrements": [
+        "Escopo por cenário na US/TP com snapshot completo de origem e versão; fora do escopo não é N/A nem aprovado",
+        "Responsáveis/revisor opcionais e referências manuais do Jira no plano",
+        "Escopo bloqueado após primeiro resultado; PROD copia apenas as etapas homologadas"
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#03-homologation"
     },
     {
       "id": "04-changes",
-      "name": "GMUD, checklist e aprovação",
-      "modules": ["changes"],
-      "dependsOn": ["03-homologation"],
+      "name": "GMUD: preparação, checklist e plano de PROD",
+      "modules": [
+        "changes"
+      ],
+      "dependsOn": [
+        "03-homologation"
+      ],
       "status": "pending",
       "acceptance": [
         "Criar e vincular features sem outra GMUD ativa",
         "Checklist considera resposta Não válida; exceção incompleta explícita e auditada",
-        "Plano de PROD baseado em HO aceita; aprovação e revisão verificadas no servidor"
-      ]
+        "Preparar cenários PROD a partir de HO; não liberar confirmação da subida com módulo PROD desativado"
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#04-changes"
+    },
+    {
+      "id": "04b-approval",
+      "name": "GMUD: aprovação e calendário de implantações",
+      "modules": [
+        "changes"
+      ],
+      "dependsOn": [
+        "04-changes"
+      ],
+      "status": "pending",
+      "acceptance": [
+        "Gerente aprova somente com HO e plano PROD válidos",
+        "Calendário e gestão usam a mesma modal e regras",
+        "Reprogramar somente antes de deploy; sem confirmação de subida até habilitar PROD"
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#04b-approval"
     },
     {
       "id": "05-production",
       "name": "Subida e validação de produção",
-      "modules": ["production", "changes"],
-      "dependsOn": ["04-changes"],
+      "modules": [
+        "production",
+        "changes"
+      ],
+      "dependsOn": [
+        "04b-approval"
+      ],
       "status": "pending",
       "acceptance": [
         "TL confirma implantação externa com releaseRef",
         "PO valida etapas e registra motivos; sem upload de documentos",
         "Encerrar apenas após aceite PROD; rollback preserva resultados; nova versão gera nova GMUD"
-      ]
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#05-production"
     },
     {
       "id": "06-calendars",
       "name": "Calendários e modais",
-      "modules": ["planning", "changes"],
-      "dependsOn": ["05-production"],
+      "modules": [
+        "planning",
+        "changes"
+      ],
+      "dependsOn": [
+        "01-features"
+      ],
       "status": "pending",
       "acceptance": [
-        "Consultas sobre os mesmos documentos; nenhuma coleção de timeline",
-        "Dia da implantação colorido conforme status",
-        "Modal compartilhada para consulta/aprovação e link claro para validar PROD"
-      ]
+        "Calendário de HO e concorrências como evolução opcional",
+        "Calendário de GMUD pertence ao módulo GMUD e usa seus mesmos registros"
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#06-calendars"
     },
     {
       "id": "07-migration",
       "name": "Migração e regressão",
-      "modules": ["demo"],
-      "dependsOn": ["06-calendars"],
+      "modules": [
+        "demo"
+      ],
+      "dependsOn": [
+        "01-features",
+        "02-catalog",
+        "03-homologation",
+        "04-changes",
+        "04b-approval",
+        "05-production"
+      ],
       "status": "pending",
       "acceptance": [
         "Importação explícita idempotente; sem seed automático",
         "Revisar exemplos inconsistentes; não inventar aceites",
         "Fluxo ponta a ponta com sucesso, falha, rollback e nova GMUD da mesma feature"
+      ],
+      "databaseRelease": "releases/all-phases/manifest.json#07-migration"
+    }
+  ],
+  "moduleGroups": [
+    {
+      "id": "delivery",
+      "name": "Entregas",
+      "flag": "delivery",
+      "modules": [
+        "features"
+      ],
+      "releases": [
+        "01-features"
+      ]
+    },
+    {
+      "id": "quality",
+      "name": "Qualidade",
+      "flag": "quality",
+      "modules": [
+        "test-catalog",
+        "homologation"
+      ],
+      "releases": [
+        "02-catalog",
+        "03-homologation"
+      ],
+      "capabilityFlags": {
+        "catalog": "quality",
+        "homologation": "homologation"
+      }
+    },
+    {
+      "id": "gmud",
+      "name": "GMUD",
+      "flag": "gmud",
+      "modules": [
+        "changes"
+      ],
+      "releases": [
+        "04-changes"
+      ]
+    },
+    {
+      "id": "approval",
+      "name": "Aprovação",
+      "flag": "approval",
+      "modules": [
+        "changes"
+      ],
+      "releases": [
+        "04b-approval"
+      ]
+    },
+    {
+      "id": "production",
+      "name": "Validação de produção",
+      "flag": "production",
+      "modules": [
+        "production"
+      ],
+      "releases": [
+        "05-production"
+      ]
+    },
+    {
+      "id": "planning",
+      "name": "Planejamento",
+      "flag": "planning",
+      "modules": [
+        "planning"
+      ],
+      "releases": [
+        "06-calendars"
       ]
     }
-  ]
+  ],
+  "gradualImplementationGuide": "plano-implementacao/ORDEM-DE-IMPLEMENTACAO.md",
+  "firstRelease": "releases/tests-first/manifest.json",
+  "allPhasesRelease": "releases/all-phases/manifest.json",
+  "validationReport": "releases/all-phases/validacao.md",
+  "databaseValidation": {
+    "status": "not-requested",
+    "scope": "Validacao solicitada exclusivamente local, sem conexao com MongoDB. Contratos e migrations verificados por testes locais com adaptadores simulados.",
+    "runner": "mongodb/validate-isolated.sh",
+    "runnerPolicy": "Opcional para futura integracao; nao executado neste aceite local."
+  },
+  "localValidation": {
+    "status": "passed",
+    "startedAt": "2026-10-23T20:11:27.534Z",
+    "finishedAt": "2026-10-23T20:13:14.038Z",
+    "suiteCount": 21,
+    "failedSuites": 0,
+    "unitTestsPassed": 51,
+    "command": "node tests/run-e2e.cjs",
+    "databaseConnection": false,
+    "report": "releases/all-phases/validacao.md",
+    "integrationStatusUnchanged": true,
+    "supplementary": "Retiradas opcoes de reutilizacao; evidencia Jira opcional por execucao/ciclo, validacao HTTP/HTTPS, consulta em lista/planilha, edicao/remocao e historico. Suite de evidencia reexecutada apos limpeza da mensagem de URL ao corrigir o campo."
+  }
 }

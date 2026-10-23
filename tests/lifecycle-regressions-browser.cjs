@@ -146,6 +146,10 @@ const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright"),
         await po.goto(base + "/homologacao.html?issue=DEMO-E2E-DEPLOY");
         await p.locator(".ho-case summary").first().click();
         await p.locator(".ho-stage-grid select").last().selectOption("Falhou");
+        await p
+          .locator(".ho-stage-grid textarea[data-stage]")
+          .last()
+          .fill("Falha detectada durante a validação");
         await p.click("#saveHO");
         await po.locator("#hoApprove [name=por]").fill("PO aba antiga");
         await po

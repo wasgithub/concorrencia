@@ -1,0 +1,421 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>IssueFlow · Acompanhamento de testes</title>
+    <link rel="stylesheet" href="shared/ui/theme.css" />
+    <link rel="stylesheet" href="shared/ui/styles.css" />
+    <link rel="stylesheet" href="modules/test-runs/run.css" />
+    <script src="shared/config/modules.js" defer></script>
+    <script src="shared/storage/local-storage.js" defer></script>
+    <script src="modules/test-catalog/catalog-store.js" defer></script>
+    <script src="modules/test-runs/run-store.js" defer></script>
+    <script src="modules/test-runs/run-views.js" defer></script>
+    <script src="modules/test-runs/run-page.js" defer></script>
+    <script src="shared/ui/navigation.js" defer></script>
+  </head>
+  <body>
+    <aside class="sidebar">
+      <a class="brand" href="index.html"
+        ><span class="brand-icon">i<span>f</span></span
+        >IssueFlow</a
+      >
+      <div class="workspace">WORKSPACE<span>Gestão de operações</span></div>
+      <nav class="operation-nav" aria-label="Menu principal"></nav>
+      <div class="sidebar-note">
+        <span class="live-dot"></span> Ambiente de demonstração<small
+          >Dados salvos neste navegador</small
+        >
+      </div>
+    </aside>
+    <div class="shell">
+      <header>
+        <span
+          >Workspace <span class="slash">/</span>
+          <strong>Acompanhamento de testes</strong></span
+        >
+        <div class="profile">
+          <span class="demo">DEMO</span><span class="avatar">AD</span>
+        </div>
+      </header>
+      <main class="runs-page">
+        <div class="page-heading">
+          <div>
+            <div class="eyebrow">QUALIDADE / EXECUÇÃO</div>
+            <h1>Acompanhamento de testes</h1>
+            <p>
+              Uma visão do regressivo, dos times e das etapas que precisam de
+              atenção.
+            </p>
+          </div>
+          <button class="primary" id="newRun">＋ Novo ciclo</button>
+        </div>
+        <div class="run-toolbar" id="runCycleToolbar">
+          <label>Ciclo de testes<select id="runSelect"></select></label>
+          <span id="runDemo" class="run-demo">Ciclo demonstrativo</span>
+        </div>
+        <form id="runPeriodForm" class="run-period-form">
+          <div class="run-period-title">
+            <strong>Quem está validando junto?</strong
+            ><small>Consulte os ciclos que se cruzam no período.</small>
+          </div>
+          <label>De<input type="date" id="runPeriodStart" /></label
+          ><label>Até<input type="date" id="runPeriodEnd" /></label>
+          <label
+            >Ambiente<select id="runPeriodEnvironment">
+              <option value="HO">HO</option>
+              <option value="PROD">PROD</option>
+              <option value="">Todos</option>
+            </select></label
+          >
+          <button class="secondary" type="submit">
+            Ver agenda dos times →
+          </button>
+          <p id="runPeriodError" role="alert" class="settings-error" hidden></p>
+        </form>
+        <section class="run-overview" aria-label="Resumo do ciclo">
+          <div class="run-overview-heading">
+            <div>
+              <div class="eyebrow" id="runEnvironment"></div>
+              <h2 id="runName"></h2>
+              <p id="runMeta"></p>
+            </div>
+            <span id="runState" class="run-status"></span>
+          </div>
+          <div id="runStats" class="run-stats"></div>
+          <div class="run-progress-grid" id="runProgress"></div>
+          <div class="run-attention" id="runAttention"></div>
+        </section>
+        <nav class="run-tabs" aria-label="Visões do ciclo">
+          <button type="button" data-view="scenarios" aria-current="page">
+            Cenários <span id="scenarioTotal"></span>
+          </button>
+          <button type="button" data-view="matrix">Planilha de etapas</button>
+          <button type="button" data-view="agenda">Agenda dos times</button>
+          <button type="button" data-view="history">Histórico</button>
+        </nav>
+        <section id="runFiltersPanel" class="panel run-panel">
+          <div class="run-filters">
+            <label class="run-search"
+              ><span>Buscar cenário, issue ou pessoa</span
+              ><input
+                id="runSearch"
+                type="search"
+                placeholder="Buscar neste ciclo…"
+            /></label>
+            <label>Frente<select id="runFront"></select></label
+            ><label>Time executor<select id="runTeam"></select></label>
+            <label
+              >Situação<select id="runStatus">
+                <option value="">Todas as situações</option>
+                <option value="outstanding">A concluir</option>
+                <option value="failed">Com falha</option>
+                <option value="running">Em execução</option>
+                <option value="pending">Não iniciado</option>
+                <option value="done">Concluído</option>
+                <option value="dispensed">Dispensado</option>
+              </select></label
+            >
+            <button id="clearRunFilters" class="secondary small">Limpar</button>
+          </div>
+        </section>
+        <section
+          id="scenarioView"
+          class="panel run-panel"
+          aria-label="Cenários do ciclo"
+        >
+          <div class="run-table-wrap">
+            <table class="run-table">
+              <thead>
+                <tr>
+                  <th>CENÁRIO</th>
+                  <th>TIME / RESPONSÁVEL</th>
+                  <th>ETAPA ATUAL</th>
+                  <th>ETAPAS OK</th>
+                  <th>SITUAÇÃO</th>
+                  <th><span class="sr-only">Detalhes</span></th>
+                </tr>
+              </thead>
+              <tbody id="runRows"></tbody>
+            </table>
+          </div>
+          <div id="runEmpty" class="empty" hidden>
+            Nenhum cenário corresponde aos filtros.
+          </div>
+          <div class="run-table-footer">
+            <span id="runCount"></span
+            ><span>Selecione um cenário para acompanhar suas etapas →</span>
+          </div>
+        </section>
+        <section
+          id="matrixView"
+          class="panel run-matrix-panel"
+          aria-label="Planilha de etapas"
+          hidden
+        >
+          <div class="matrix-scope-controls">
+            <label
+              >Exibir<select id="matrixScope">
+                <option value="current">Ciclo selecionado</option>
+                <option value="production">Por data de produção</option>
+                <option value="selected">Datas selecionadas</option>
+                <option value="all">Todos os ciclos</option>
+              </select></label
+            >
+            <label id="matrixManualDate"
+              >Outra data de produção<input
+                type="date"
+                id="matrixProductionDate"
+                disabled
+            /></label>
+            <label
+              >Ambiente<select id="matrixEnvironment">
+                <option value="HO">HO</option>
+                <option value="PROD">PROD</option>
+                <option value="">Todos</option>
+              </select></label
+            >
+            <p id="matrixScopeSummary"></p>
+          </div>
+          <details id="matrixScheduleDisclosure" class="matrix-schedule" open>
+            <summary>
+              Períodos de HO e datas de produção
+              <span>Compare os times que validam juntos</span>
+            </summary>
+            <div id="matrixSchedule" class="matrix-schedule-scroll"></div>
+          </details>
+          <div class="matrix-date-picker">
+            <div class="matrix-date-picker-title">
+              <strong>Datas de subida</strong
+              ><span
+                >Selecione uma ou mais datas para filtrar os cenários
+                abaixo.</span
+              >
+            </div>
+            <div
+              id="matrixDateChoices"
+              class="matrix-date-choices"
+              role="group"
+              aria-label="Filtrar cenários por datas de subida"
+            ></div>
+          </div>
+          <div class="run-matrix-heading">
+            <div>
+              <h2>Execução por cenário e etapa</h2>
+              <div
+                id="matrixDateCaption"
+                class="matrix-date-caption"
+                aria-live="polite"
+              ></div>
+              <p>
+                As etapas ficam nas colunas. Selecione uma célula para abrir a
+                validação.
+              </p>
+            </div>
+            <div class="run-matrix-legend">
+              <span class="ok">OK</span><span class="failed">Falhou</span
+              ><span class="pending">Pendente</span
+              ><span class="not_applicable">N/A</span
+              ><span>— Fora do fluxo</span>
+            </div>
+          </div>
+          <div
+            class="run-matrix-scroll"
+            tabindex="0"
+            aria-label="Tabela de etapas; role horizontalmente para ver todas as colunas"
+          >
+            <table class="run-matrix">
+              <thead id="runMatrixHead"></thead>
+              <tbody id="runMatrixRows"></tbody>
+            </table>
+          </div>
+          <div class="run-table-footer">
+            <span id="matrixCount"></span
+            ><span
+              >Mesmos resultados da visão Cenários · sem duplicar
+              registros</span
+            >
+          </div>
+        </section>
+        <section
+          id="agendaView"
+          class="panel run-agenda-panel"
+          aria-label="Agenda dos times por período"
+          hidden
+        >
+          <div class="run-agenda-heading">
+            <div>
+              <div class="eyebrow">PERÍODO DE VALIDAÇÃO</div>
+              <h2>Times validando no mesmo período</h2>
+              <p id="agendaSummary"></p>
+            </div>
+          </div>
+          <p id="agendaPeriodNote" class="run-agenda-note"></p>
+          <div
+            id="runAgendaGrid"
+            class="run-agenda-scroll"
+            tabindex="0"
+            aria-label="Agenda por time e ciclo; role horizontalmente para ver todas as datas"
+          ></div>
+          <div class="run-agenda-footer">
+            <span
+              >As barras mostram períodos previstos, não atividade em tempo real
+              nem conflito de componentes.</span
+            ><span>Selecione uma barra para abrir a planilha do ciclo.</span>
+          </div>
+        </section>
+        <section
+          id="historyView"
+          class="panel run-history"
+          aria-label="Histórico do ciclo"
+          hidden
+        ></section>
+        <p class="run-footnote">
+          Resultados deste ciclo são independentes dos planos das issues.
+          Concluir etapas não registra aceite de produto nem confirma
+          implantação.
+        </p>
+        <p id="runError" role="alert" class="settings-error"></p>
+      </main>
+    </div>
+    <dialog id="runDetails" class="run-drawer" aria-labelledby="detailName">
+      <div class="run-drawer-header">
+        <span class="eyebrow">EXECUÇÃO DO CENÁRIO</span
+        ><button
+          id="closeRunDetails"
+          class="icon-button"
+          aria-label="Fechar detalhes"
+        >
+          ×
+        </button>
+      </div>
+      <h2 id="detailName"></h2>
+      <p id="detailMeta"></p>
+      <div id="detailStatus"></div>
+      <form id="runResultForm">
+        <div class="form-grid run-assignments">
+          <label
+            >Time executor<input name="team" maxlength="100" required /></label
+          ><label
+            >Responsável<input name="owner" maxlength="100" required
+          /></label>
+        </div>
+        <p id="detailWatchers" class="field-hint"></p>
+        <section class="run-evidence-field">
+          <label for="scenarioEvidenceUrl">Link das evidências no Jira</label>
+          <input
+            id="scenarioEvidenceUrl"
+            name="evidenceUrl"
+            type="text"
+            inputmode="url"
+            maxlength="2048"
+            placeholder="https://seu-jira/browse/AGRO-123"
+            aria-describedby="scenarioEvidenceHint"
+          />
+          <small id="scenarioEvidenceHint"
+            >Cole o link do card ou da página do Jira onde estão as evidências
+            deste cenário. O preenchimento é opcional.</small
+          >
+          <a
+            id="openEvidenceLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            hidden
+            >Abrir evidências no Jira ↗</a
+          >
+        </section>
+        <div class="run-steps-heading">
+          <h3>Etapas do cenário</h3>
+          <span>O motivo é obrigatório quando houver falha.</span>
+        </div>
+        <div id="detailSteps"></div>
+        <p id="detailError" class="settings-error" role="alert"></p>
+        <div class="run-drawer-actions">
+          <button type="button" class="secondary" id="cancelRunDetails">
+            Cancelar</button
+          ><button class="primary" type="submit">Salvar validação</button>
+        </div>
+      </form>
+    </dialog>
+    <dialog id="newRunDialog" aria-labelledby="newRunTitle">
+      <div class="modal-heading">
+        <h2 id="newRunTitle">Novo ciclo de testes</h2>
+        <button
+          id="closeNewRun"
+          type="button"
+          class="icon-button"
+          aria-label="Fechar novo ciclo"
+        >
+          ×
+        </button>
+      </div>
+      <p class="modal-intro">
+        Selecione cenários do catálogo. Cada ciclo mantém sua própria cópia de
+        etapas e resultados.
+      </p>
+      <form id="newRunForm">
+        <div class="form-grid">
+          <label class="full"
+            >Nome do ciclo<input
+              name="name"
+              required
+              maxlength="160"
+              placeholder="Ex.: Regressivo · Implantação 30/out"
+          /></label>
+          <label
+            >Implantação prevista — início<input
+              type="date"
+              name="startDate"
+              required /></label
+          ><label
+            >Implantação prevista — fim<input
+              type="date"
+              name="endDate"
+              required
+          /></label>
+          <label
+            >Validação prevista — início<input
+              type="date"
+              name="validationStartDate"
+          /></label>
+          <label
+            >Validação prevista — fim<input
+              type="date"
+              name="validationEndDate"
+          /></label>
+          <label
+            >Ambiente<select name="environment">
+              <option>HO</option>
+              <option>PROD</option>
+            </select></label
+          ><label
+            >Release / referência<input name="release" maxlength="100"
+          /></label>
+          <label
+            >Time executor inicial<input
+              name="team"
+              maxlength="100"
+              required /></label
+          ><label
+            >Responsável pela preparação<input
+              name="owner"
+              maxlength="100"
+              required
+          /></label>
+        </div>
+        <fieldset class="run-catalog">
+          <legend id="newRunLegend">Cenários do catálogo</legend>
+          <div id="newRunScenarios"></div>
+        </fieldset>
+        <p id="newRunError" role="alert" class="settings-error"></p>
+        <div class="modal-actions">
+          <button type="button" id="cancelNewRun" class="secondary">
+            Cancelar</button
+          ><button type="submit" class="primary">Criar ciclo</button>
+        </div>
+      </form>
+    </dialog>
+    <div id="toast" role="status" hidden></div>
+  </body>
+</html>
